@@ -81,7 +81,13 @@
   const props = defineProps({
     autoSize: {
       default: true,
+      required: false,
       type: Boolean,
+    },
+    borderRadiusPx: {
+      default: 8,
+      required: false,
+      type: Number,
     },
     breakpoints: {
       default: () => ({
@@ -91,11 +97,13 @@
         xs: 480,
         xxs: 0,
       }),
+      required: false,
       type: Object as PropType<Breakpoints>,
       validator: breakpointsValidator,
     },
     colNum: {
-      required: true,
+      default: 12,
+      required: false,
       type: Number,
     },
     cols: {
@@ -106,11 +114,13 @@
         xs: 4,
         xxs: 2,
       }),
+      required: false,
       type: Object as PropType<Breakpoints>,
       validator: breakpointsValidator,
     },
     horizontalShift: {
       default: false,
+      required: false,
       type: Boolean,
     },
     intersectionObserverConfig: {
@@ -119,11 +129,13 @@
         rootMargin: `8px`,
         threshold: 0.40,
       }),
+      required: false,
       type: Object as PropType<TIntersectionObserverConfig>,
       validator: intersectionObserverConfigValidator,
     },
     isDraggable: {
       default: true,
+      required: false,
       type: Boolean,
     },
     isResizable: {
@@ -169,6 +181,10 @@
       default: 150,
       type: Number,
     },
+    useBorderRadius: {
+      required: false,
+      type: Boolean,
+    },
     useCssTransforms: {
       default: true,
       type: Boolean,
@@ -200,21 +216,6 @@
     (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: Layout): void;
   }>();
 
-  // const emit = defineEmits([
-  //   `container-resized`,
-  //   `intersection-observe`,
-  //   `intersection-unobserve`,
-  //   `item-move`,
-  //   `item-moved`,
-  //   `item-resize`,
-  //   `item-resized`,
-  //   `layout-before-mount`,
-  //   `layout-created`,
-  //   `layout-mounted`,
-  //   `layout-ready`,
-  //   `update:breakpoint`,
-  //   `update:layout`,
-  // ]);
   const emitter = mitt<Events>();
 
   provide(emitterKey, emitter);
@@ -254,6 +255,7 @@
 
   // computed
   const gridItemProps = computed<IGridLayoutGridItemItemProps>(() => ({
+    borderRadiusPx: props.borderRadiusPx,
     breakpointCols: props.cols,
     colNum: props.colNum,
     containerWidth: width.value,
@@ -264,6 +266,7 @@
     maxRows: props.maxRows,
     responsive: props.responsive,
     rowHeight: props.rowHeight,
+    useBorderRadius: props.useBorderRadius,
     useCssTransforms: props.useCssTransforms,
     width: width.value,
   }));

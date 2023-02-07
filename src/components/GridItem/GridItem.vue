@@ -33,6 +33,11 @@
   import { IGridItemPosition } from '@/core/interfaces/grid-item-position';
 
   const props = defineProps({
+    borderRadiusPx: {
+      default: 8,
+      required: false,
+      type: Number,
+    },
     breakpointCols: {
       required: true,
       type: Object as PropType<Breakpoints>,
@@ -116,6 +121,10 @@
       default: false,
       type: Boolean,
     },
+    useBorderRadius: {
+      required: false,
+      type: Boolean,
+    },
     useCssTransforms: {
       required: true,
       type: Boolean,
@@ -134,7 +143,17 @@
     },
   });
 
-  const emit = defineEmits([`container-resized`, `resize`, `resized`, `move`, `moved`, `drag-event`, `resize-event`]);
+  const emit = defineEmits(
+    [
+      `container-resized`,
+      `resize`, `resized`,
+      `move`,
+      `moved`,
+      `drag-event`,
+      `resize-event`,
+      `remove-grid-item`,
+    ],
+  );
   const item = ref<HTMLDivElement | null>(null);
   const emitter = inject(emitterKey);
   const resizableHandleClass = `vue-resizable-handle`;
@@ -144,16 +163,25 @@
   const dragEventSet = ref(false);
   const dragging = ref<{ left?: number; top?: number }>({});
   const inner = ref<TInner<number>>({
-    h: props.h, w: props.w, x: props.x, y: props.y,
+    h: props.h,
+    w: props.w,
+    x: props.x,
+    y: props.y,
   });
   const interactObj = ref<any>(null);
   const isDragging = ref(false);
   const isResizing = ref(false);
   const lastInner = ref<TInner<number>>({
-    h: NaN, w: NaN, x: NaN, y: NaN,
+    h: NaN,
+    w: NaN,
+    x: NaN,
+    y: NaN,
   });
   const previousInner = ref<TInner<number>>({
-    h: NaN, w: NaN, x: NaN, y: NaN,
+    h: NaN,
+    w: NaN,
+    x: NaN,
+    y: NaN,
   });
   const resizeEventSet = ref(false);
   const resizing = ref<{ height: number; width: number } | null>(null);
@@ -163,7 +191,8 @@
   const resizableAndNotStatic = computed((): boolean => props.isResizable && !props.static);
   const isNoTouch = computed((): boolean => {
     const draggableOrResizableAndNotStatic = (props.isDraggable || props.isResizable) && !props.static;
-    const isAndroid = navigator.userAgent.toLowerCase().indexOf(`android`) !== -1;
+    const isAndroid = navigator.userAgent.toLowerCase()
+      .indexOf(`android`) !== -1;
 
     return draggableOrResizableAndNotStatic && isAndroid;
   });
@@ -177,6 +206,7 @@
     static: props.static,
     'vue-draggable-dragging': isDragging.value,
     'vue-resizable': resizableAndNotStatic.value,
+    'use-radius': props.useBorderRadius,
   }));
   const calcColWidth = (): number => {
     const [m1] = props.margin;
@@ -248,7 +278,8 @@
 
     for(const prop of [`width`, `height`]) {
       const val = style.props[prop as `width` | `height`];
-      const matches = val?.toString().match(/^(\d+)px$/);
+      const matches = val?.toString()
+        .match(/^(\d+)px$/);
 
       if(!matches) return;
 
@@ -270,9 +301,15 @@
 
     if(!position) return;
 
-    const { x, y } = position;
+    const {
+      x,
+      y,
+    } = position;
 
-    const newPosition = { left: 0, top: 0 };
+    const newPosition = {
+      left: 0,
+      top: 0,
+    };
 
     switch(event.type) {
       case `dragstart`: {
@@ -336,15 +373,24 @@
 
     if(!position) return;
 
-    const { x, y } = position;
-    const newSize = { height: 0, width: 0 };
+    const {
+      x,
+      y,
+    } = position;
+    const newSize = {
+      height: 0,
+      width: 0,
+    };
 
     switch(event.type) {
       case `resizestart`: {
         previousInner.value.w = inner.value.w;
         previousInner.value.h = inner.value.h;
 
-        const { height, width } = calcPosition(inner.value.x, inner.value.y, inner.value.w, inner.value.h);
+        const {
+          height,
+          width,
+        } = calcPosition(inner.value.x, inner.value.y, inner.value.w, inner.value.h);
 
         newSize.width = width;
         newSize.height = height;
@@ -364,7 +410,10 @@
         break;
       }
       case `resizeend`: {
-        const { height, width } = calcPosition(inner.value.x, inner.value.y, inner.value.w, inner.value.h);
+        const {
+          height,
+          width,
+        } = calcPosition(inner.value.x, inner.value.y, inner.value.w, inner.value.h);
 
         newSize.width = width;
         newSize.height = height;
@@ -433,12 +482,21 @@
       const minimum = calcPosition(0, 0, props.minW, props.minH);
       const opts = {
         edges: {
-          bottom: selector, left: false, right: selector, top: false,
+          bottom: selector,
+          left: false,
+          right: selector,
+          top: false,
         },
         ignoreFrom: `a, button`,
         restrictSize: {
-          max: { height: maximum.height, width: maximum.width },
-          min: { height: minimum.height, width: minimum.width },
+          max: {
+            height: maximum.height,
+            width: maximum.width,
+          },
+          min: {
+            height: minimum.height,
+            width: minimum.width,
+          },
         },
       };
 
@@ -540,64 +598,68 @@
   });
 </script>
 
-<style lang="scss">
-@import  '@/styles/variables.scss';
+<style lang="scss" scoped>
+@import '@/styles/variables.scss';
 
-  .vue-grid-item {
-    background-color: $grid-item-bg-color;
-    box-sizing: border-box;
-    color: $grid-item-text-color;
-    font-size: $grid-item-font-size;
+.use-radius {
+  border-radius: 8px;
+}
+
+.vue-grid-item {
+  background-color: $grid-item-bg-color;
+  box-sizing: border-box;
+  color: $grid-item-text-color;
+  font-size: $grid-item-font-size;
+  touch-action: none;
+  transition: all 200ms ease;
+  transition-property: left, top, right;
+
+  &.no-touch {
     touch-action: none;
-    transition: all 200ms ease;
-    transition-property: left, top, right;
-
-    &.no-touch {
-      touch-action: none;
-    }
-
-    &.css-transforms {
-      right: auto;
-      left: 0;
-      transition-property: transform;
-    }
-
-    &.resizing {
-      z-index: 3;
-      opacity: .6;
-    }
-
-    &.vue-draggable-dragging {
-      z-index: 3;
-      transition:none;
-    }
-
-    &.vue-grid-placeholder {
-      z-index: 2;
-      user-select: none;
-      background: $grid-item-placeholder-bg-color;
-      opacity: $grid-item-placeholder-opacity;
-      transition-duration: 100ms;
-    }
-
-    & > .vue-resizable-handle {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      z-index: 20;
-      box-sizing: border-box;
-      width: 20px;
-      height: 20px;
-      padding: 0 3px 3px 0;
-      cursor: se-resize;
-      background-image: url('../../assets/resize.svg');
-      background-repeat: no-repeat;
-      background-position: bottom right;
-      background-origin: content-box;
-    }
-
-    &.disable-user-select {
-      user-select: none;
-    }
   }
+
+  &.css-transforms {
+    right: auto;
+    left: 0;
+    transition-property: transform;
+  }
+
+  &.resizing {
+    z-index: 3;
+    opacity: .6;
+  }
+
+  &.vue-draggable-dragging {
+    z-index: 3;
+    transition: none;
+  }
+
+  &.vue-grid-placeholder {
+    z-index: 2;
+    user-select: none;
+    background: $grid-item-placeholder-bg-color;
+    opacity: $grid-item-placeholder-opacity;
+    transition-duration: 100ms;
+  }
+
+  & > .vue-resizable-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    padding: 0 3px 3px 0;
+    cursor: se-resize;
+    background-image: url('../../assets/resize.svg');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-origin: content-box;
+  }
+
+  &.disable-user-select {
+    user-select: none;
+  }
+}
 </style>

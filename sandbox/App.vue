@@ -1,14 +1,23 @@
 <template>
   <div class="container">
-    <div class="row responsive-label">
+    <div class="row">
       <div class="col-sm">
         <form>
           <fieldset>
             <legend>Test bench</legend>
-            <label for="rowheight">Row Height(px)</label>
-            <input v-model="rowHeight" type="number" id="rowheight" placeholder="Row Height"/>
-            <label for="rownum">Columns</label>
-            <input v-model="colNum" id="rownum" type="number" placeholder="Columns"/>
+            <label for="rowHeight">Row Height(px)</label>
+            <input v-model="rowHeight" type="number" id="rowHeight" placeholder="Row Height"/>
+            <label for="colNum">Columns</label>
+            <input v-model="colNum" id="colNum" type="number" placeholder="Columns"/>
+            <label for="mtb">Margin Top / Bottom</label>
+            <input v-model="marginTopBottom" id="mtb" type="number" placeholder="Margin Top / Bottom" disabled/>
+            <label for="mlr">Margin Left / Right</label>
+            <input v-model="marginLeftRight" id="mlr" type="number" placeholder="Margin Left / Right" disabled/>
+            <label for="maxRows">Max Rows</label>
+            <input v-model="maxRows" id="maxRows" type="number" placeholder="Max rows" disabled/>
+            <label for="borderRadius">Border Radius</label>
+            <input v-model="borderRadiusPx" id="borderRadius" type="number" placeholder="Border Radius"/>
+            <br/>
             <label for="draggable">Draggable</label>
             <input v-model="isDraggable" id="draggable" type="checkbox">
             <label for="resize">Resizable</label>
@@ -17,12 +26,16 @@
             <input v-model="isResponsive" id="responsive" type="checkbox">
             <label for="gridlines">Show Gridlines</label>
             <input v-model="showGridLines" id="gridlines" type="checkbox">
-          </fieldset>
-          <fieldset style="display: none">
-            <label for="mtb">Margin Top / Bottom</label>
-            <input v-model="marginTopBottom" id="mtb" type="number" placeholder="Margin Top / Bottom" disabled/>
-            <label for="mlr">Margin Left / Right</label>
-            <input v-model="marginLeftRight" id="mlr" type="number" placeholder="Margin Left / Right" disabled/>
+            <label for="autosize">Auto resize GridLayout</label>
+            <input v-model="autoResizeGridLayout" id="autosize" type="checkbox">
+            <label for="verticalCompact">Compact</label>
+            <input v-model="vertCompact" id="verticalCompact" type="checkbox">
+            <label for="horizontalShift">Horizontal Shift</label>
+            <input v-model="horizontalShift" id="horizontalShift" type="checkbox">
+            <label for="useBorderRadius">Use Radius</label>
+            <input v-model="useBorderRadius" id="useBorderRadius" type="checkbox">
+            <label for="preventCollision">Prevent Collision</label>
+            <input v-model="preventCollision" id="preventCollision" type="checkbox">
           </fieldset>
         </form>
       </div>
@@ -32,15 +45,21 @@
         <grid-layout
           ref="gridLayout"
           v-model:layout="demoLayout"
+          :auto-size="autoResizeGridLayout"
+          :border-radius-px="borderRadiusPx"
           :class="{grid: showGridLines}"
           :col-num="colNum"
+          :horizontal-shift="horizontalShift"
           :is-draggable="isDraggable"
           :is-resizable="isResizable"
           :margin="[marginLeftRight, marginTopBottom]"
+          :max-rows="maxRows"
+          :prevent-collision="preventCollision"
           :responsive="isResponsive"
           :row-height="rowHeight"
+          :use-border-radius="useBorderRadius"
           :use-css-transform="true"
-          :vertical-compact="true"
+          :vertical-compact="vertCompact"
           @item-resize="containerResized">
           <template #gridItemContent="slotProps">
             <div>
@@ -75,8 +94,15 @@
   const isDraggable = ref(true);
   const isResizable = ref(true);
   const isResponsive = ref(false);
-  const marginTopBottom = ref(10);
-  const marginLeftRight = ref(10);
+  const marginTopBottom = ref(10); // TODO Not working as expected
+  const marginLeftRight = ref(10); // TODO Not working as expected
+  const autoResizeGridLayout = ref(true);
+  const vertCompact= ref(true);
+  const horizontalShift = ref(false);
+  const maxRows = ref(6); // TODO not working as expected
+  const useBorderRadius = ref(false);
+  const borderRadiusPx = ref(8);
+  const preventCollision = ref(false);
 
   const containerResized = (e: Event): void => {
     console.debug(e);
@@ -85,6 +111,26 @@
 
 <style lang="scss" scoped>
 @import '../src/styles/index.scss';
+#rowHeight {
+  max-width: 100px !important;
+}
+#colNum {
+  max-width: 100px !important;
+}
+#mlr {
+  max-width: 100px !important;
+}
+#mtb {
+  max-width: 100px !important;
+}
+#maxRows {
+  max-width: 100px !important;
+}
+
+#borderRadius {
+  max-width: 100px !important;
+}
+
 .container {
   background: #646cff;
 }
