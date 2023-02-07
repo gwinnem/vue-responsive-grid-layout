@@ -1,0 +1,42 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recommended-vue/scss"
+  ],
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "at-rule-name-case": null,
+    "at-rule-no-unknown": null,
+    "comment-empty-line-before": null,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "function-no-unknown": [true, {
+      "ignoreFunctions": ["/color/", "/string/", "/v-bind/"]
+    }],
+    "media-feature-name-case": null,
+    "media-feature-name-no-unknown": null,
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": true,
+    "no-empty-source": null,
+    "no-extra-semicolons": true,
+    "no-invalid-double-slash-comments": null,
+    "number-leading-zero": "never",
+    "order/properties-alphabetical-order": true,
+    "scss/at-import-partial-extension": null,
+    "scss/at-import-partial-extension-blacklist": ["scss"],
+    "scss/dollar-variable-colon-space-before": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "selector-class-pattern": [
+      "^([a-z][a-z0-9]*)(-[a-z0-9]+)*((__[a-z0-9-]+)?((--[a-z0-9]+)?(-[a-z0-9]+)*))$",
+      { "message": "Expected class selector to be BEM" }
+    ],
+    "selector-pseudo-element-colon-notation": null,
+    "selector-pseudo-element-no-unknown": null,
+    "shorthand-property-no-redundant-values": null,
+    "string-quotes": "single",
+    "value-keyword-case": ["lower", {
+      "ignoreFunctions": ["/^v-bind$/"]
+    }]
+  }
+}

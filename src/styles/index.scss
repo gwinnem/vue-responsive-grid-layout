@@ -1,0 +1,24 @@
+@import 'variables';
+
+:root {
+  --ep-color-primary: #a15d5d;
+  --ep-color-primary-light-9: #080826;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--ep-color-primary);
+}
+
+code {
+  background-color: var(--ep-color-primary-light-9);
+  border-radius: 2px;
+  color: var(--ep-color-primary);
+  padding: 2px 4px;
+}
