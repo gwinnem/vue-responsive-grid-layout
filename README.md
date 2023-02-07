@@ -1,6 +1,8 @@
 # vue-responsive-grid-layout
 VUE 3 responsive grid layout. More to come.
+<br/>
 This work is based on the original work with: [Vue Grid Layout](https://jbaysolutions.github.io/vue-grid-layout/guide/).
+<br/>
 This package is based on typescript with almost 100% type safety.
 
 #### Original Features:
