@@ -1,6 +1,7 @@
 import { Breakpoints } from "../types/helpers";
 
 export interface IGridLayoutGridItemItemProps {
+  borderRadiusPx: number;
   breakpointCols: Breakpoints;
   colNum: number;
   containerWidth: number;
@@ -11,6 +12,7 @@ export interface IGridLayoutGridItemItemProps {
   maxRows: number;
   responsive: boolean;
   rowHeight: number;
+  useBorderRadius: boolean;
   useCssTransforms: boolean;
   width: number;
 }

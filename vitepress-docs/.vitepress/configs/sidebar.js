@@ -8,13 +8,17 @@ export default {
 function getApiSidebar() {
   return [
     {
-      text: 'Features',
-      collapsible: true,
+      text: 'API',
+      collapsible: false,
       items: [
         {
-          text: 'API',
-          link: '/api/',
+          text: 'Interfaces',
+          link: '/api/interfaces',
         },
+        {
+          text: 'Types',
+          link: '/api/types/',
+        }
       ],
     },
   ];
@@ -24,45 +28,41 @@ function getComponentsSidebar() {
   return [
     {
       text: 'Components',
-      collapsible: true,
+      link: '/components/',
       items: [
         {
           text: 'GridLayout',
-          link: '/components/grid-layout',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              text: 'Props',
+              link: '/components/grid-layout-props',
+            },
+            {
+              text: 'Events',
+              link: '/components/grid-layout-events',
+            },
+          ],
         },
         {
           text: 'GridItem',
-          link: '/components/grid-item',
-        },
-      ],
-    },
-    {
-      text: 'Properties',
-      collapsible: true,
-      collapsed: false,
-      items: [
-        {
-          text: 'GridLayout Props',
-          link: '/components/grid-layout-props'
-        },
-        {
-          text: 'GridItem Props',
-          link: '/components/grid-item-props'
-        },
-      ],
-    },
-    {
-      text: 'Events',
-      collapsible: true,
-      collapsed: false,
-      items: [
-        {
-          text: 'GridLayout Events',
-          link: '/components/grid-layout-events'
-        },
-        {
-          text: 'GridItem Events',
-          link: '/components/grid-item-events'
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              text: 'Props',
+              link: '/components/grid-item-props',
+            },
+            {
+              text: 'Events',
+              link: '/components/grid-item-events',
+            },
+            {
+              text: 'Slots',
+              link: '/components/grid-item-slots',
+            },
+          ],
         },
       ],
     },
@@ -77,6 +77,10 @@ function getGuideSidebar() {
         {
           text: 'Installation',
           link: '/guide/installation',
+        },
+        {
+          text: 'Code examples',
+          link: '/guide/code-examples',
         },
         {
           text: 'Changelog',

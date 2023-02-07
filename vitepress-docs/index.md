@@ -14,10 +14,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/
-    - theme: alt
-      text: Learn More
-      link: /guide/
+      link: /guide/installation
 
 features:
   - icon: ⚡️

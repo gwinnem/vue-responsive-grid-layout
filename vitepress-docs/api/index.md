@@ -1,35 +1,29 @@
-# Vitepress Demo
+# API
 
-## 已实现
+## html style
 
-- [x] vue 组件
-
-```js
+```html
 <demo-block>
-  <xl-button>默认按钮</xl-button>
-  <xl-button type="primary">主要按钮</xl-button>
-  <xl-button type="success">成功按钮</xl-button>
-  <xl-button type="info">信息按钮</xl-button>
-  <xl-button type="warning">警告按钮</xl-button>
-  <xl-button type="danger">危险按钮</xl-button>
+  <xl-button>Default</xl-button>
+  <xl-button type="primary">Primary</xl-button>
+  <xl-button type="success">Success</xl-button>
+  <xl-button type="info">Information</xl-button>
+  <xl-button type="warning">Warning</xl-button>
+  <xl-button type="danger">Danger</xl-button>
 </demo-block>
 ```
 
-![image-20210615194021326](https://tva1.sinaimg.cn/large/008i3skNly1grj6qits6pj312c04aq3j.jpg)
 
-- [x] vue 代码自动渲染并且显示对应 code（目前已支持 script 和 style，有好的解决方案的伙伴请提 issue）
+The vue code is automatically rendered and the corresponding code is displayed (script and style are currently supported, if you have a good solution, please submit an issue)
 
-:::demo 使用 `type`、`plain`、`round` 和 `circle` 属性来定义 Button 的样式。
+## vue style
+Use the `type`, `plain`, `round` and `circle` properties to define the Button's style.
 
 ```vue
-<xl-button>默认按钮</xl-button>
-<xl-button type="primary">主要按钮</xl-button>
-<xl-button type="success">成功按钮</xl-button>
-<xl-button type="info">信息按钮</xl-button>
-<xl-button type="warning">警告按钮</xl-button>
-<xl-button type="danger">危险按钮</xl-button>
+<xl-button>Default</xl-button>
+<xl-button type="primary">Primary</xl-button>
+<xl-button type="success">Success</xl-button>
+<xl-button type="info">Information</xl-button>
+<xl-button type="warning">Warning</xl-button>
+<xl-button type="danger">Danger</xl-button>
 ```
-
-:::
-
-![image-20210615194046416](https://tva1.sinaimg.cn/large/008i3skNly1grj6qx0v0nj31r40nsdkn.jpg)

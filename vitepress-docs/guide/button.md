@@ -1,64 +1,50 @@
-# Button 按钮
+# Button
 
-常用的操作按钮。
+Commonly used action buttons.
 
-## 基础用法
+## Basic usage
 
-基础的按钮用法。
-
-:::demo 使用 `type`、`plain`、`round` 和 `circle` 属性来定义 Button 的样式。
+Use the `type`, `plain`, `round` and `circle` properties to define the Button's style.
 
 ```vue
 <template>
-  <xl-button>默认按钮</xl-button>
-  <xl-button type="primary">主要按钮</xl-button>
-  <xl-button type="success">成功按钮</xl-button>
-  <xl-button type="info">信息按钮</xl-button>
-  <xl-button type="warning">警告按钮</xl-button>
-  <xl-button type="danger">危险按钮</xl-button>
+  <xl-button>Default</xl-button>
+  <xl-button type="primary">Primary</xl-button>
+  <xl-button type="success">Success</xl-button>
+  <xl-button type="info">Information</xl-button>
+  <xl-button type="warning">Warning</xl-button>
+  <xl-button type="danger">Danger</xl-button>
 </template>
 ```
 
-:::
+## Different sizes
 
-## 不同尺寸
-
-提供三种不同尺寸的按钮。
-
-:::demo
+Available in three different sizes of buttons.
 
 ```vue
-<xl-button>默认按钮</xl-button>
-<xl-button type="primary">主要按钮</xl-button>
-<xl-button type="success">成功按钮</xl-button>
-<xl-button type="info">信息按钮</xl-button>
-<xl-button type="warning">警告按钮</xl-button>
-<xl-button type="danger">危险按钮</xl-button>
+<xl-button type="sm">Small</xl-button>
+<xl-button type="md">Medium</xl-button>
+<xl-button type="lg">Large</xl-button>
 ```
 
-:::
+## Loading
 
-## 加载中
+Click the button to load data, and display the loading status on the button.
 
-点击按钮进行数据加载操作，在按钮上面显示加载状态。
-
-:::demo
 
 ```vue
-<xl-button>默认按钮</xl-button>
-<xl-button type="primary">主要按钮</xl-button>
-<xl-button type="success">成功按钮</xl-button>
-<xl-button type="info">信息按钮</xl-button>
-<xl-button type="warning">警告按钮</xl-button>
-<xl-button type="danger">危险按钮</xl-button>
+<xl-button>Default</xl-button>
+<xl-button type="primary">Primary</xl-button>
+<xl-button type="success">Success</xl-button>
+<xl-button type="info">Information</xl-button>
+<xl-button type="warning">Warning</xl-button>
+<xl-button type="danger">Danger</xl-button>
 ```
-
-:::
 
 ## Attributes
 
-| 参数    | 说明   | 类型    | 可选值                                             | 默认值  |
-| ------- | ------ | ------- | -------------------------------------------------- | ------- |
-| size    | 尺寸   | string  | large / small / mini                               | default |
-| type    | 类型   | string  | primary / success / warning / info / danger / text | primary |
-| loading | 加载中 | boolean | —                                                  | false   |
+| Parameter | Definition | Type    | Optional                                            | Default  |
+|-----------|------------|---------|-----------------------------------------------------|----------|
+| size      | Size       | string  | large / small / mini                                | default  |
+| type      | Type       | string  | primary / success / warning / info / danger / text  | primary  |
+| loading   | Loading    | boolean | —                                                   | false    |
