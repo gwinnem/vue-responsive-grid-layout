@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, `./src`),
+    },
   },
   test: {
-    environment: 'jsdom',
+    environment: `jsdom`,
     globals: true,
-    include: ['tests/*.spec.ts', 'tests/unit/*.spec.ts']
-  }
+    include: [`tests/*.spec.ts`, `tests/unit/*.spec.ts`],
+  },
 });
