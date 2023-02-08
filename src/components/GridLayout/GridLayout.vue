@@ -17,6 +17,7 @@
           @container-resized="emits(EGridLayoutEvent.CONTAINER_RESIZED, $event)"
           @move="emits(EGridLayoutEvent.ITEM_MOVE, $event)"
           @moved="emits(EGridLayoutEvent.ITEM_MOVED, $event)"
+          @remove-grid-item="removeGridItem"
           @resize="emits(EGridLayoutEvent.ITEM_RESIZE, $event)">
           <slot
             :item="layoutItem"
@@ -181,6 +182,11 @@
       default: 150,
       type: Number,
     },
+    showCloseButton: {
+      default: true,
+      required: false,
+      type: Boolean,
+    },
     useBorderRadius: {
       required: false,
       type: Boolean,
@@ -228,7 +234,16 @@
     x: 0,
     y: 0,
   };
-  const layoutItemOptionalKeys = [`minW`, `minH`, `maxW`, `maxH`, `moved`, `static`, `isDraggable`, `isResizable`];
+  const layoutItemOptionalKeys = [
+    `isDraggable`,
+    `isResizable`,
+    `maxH`,
+    `maxW`,
+    `minH`,
+    `minW`,
+    `moved`,
+    `static`,
+  ];
 
   // data
   const erd = ref(elementResizeDetectorMaker({
@@ -266,6 +281,7 @@
     maxRows: props.maxRows,
     responsive: props.responsive,
     rowHeight: props.rowHeight,
+    showCloseButton: props.showCloseButton,
     useBorderRadius: props.useBorderRadius,
     useCssTransforms: props.useCssTransforms,
     width: width.value,
@@ -326,6 +342,7 @@
         return acc;
       }, {});
   };
+
   const layoutUpdate = (): void => {
     if(props.layout && originalLayout.value) {
       if(props.layout.length !== originalLayout.value.length) {
@@ -356,11 +373,19 @@
       emitter.emit(`recalculate-styles`);
     }
   };
+
+  // TODO fix => grid is not being updated with the new layout
+  const removeGridItem = (id: number): void => {
+    originalLayout.value = originalLayout.value.filter(item => item.i !== id);
+    // layoutUpdate();
+  };
+
   const onWindowResize = (): void => {
     if(wrapper.value) {
       width.value = wrapper.value.offsetWidth;
     }
   };
+
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
@@ -374,7 +399,7 @@
       layouts.value,
       props.breakpoints,
       newBreakpoint,
-      // lastBreakpoint.value,
+      lastBreakpoint.value,
       newCols,
       props.verticalCompact,
     );
@@ -547,12 +572,10 @@
   watch(() => props.colNum, value => {
     emitter.emit(`set-col-num`, value);
   });
-
   watch(() => props.layout.length, () => {
     layoutUpdate();
     compact(props.layout, props.verticalCompact);
   });
-
   watch(() => props.margin, () => {
     updateHeight();
   });

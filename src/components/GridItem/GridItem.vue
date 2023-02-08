@@ -4,6 +4,12 @@
     class="vue-grid-item"
     :class="classObj"
     :style="style.props">
+    <img
+      v-if="showCloseButton"
+      alt="Close Button"
+      class="close-button"
+      src="../../assets/close.svg"
+      @click="closeClicked(props.i)" />
     <slot></slot>
     <span
       v-if="resizableAndNotStatic"
@@ -117,6 +123,11 @@
       required: true,
       type: Number,
     },
+    showCloseButton: {
+      default: true,
+      required: false,
+      type: Boolean,
+    },
     static: {
       default: false,
       type: Boolean,
@@ -146,12 +157,13 @@
   const emit = defineEmits(
     [
       `container-resized`,
-      `resize`, `resized`,
+      `drag-event`,
       `move`,
       `moved`,
-      `drag-event`,
-      `resize-event`,
       `remove-grid-item`,
+      `resize`,
+      `resized`,
+      `resize-event`,
     ],
   );
   const item = ref<HTMLDivElement | null>(null);
@@ -186,6 +198,10 @@
   const resizeEventSet = ref(false);
   const resizing = ref<{ height: number; width: number } | null>(null);
   const style: { props: CSSProperties } = reactive({ props: {} });
+
+  const closeClicked = (id: number): void => {
+    emit(`remove-grid-item`, id);
+  };
 
   // computed
   const resizableAndNotStatic = computed((): boolean => props.isResizable && !props.static);
@@ -601,8 +617,18 @@
 <style lang="scss" scoped>
 @import '@/styles/variables.scss';
 
-.use-radius {
-  border-radius: 8px;
+.close-button {
+  height: 18px;
+  position: absolute;
+  right: 2px;
+  top: 3px;
+  width: 18px;
+  z-index: 20;
+}
+
+.close-button:hover {
+  cursor: pointer;
+  filter: brightness(0) invert(1);
 }
 
 .vue-grid-item {
@@ -644,8 +670,8 @@
 
   & > .vue-resizable-handle {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 1px;
+    bottom: 1px;
     z-index: 20;
     box-sizing: border-box;
     width: 20px;
@@ -656,6 +682,10 @@
     background-repeat: no-repeat;
     background-position: bottom right;
     background-origin: content-box;
+  }
+
+  &.use-radius {
+    border-radius: 8px;
   }
 
   &.disable-user-select {

@@ -12,6 +12,7 @@ export interface IGridLayoutGridItemItemProps {
   maxRows: number;
   responsive: boolean;
   rowHeight: number;
+  showCloseButton: boolean;
   useBorderRadius: boolean;
   useCssTransforms: boolean;
   width: number;
