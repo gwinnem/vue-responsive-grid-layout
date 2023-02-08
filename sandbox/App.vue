@@ -36,6 +36,8 @@
             <input v-model="useBorderRadius" id="useBorderRadius" type="checkbox">
             <label for="preventCollision">Prevent Collision</label>
             <input v-model="preventCollision" id="preventCollision" type="checkbox">
+            <label for="showCloseButton">Show Close Button</label>
+            <input v-model="showCloseButton" id="showCloseButton" type="checkbox">
           </fieldset>
         </form>
       </div>
@@ -57,6 +59,7 @@
           :prevent-collision="preventCollision"
           :responsive="isResponsive"
           :row-height="rowHeight"
+          :show-close-button="showCloseButton"
           :use-border-radius="useBorderRadius"
           :use-css-transform="true"
           :vertical-compact="vertCompact"
@@ -103,6 +106,7 @@
   const useBorderRadius = ref(false);
   const borderRadiusPx = ref(8);
   const preventCollision = ref(false);
+  const showCloseButton = ref(true);
 
   const containerResized = (e: Event): void => {
     console.debug(e);
