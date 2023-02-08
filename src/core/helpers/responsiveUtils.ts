@@ -2,7 +2,7 @@ import {
   Breakpoints,
   BreakpointsKeys,
   findOrGenerateResponsiveLayoutFnc,
-  Layout,
+  Layout, ResponsiveLayout,
 } from '../types/helpers';
 import { cloneLayout, compact, correctBounds } from './utils';
 
@@ -12,13 +12,12 @@ export const sortBreakpoints = (breakpoints: Breakpoints): BreakpointsKeys[] => 
 };
 
 export const findOrGenerateResponsiveLayout: findOrGenerateResponsiveLayoutFnc = (
-  orgLayout,
-  layouts,
-  breakpoints,
-  breakpoint,
-  // lastBreakpoint,
-  cols,
-  verticalCompact,
+  orgLayout: Layout,
+  layouts: ResponsiveLayout,
+  breakpoints: Breakpoints,
+  breakpoint: BreakpointsKeys,
+  cols: number,
+  verticalCompact: boolean,
 ): Layout => {
   if(Object.prototype.hasOwnProperty.call(layouts, breakpoint)) {
     return cloneLayout(layouts[breakpoint] || []);

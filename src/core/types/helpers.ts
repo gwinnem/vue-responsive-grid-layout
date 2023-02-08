@@ -41,7 +41,6 @@ export type findOrGenerateResponsiveLayoutFnc = (
   layouts: ResponsiveLayout,
   breakpoints: Breakpoints,
   breakpoint: BreakpointsKeys,
-  lastBreakpoint: BreakpointsKeys,
   cols: number,
   verticalCompact: boolean,
 ) => Layout
