@@ -87,9 +87,9 @@
   import { GridLayout } from '../src';
   import { data } from './layoutPayload';
   import { ref } from 'vue';
-  import { Layout } from '../src/core/types/helpers';
+  import { TLayout } from '../src/core/types/helpers';
 
-  const demoLayout = ref<Layout>(data);
+  const demoLayout = ref<TLayout>(data);
   const colNum = ref(12);
   const rowHeight = ref(120);
   const rowHeightPx = ref(rowHeight.value + 10 + 'px');
