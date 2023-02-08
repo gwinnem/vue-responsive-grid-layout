@@ -32,7 +32,7 @@
   import interact from '@interactjs/interactjs';
   import { emitterKey } from '@/core/symbols/symbols';
   import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
-  import { Breakpoints, BreakpointsKeys } from '@/core/types/helpers';
+  import { TBreakpoints, TBreakpointsKeys } from '@/core/types/helpers';
   import { TInner } from '@/core/types/components';
   import { createCoreData, getControlPosition } from '@/core/helpers/draggableUtils';
   import { setTopLeft, setTransform, stringReplacer } from '@/core/helpers/utils';
@@ -46,7 +46,7 @@
     },
     breakpointCols: {
       required: true,
-      type: Object as PropType<Breakpoints>,
+      type: Object as PropType<TBreakpoints>,
     },
     colNum: {
       required: true,
@@ -89,7 +89,7 @@
     },
     lastBreakpoint: {
       required: true,
-      type: String as PropType<BreakpointsKeys>,
+      type: String as PropType<TBreakpointsKeys>,
     },
     margin: {
       required: true,

@@ -1,14 +1,14 @@
 import { CSSProperties } from 'vue';
 import {
-  Layout,
-  LayoutItem,
+  TLayout,
+  TLayoutItem,
   // LayoutItemsByYAxis,
-  MovingDirection,
-  MovingDirections,
+  TMovingDirection,
+  EMovingDirections,
   setPositionFnc,
 } from '../types/helpers';
 
-export const bottom = (layout: Layout): number => {
+export const bottom = (layout: TLayout): number => {
   let max = 0;
 
   let bottomY: number;
@@ -24,8 +24,8 @@ export const bottom = (layout: Layout): number => {
   return max;
 };
 
-export const cloneLayoutItem = (layoutItem: LayoutItem): LayoutItem => JSON.parse(JSON.stringify(layoutItem));
-export const cloneLayout = (layout: Layout): Layout => {
+export const cloneLayoutItem = (layoutItem: TLayoutItem): TLayoutItem => JSON.parse(JSON.stringify(layoutItem));
+export const cloneLayout = (layout: TLayout): TLayout => {
   const newLayout = Array(layout.length);
 
   for(let i = 0; i < layout.length; i++) {
@@ -35,19 +35,19 @@ export const cloneLayout = (layout: Layout): Layout => {
   return newLayout;
 };
 
-export const collides = (l1: LayoutItem, l2: LayoutItem): boolean => {
+export const collides = (l1: TLayoutItem, l2: TLayoutItem): boolean => {
   return !(l1 === l2 || l1.x + l1.w <= l2.x || l1.x >= l2.x + l2.w || l1.y + l1.h <= l2.y || l1.y >= l2.y + l2.h);
 };
 
 // eslint-disable-next-line consistent-return
-export const getFirstCollision = (layout: Layout, layoutItem: LayoutItem): LayoutItem | void => {
+export const getFirstCollision = (layout: TLayout, layoutItem: TLayoutItem): TLayoutItem | void => {
   for(let i = 0, len = layout.length; i < len; i++) {
     if(collides(layout[i], layoutItem)) return layout[i];
   }
 };
 
-export const getStatics = (layout: Layout): LayoutItem[] => layout.filter(l => l.static);
-export const sortLayoutItemsByRowCol = (layout: Layout): Layout => {
+export const getStatics = (layout: TLayout): TLayoutItem[] => layout.filter(l => l.static);
+export const sortLayoutItemsByRowCol = (layout: TLayout): TLayout => {
   return [...layout].sort((a, b) => {
     if(a.y === b.y && a.x === b.x) return 0;
 
@@ -56,7 +56,7 @@ export const sortLayoutItemsByRowCol = (layout: Layout): Layout => {
     return -1;
   });
 };
-export const compactItem = (compareWith: Layout, l: LayoutItem, verticalCompact: boolean): LayoutItem => {
+export const compactItem = (compareWith: TLayout, l: TLayoutItem, verticalCompact: boolean): TLayoutItem => {
   if(verticalCompact) {
     while (l.y > 0 && !getFirstCollision(compareWith, l)) {
       l.y--;
@@ -72,7 +72,7 @@ export const compactItem = (compareWith: Layout, l: LayoutItem, verticalCompact:
 
   return l;
 };
-export const compact = (layout: Layout, verticalCompact: boolean): Layout | undefined => {
+export const compact = (layout: TLayout, verticalCompact: boolean): TLayout | undefined => {
   if(!layout) return;
 
   const compareWith = getStatics(layout);
@@ -96,7 +96,7 @@ export const compact = (layout: Layout, verticalCompact: boolean): Layout | unde
   return out;
 };
 
-export const correctBounds = (layout: Layout, bounds: { cols: number }): Layout => {
+export const correctBounds = (layout: TLayout, bounds: { cols: number }): TLayout => {
   const collidesWith = getStatics(layout);
 
   for(let i = 0; i < layout.length; i++) {
@@ -121,24 +121,24 @@ export const correctBounds = (layout: Layout, bounds: { cols: number }): Layout 
   return layout;
 };
 
-export const getAllCollisions = (layout: Layout, layoutItem: LayoutItem): LayoutItem[] => {
+export const getAllCollisions = (layout: TLayout, layoutItem: TLayoutItem): TLayoutItem[] => {
   return layout.filter(l => collides(l, layoutItem));
 };
 
-export const getLayoutItem = (layout: Layout, id: number): LayoutItem => layout.filter(l => l.i === id)[0];
+export const getLayoutItem = (layout: TLayout, id: number): TLayoutItem => layout.filter(l => l.i === id)[0];
 
 export const moveElementAwayFromCollision = (
-  layout: Layout,
-  collidesWith: LayoutItem,
-  itemToMove: LayoutItem,
+  layout: TLayout,
+  collidesWith: TLayoutItem,
+  itemToMove: TLayoutItem,
   isUserAction: boolean,
-  movingDirection: MovingDirection,
+  movingDirection: TMovingDirection,
   horizontalShift: boolean,
-): Layout => {
+): TLayout => {
   const preventCollision = false;
 
   if(isUserAction) {
-    const fakeItem: LayoutItem = {
+    const fakeItem: TLayoutItem = {
       h: itemToMove.h,
       i: -1,
       w: itemToMove.w,
@@ -157,14 +157,14 @@ export const moveElementAwayFromCollision = (
       x: itemToMove.x,
       y: itemToMove.y + 1,
     },
-    [MovingDirections.LEFT]: [itemToMove.x + collidesWith.w, collidesWith.y],
-    [MovingDirections.RIGHT]: [itemToMove.x - collidesWith.w, collidesWith.y],
-    [MovingDirections.UP]: [itemToMove.x, itemToMove.y + collidesWith.h],
-    [MovingDirections.DOWN]: [itemToMove.x, itemToMove.y - collidesWith.h],
+    [EMovingDirections.LEFT]: [itemToMove.x + collidesWith.w, collidesWith.y],
+    [EMovingDirections.RIGHT]: [itemToMove.x - collidesWith.w, collidesWith.y],
+    [EMovingDirections.UP]: [itemToMove.x, itemToMove.y + collidesWith.h],
+    [EMovingDirections.DOWN]: [itemToMove.x, itemToMove.y - collidesWith.h],
   };
 
   if(horizontalShift) {
-    const horizontalDirection = movingDirection === MovingDirections.LEFT || movingDirection === MovingDirections.RIGHT;
+    const horizontalDirection = movingDirection === EMovingDirections.LEFT || movingDirection === EMovingDirections.RIGHT;
 
     if(movingDirection in movingCordsData && !(horizontalDirection && collidesWith.w < itemToMove.w && collidesWith.x !== itemToMove.x)) {
       const [x, y] = movingCordsData[movingDirection];
@@ -179,14 +179,14 @@ export const moveElementAwayFromCollision = (
 };
 
 export const moveElement = (
-  layout: Layout,
-  l: LayoutItem,
+  layout: TLayout,
+  l: TLayoutItem,
   x: number,
   y: number,
   isUserAction: boolean,
   horizontalShift: boolean,
   preventCollision?: boolean,
-): Layout => {
+): TLayout => {
   if(l.static) return layout;
 
   const oldX = l.x;
@@ -224,7 +224,7 @@ export const moveElement = (
 
     if(l.y > collision.y && l.y - collision.y > collision.h / 4) continue;
 
-    const movingDirection = (Object.keys(moving) as MovingDirections[]).filter(k => moving[k])?.[0];
+    const movingDirection = (Object.keys(moving) as EMovingDirections[]).filter(k => moving[k])?.[0];
 
     if(collision.static) {
       // eslint-disable-next-line no-param-reassign

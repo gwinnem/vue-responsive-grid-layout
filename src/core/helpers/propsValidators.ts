@@ -1,10 +1,10 @@
 import { TIntersectionObserverConfig } from '../types/components'
 import testsPayload from './payload'
-import { Breakpoints, Layout } from '../types/helpers'
+import { TBreakpoints, TLayout } from '../types/helpers'
 
 const { keysValidatorPayload, layoutValidatorPayload } = testsPayload
 
-export const breakpointsValidator = (cols: Breakpoints): boolean => {
+export const breakpointsValidator = (cols: TBreakpoints): boolean => {
   const propColsKeys = (Object.keys(cols) as (keyof typeof cols)[])
   const colsValues = propColsKeys.map(k => typeof cols[k] === 'number')
 
@@ -25,7 +25,7 @@ export const keysValidator = (requiredKeys: string[], propsKeys: string[]): bool
   return propsKeys.length >= requiredKeys.length && coincidenceKeys.length === requiredKeys.length
 }
 
-export const layoutValidator = (layout: Layout) => {
+export const layoutValidator = (layout: TLayout) => {
   const { validOptionalLayout, validRequiredLayout } = layoutValidatorPayload
   const validLayout = { ...validRequiredLayout, ...validOptionalLayout }
   const requiredKeys = Object.keys(validRequiredLayout)

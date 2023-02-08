@@ -1,8 +1,8 @@
-import { Breakpoints } from "../types/helpers";
+import { TBreakpoints } from "../types/helpers";
 
 export interface IGridLayoutGridItemItemProps {
   borderRadiusPx: number;
-  breakpointCols: Breakpoints;
+  breakpointCols: TBreakpoints;
   colNum: number;
   containerWidth: number;
   isDraggable: boolean;

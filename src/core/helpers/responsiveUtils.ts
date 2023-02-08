@@ -1,24 +1,24 @@
 import {
-  Breakpoints,
-  BreakpointsKeys,
+  TBreakpoints,
+  TBreakpointsKeys,
   findOrGenerateResponsiveLayoutFnc,
-  Layout, ResponsiveLayout,
+  TLayout, TResponsiveLayout,
 } from '../types/helpers';
 import { cloneLayout, compact, correctBounds } from './utils';
 
-export const sortBreakpoints = (breakpoints: Breakpoints): BreakpointsKeys[] => {
+export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpointsKeys[] => {
   return (Object.keys(breakpoints) as (keyof typeof breakpoints)[])
     .sort((a, b) => (breakpoints[a] ?? 1) - (breakpoints[b] ?? 1));
 };
 
 export const findOrGenerateResponsiveLayout: findOrGenerateResponsiveLayoutFnc = (
-  orgLayout: Layout,
-  layouts: ResponsiveLayout,
-  breakpoints: Breakpoints,
-  breakpoint: BreakpointsKeys,
+  orgLayout: TLayout,
+  layouts: TResponsiveLayout,
+  breakpoints: TBreakpoints,
+  breakpoint: TBreakpointsKeys,
   cols: number,
   verticalCompact: boolean,
-): Layout => {
+): TLayout => {
   if(Object.prototype.hasOwnProperty.call(layouts, breakpoint)) {
     return cloneLayout(layouts[breakpoint] || []);
   }
@@ -41,10 +41,10 @@ export const findOrGenerateResponsiveLayout: findOrGenerateResponsiveLayoutFnc =
 
   layout = cloneLayout(layout || []);
 
-  return compact(correctBounds(layout, { cols }), verticalCompact) as Layout;
+  return compact(correctBounds(layout, { cols }), verticalCompact) as TLayout;
 };
 
-export const getBreakpointFromWidth = (breakpoints: Breakpoints, width: number): BreakpointsKeys => {
+export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number): TBreakpointsKeys => {
   const sorted = sortBreakpoints(breakpoints);
 
   let [matching] = sorted;
@@ -58,6 +58,6 @@ export const getBreakpointFromWidth = (breakpoints: Breakpoints, width: number):
   return matching;
 };
 
-export const getColsFromBreakpoint = (breakpoint: keyof Breakpoints, cols: Breakpoints): number | undefined => {
+export const getColsFromBreakpoint = (breakpoint: keyof TBreakpoints, cols: TBreakpoints): number | undefined => {
   return cols[breakpoint] ?? undefined;
 };

@@ -48,12 +48,12 @@
   import GridItem from '../GridItem/GridItem.vue';
   import { emitterKey } from '@/core/symbols/symbols';
   import {
-    Breakpoints,
-    BreakpointsKeys,
-    Layout,
-    LayoutItemRequired,
-    RecordBreakpoint,
-    ResponsiveLayout,
+    TBreakpoints,
+    TBreakpointsKeys,
+    TLayout,
+    TLayoutItemRequired,
+    TRecordBreakpoint,
+    TResponsiveLayout,
   } from '@/core/types/helpers';
   import { TGridLayoutEvent, TIntersectionObserverConfig } from '@/core/types/components';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
@@ -99,7 +99,7 @@
         xxs: 0,
       }),
       required: false,
-      type: Object as PropType<Breakpoints>,
+      type: Object as PropType<TBreakpoints>,
       validator: breakpointsValidator,
     },
     colNum: {
@@ -116,7 +116,7 @@
         xxs: 2,
       }),
       required: false,
-      type: Object as PropType<Breakpoints>,
+      type: Object as PropType<TBreakpoints>,
       validator: breakpointsValidator,
     },
     horizontalShift: {
@@ -145,7 +145,7 @@
     },
     layout: {
       required: true,
-      type: Array as PropType<Layout>,
+      type: Array as PropType<TLayout>,
       validator: layoutValidator,
     },
     margin: {
@@ -167,13 +167,13 @@
     },
     responsiveLayouts: {
       default: () => ({}),
-      type: Object as PropType<ResponsiveLayout>,
-      validator: (value: ResponsiveLayout) => {
-        const layoutKeys = (Object.keys(value) as (keyof ResponsiveLayout)[]);
+      type: Object as PropType<TResponsiveLayout>,
+      validator: (value: TResponsiveLayout) => {
+        const layoutKeys = (Object.keys(value) as (keyof TResponsiveLayout)[]);
 
         if(!layoutKeys.length) return true;
 
-        const validator = layoutKeys.map((k: BreakpointsKeys) => layoutValidator(value[k]));
+        const validator = layoutKeys.map((k: TBreakpointsKeys) => layoutValidator(value[k]));
 
         return !validator.includes(false);
       },
@@ -214,12 +214,12 @@
     (e: EGridLayoutEvent.ITEM_MOVED, value: Event): void;
     (e: EGridLayoutEvent.ITEM_RESIZE, value: Event): void;
     (e: EGridLayoutEvent.ITEM_RESIZED): void;
-    (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_CREATED, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_READY, layout: Layout): void;
+    (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_CREATED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
     (e: EGridLayoutEvent.UPDATE_BREAKPOINT, breakPoint: string, layout: string): void;
-    (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: Layout): void;
+    (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
   }>();
 
   const emitter = mitt<Events>();
@@ -227,7 +227,7 @@
   provide(emitterKey, emitter);
 
   // options
-  const layoutItemRequired: LayoutItemRequired = {
+  const layoutItemRequired: TLayoutItemRequired = {
     h: 0,
     i: -1,
     w: 0,
@@ -251,9 +251,9 @@
     strategy: `scroll`,
   }));
   const isDragging = ref(false);
-  const lastBreakpoint = ref<BreakpointsKeys>(<`lg` | `md` | `sm` | `xs` | `xxs` | ``>``);
+  const lastBreakpoint = ref<TBreakpointsKeys>(<`lg` | `md` | `sm` | `xs` | `xxs` | ``>``);
   const lastLayoutLength = ref(0);
-  const layouts = ref<RecordBreakpoint<Layout>>({});
+  const layouts = ref<TRecordBreakpoint<TLayout>>({});
   const mergedStyle = ref({});
   const originalLayout = ref(props.layout);
   const placeholder = ref({
@@ -309,7 +309,7 @@
     emits(EGridLayoutEvent.INTERSECTION_OBSERVE, observerItems.observe);
     emits(EGridLayoutEvent.INTERSECTION_UNOBSERVE, observerItems.unobserve);
   };
-  const findDifference = (layout: Layout, originalLayout: Layout): Layout => {
+  const findDifference = (layout: TLayout, originalLayout: TLayout): TLayout => {
     const uniqueResultOne = layout.filter(l => !originalLayout.some(ol => l.i === ol.i));
     const uniqueResultTwo = originalLayout.filter(ol => !layout.some(l => ol.i === l.i));
 

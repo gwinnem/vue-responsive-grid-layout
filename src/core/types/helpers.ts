@@ -1,12 +1,7 @@
-export type Breakpoints = RecordBreakpoint<number>
+export type TBreakpointsKeys = `lg` | `md` | `sm` | `xs` | `xxs` | ``;
 
-export type BreakpointsKeys = `lg` | `md` | `sm` | `xs` | `xxs` | ``
-
-export type Layout = LayoutItem[]
-
-export type LayoutItem = LayoutItemRequired & LayoutItemOptional
-
-export type LayoutItemOptional = {
+export type TLayoutItemRequired = { w: number; h: number; x: number; y: number; i: number };
+export type TLayoutItemOptional = {
   minW?: number;
   minH?: number;
   maxW?: number;
@@ -15,35 +10,37 @@ export type LayoutItemOptional = {
   static?: boolean;
   isDraggable?: boolean;
   isResizable?: boolean;
-}
+};
 
-export type LayoutItemRequired = { w: number; h: number; x: number; y: number; i: number }
+export type TLayoutItem = TLayoutItemRequired & TLayoutItemOptional;
+export type TLayout = TLayoutItem[];
 
 // export type LayoutItemsByYAxis = {
 //   [K in string]: LayoutItem[]
 // }
 
-export enum MovingDirections {
+export enum EMovingDirections {
   DOWN = `DOWN`,
   LEFT = `LEFT`,
   RIGHT = `RIGHT`,
   UP = `UP`,
 }
-export type MovingDirection = keyof typeof MovingDirections
+export type TMovingDirection = keyof typeof EMovingDirections
 
-export type RecordBreakpoint<Type> = Partial<Record<BreakpointsKeys, Type>>
+export type TRecordBreakpoint<Type> = Partial<Record<TBreakpointsKeys, Type>>;
+export type TBreakpoints = TRecordBreakpoint<number>;
 
-export type ResponsiveLayout = RecordBreakpoint<Layout>
+export type TResponsiveLayout = TRecordBreakpoint<TLayout>;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type findOrGenerateResponsiveLayoutFnc = (
-  orgLayout: Layout,
-  layouts: ResponsiveLayout,
-  breakpoints: Breakpoints,
-  breakpoint: BreakpointsKeys,
+  orgLayout: TLayout,
+  layouts: TResponsiveLayout,
+  breakpoints: TBreakpoints,
+  breakpoint: TBreakpointsKeys,
   cols: number,
   verticalCompact: boolean,
-) => Layout
+) => TLayout;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export type setPositionFnc<Position> = (top: number, left: number, width: number, height: number) => Position
+export type setPositionFnc<Position> = (top: number, left: number, width: number, height: number) => Position;

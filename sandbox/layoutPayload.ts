@@ -1,6 +1,6 @@
-import { Layout } from '../src/core/types/helpers';
+import { TLayout } from '../src/core/types/helpers';
 
-export const data: Layout = [
+export const data: TLayout = [
   {
     x: 0,
     y: 0,
@@ -35,7 +35,8 @@ export const data: Layout = [
     y: 2,
     w: 2,
     h: 2,
-    i: 4
+    i: 4,
+    static: true
   },
   {
     x: 4,
@@ -71,19 +72,5 @@ export const data: Layout = [
     w: 2,
     h: 2,
     i: 9
-  },
-  {
-    x: 2,
-    y: 6,
-    w: 2,
-    h: 2,
-    i: 10
-  },
-  {
-    x: 4,
-    y: 6,
-    w: 2,
-    h: 2,
-    i: 11
   }
 ];
