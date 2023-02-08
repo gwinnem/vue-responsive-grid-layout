@@ -52,6 +52,17 @@ resizeEvent: function(i, newH, newW, newHPx, newWPx): void {
 }
 ``` 
 
+
+## remove-grid-item
+Emitted when the user clicks the close button in a `GridItem`.
+
+```typescript
+const closeClicked = (id: number): void => {
+  emit(`remove-grid-item`, id);
+};
+```
+
+
 ## resized
 
 ## resize-event(??)

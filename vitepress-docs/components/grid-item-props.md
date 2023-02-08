@@ -134,6 +134,17 @@ The value is a number that is multiplied by `colWidth`.
 
 If 'true', forces the GridItem to preserve its aspect ratio when resizing.
 
+
+## showCloseButton
+* type: `Boolean`
+* required: `false`
+* default: `true`
+
+
+If `true`, the GridItem will show a close button in the top right corner.
+
+When it is being clicked it will fire an event `remove-grid-item` which the `GridLayout` is listening for. The `GridItem` will then be removed from the `GridLayout`.
+
 ### resizeIgnoreFrom(Not implemented)
 * type: `String`
 * required: `false`

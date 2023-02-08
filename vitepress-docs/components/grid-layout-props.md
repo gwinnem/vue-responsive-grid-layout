@@ -68,6 +68,7 @@ Says if the grid items are bounded to the container when dragging
 
 Says if the grids items are draggable.
 
+
 ### isMirrored(Not implemented yet)
 
 * type: `Boolean`
@@ -76,12 +77,14 @@ Says if the grids items are draggable.
 
 Says if the RTL/LTR should be reversed.
 
+
 ## isResizable
 * type: `Boolean`
 * required: `false`
 * default: `true`
 
 Says if the grids items are resizable.
+
 
 ## layout
 * type: `Array`
@@ -93,6 +96,7 @@ The value must be an `Array` of `Object` items. Each item must have `i`, `x`, `y
 
 Please refer to the documentation for `GridItem` below for more information.
 
+
 ## margin
 * type: `Array`
 * required: `false`
@@ -102,6 +106,7 @@ Says what are the margins of elements inside the grid.
 
 The value must be a two-element `Array` of `Number`. Each value is expressed in pixels. The first element is a margin horizontally, the second element is a vertical margin.
 
+
 ## maxRows
 * type: `Number`
 * required: `false`
@@ -109,12 +114,14 @@ The value must be a two-element `Array` of `Number`. Each value is expressed in 
 
 Says what is a maximal number of rows in the grid.
 
+
 ## preventCollision
 * type: `Boolean`
 * required: `false`
 * default: `false`
 
 Says if grid items will move when being dragged over.
+
 
 ## responsive
 * type: `Boolean`
@@ -142,6 +149,7 @@ Setting the prop after the creation of the GridLayout has no effect.
 
 Says if the moved grid items should be restored after an item has been dragged over.
 
+
 ## rowHeight
 * type: `Number`
 * required: `false`
@@ -149,22 +157,37 @@ Says if the moved grid items should be restored after an item has been dragged o
 
 Says what is a height of a single row in pixels.
 
+
+## showCloseButton
+* type: `Boolean`
+* required: `false`
+* default: `true`
+
+If `true`, the GridItem's will show a close button in the top right corner.
+
+When the button is being clicked, an event `remove-grid-item` will be emitted by the `GridItem`.
+The `GridLayout` is listening for this event and will remove the `GridItem` will then be removed from the `layout`.
+
+
 ## showGridLines
 If set to true, it adds a grid layout, displaying the size of each box in the GridLayout.
+
 
 ## staticGridItemBackgroundColor
 The background color(hex value) to be added to GridItems which are static.
 
-### transformScale(Not implemented)
 
+### transformScale(Not implemented)
 * type: `Number`
 * required: `false`
 * default: 1
 
 Sets a scaling factor to the size of the grid items, 1 is 100%
 
+
 ## useBorderRadius
 If set to true, it adds a 8px corner radius to each GridItem.
+
 
 ## useCssTransforms
 * type: `Boolean`
@@ -173,7 +196,9 @@ If set to true, it adds a 8px corner radius to each GridItem.
 
 Says if the CSS `transition-property: transform;` should be used.
 
+
 ## useObserver
+
 
 ## verticalCompact
 * type: `Boolean`

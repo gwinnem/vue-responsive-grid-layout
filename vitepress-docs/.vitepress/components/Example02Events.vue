@@ -1,7 +1,3 @@
-# 02 - Move and resize events
-
-[View source](https://github.com/jbaysolutions/vue-grid-layout/blob/master/website/docs/.vuepress/components/Example02Events.vue)
-
 <template>
   <div>
     <div ref="eventsDiv" class="eventsJSON">
@@ -43,7 +39,7 @@
 </template>
 
 <script>
-  
+  import { GridLayout, GridItem } from '../../../dist/vue-fluid-grid-layout.mjs';
 
   export default {
     components: {
@@ -355,4 +351,3 @@
   overflow-y: scroll;
 }
 </style>
-
