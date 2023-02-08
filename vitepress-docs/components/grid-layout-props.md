@@ -196,10 +196,6 @@ If set to true, it adds a 8px corner radius to each GridItem.
 
 Says if the CSS `transition-property: transform;` should be used.
 
-
-## useObserver
-
-
 ## verticalCompact
 * type: `Boolean`
 * required: `false`

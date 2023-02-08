@@ -55,7 +55,7 @@
     TRecordBreakpoint,
     TResponsiveLayout,
   } from '@/core/types/helpers';
-  import { TGridLayoutEvent, TIntersectionObserverConfig } from '@/core/types/components';
+  import { TGridLayoutEvent } from '@/core/types/components';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import {
     bottom,
@@ -67,7 +67,6 @@
   } from '@/core/helpers/utils';
   import {
     breakpointsValidator,
-    intersectionObserverConfigValidator,
     layoutValidator,
     marginValidator,
   } from '@/core/helpers/propsValidators';
@@ -123,16 +122,6 @@
       default: false,
       required: false,
       type: Boolean,
-    },
-    intersectionObserverConfig: {
-      default: () => ({
-        root: null,
-        rootMargin: `8px`,
-        threshold: 0.40,
-      }),
-      required: false,
-      type: Object as PropType<TIntersectionObserverConfig>,
-      validator: intersectionObserverConfigValidator,
     },
     isDraggable: {
       default: true,
@@ -195,10 +184,6 @@
       default: true,
       type: Boolean,
     },
-    useObserver: {
-      default: false,
-      type: Boolean,
-    },
     verticalCompact: {
       default: true,
       type: Boolean,
@@ -208,8 +193,6 @@
   // emits
   const emits = defineEmits<{
     (e: EGridLayoutEvent.CONTAINER_RESIZED, value: Event): void;
-    (e: EGridLayoutEvent.INTERSECTION_OBSERVE, value: []): void;
-    (e: EGridLayoutEvent.INTERSECTION_UNOBSERVE, value: []): void;
     (e: EGridLayoutEvent.ITEM_MOVE, value: Event): void;
     (e: EGridLayoutEvent.ITEM_MOVED, value: Event): void;
     (e: EGridLayoutEvent.ITEM_RESIZE, value: Event): void;
@@ -218,7 +201,7 @@
     (e: EGridLayoutEvent.LAYOUT_CREATED, layout: TLayout): void;
     (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
     (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
-    (e: EGridLayoutEvent.UPDATE_BREAKPOINT, breakPoint: string, layout: string): void;
+    (e: EGridLayoutEvent.UPDATE_BREAKPOINT, breakPoint: string, layout: TLayout): void;
     (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
   }>();
 
@@ -288,27 +271,7 @@
   }));
 
   // methods
-  const observerCallback = (entries): void => {
-    const observerItems = {
-      observe: [],
-      unobserve: [],
-    };
 
-    entries.forEach(({
-      target,
-      isIntersecting,
-    }) => {
-      if(isIntersecting) {
-        observerItems.observe.push(target.__INTERSECTION_OBSERVER_INDEX__);
-        return;
-      }
-
-      observerItems.unobserve.push(target.__INTERSECTION_OBSERVER_INDEX__);
-    });
-
-    emits(EGridLayoutEvent.INTERSECTION_OBSERVE, observerItems.observe);
-    emits(EGridLayoutEvent.INTERSECTION_UNOBSERVE, observerItems.unobserve);
-  };
   const findDifference = (layout: TLayout, originalLayout: TLayout): TLayout => {
     const uniqueResultOne = layout.filter(l => !originalLayout.some(ol => l.i === ol.i));
     const uniqueResultTwo = originalLayout.filter(ol => !layout.some(l => ol.i === l.i));
@@ -512,14 +475,7 @@
       emits(EGridLayoutEvent.UPDATE_LAYOUT, props.layout);
     }
   };
-  const createObserver = (): void => {
-    observer = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: `8px`,
-      threshold: 0.40,
-      ...props.intersectionObserverConfig,
-    });
-  };
+
   const onCreated = (): void => {
     emits(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
 
@@ -560,10 +516,6 @@
         if(wrapper.value) {
           erd.value.listenTo(wrapper.value, onWindowResize);
         }
-
-        if(props.useObserver) {
-          createObserver();
-        }
       });
     });
   });
@@ -598,14 +550,6 @@
 
       updateHeight();
     });
-  });
-  watch(() => props.useObserver, value => {
-    if(!value) {
-      observer.disconnect();
-      return;
-    }
-
-    createObserver();
   });
 </script>
 

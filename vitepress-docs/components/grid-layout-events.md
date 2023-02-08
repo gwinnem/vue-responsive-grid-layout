@@ -10,9 +10,6 @@
 
 ## item-resized
 
-## intersection-observe
-
-## intersection-unobserve
 
 ## layout-before-mount
 Layout beforeMount event
@@ -63,16 +60,6 @@ layoutReadyEvent: function(newLayout: Layout): void {
 ## recalculate-styles 
 Emitted into the event bus, maybe get this and others into separate enum.
 
-## update:breakpoint
-Breakpoint Changed event
-
-Every time the breakpoint value changes due to window resize
-
-```typescript
-breakpointUpdatedEvent: function(newBreakpoint: Breakpoint, newLayout: Layout): void {
-    console.log("BREAKPOINT UPDATED breakpoint=", newBreakpoint, ", layout: ", newLayout );
-}
-``` 
 
 ## update:layout(Confirm that this is correct)
 Layout updated event

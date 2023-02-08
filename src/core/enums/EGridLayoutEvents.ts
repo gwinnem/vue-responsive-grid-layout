@@ -7,8 +7,6 @@ export enum EGridLayoutEvent {
   ITEM_MOVED = `item-moved`,
   ITEM_RESIZE = `item-resize`,
   ITEM_RESIZED = `item-resized`,
-  INTERSECTION_OBSERVE = `intersection-observe`,
-  INTERSECTION_UNOBSERVE = `intersection-unobserve`,
   LAYOUT_BEFORE_MOUNT = `layout-before-mount`,
   LAYOUT_CREATED = `layout-created`,
   LAYOUT_MOUNTED = `layout-mounted`,
