@@ -4,9 +4,9 @@ import {
   TLayoutItem,
   // LayoutItemsByYAxis,
   TMovingDirection,
-  EMovingDirections,
   setPositionFnc,
 } from '../types/helpers';
+import { EMovingDirections } from '../enums/EMovingDirections';
 
 export const bottom = (layout: TLayout): number => {
   let max = 0;

@@ -1,3 +1,5 @@
+import { EMovingDirections } from '../enums/EMovingDirections';
+
 export type TBreakpointsKeys = `lg` | `md` | `sm` | `xs` | `xxs` | ``;
 
 export type TLayoutItemRequired = { w: number; h: number; x: number; y: number; i: number };
@@ -15,16 +17,6 @@ export type TLayoutItemOptional = {
 export type TLayoutItem = TLayoutItemRequired & TLayoutItemOptional;
 export type TLayout = TLayoutItem[];
 
-// export type LayoutItemsByYAxis = {
-//   [K in string]: LayoutItem[]
-// }
-
-export enum EMovingDirections {
-  DOWN = `DOWN`,
-  LEFT = `LEFT`,
-  RIGHT = `RIGHT`,
-  UP = `UP`,
-}
 export type TMovingDirection = keyof typeof EMovingDirections
 
 export type TRecordBreakpoint<Type> = Partial<Record<TBreakpointsKeys, Type>>;
