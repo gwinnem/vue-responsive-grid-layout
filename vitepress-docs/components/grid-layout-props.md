@@ -45,7 +45,7 @@ Defines number of columns for each breakpoint
 
 
 ## horizontalShift
-* default: `false`
+* default: `true`
 * required: `false`
 * type: `Boolean`
 

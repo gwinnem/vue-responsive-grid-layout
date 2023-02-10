@@ -109,7 +109,7 @@
       type: Object as PropType<TBreakpoints>,
     },
     horizontalShift: {
-      default: false,
+      default: true,
       required: false,
       type: Boolean,
     },
