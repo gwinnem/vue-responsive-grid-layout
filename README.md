@@ -1,9 +1,13 @@
 # vue-responsive-grid-layout
-VUE 3 responsive grid layout. More to come.
+VUE 3 responsive grid layout is based on the original work by [JBaysolution's vue-grid-layout](https://github.com/jbaysolutions/vue-grid-layout).
 <br/>
-This work is based on amd inspired by the original work with: [Vue Grid Layout](https://jbaysolutions.github.io/vue-grid-layout/guide/).
+This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
+
+
 [FREE ICONS](https://icones.js.org/)
-#### Original Features:
+
+
+### Original Features:
 * Draggable widgets
 * Resizable widgets
 * Static widgets
@@ -11,10 +15,10 @@ This work is based on amd inspired by the original work with: [Vue Grid Layout](
 * Widgets may be added or removed without rebuilding grid
 * Layout can be serialized and restored
 * Automatic RTL support
-* Responsive
+* Responsive using predefined layout's for different breakpoints.
 * GridItem automatically resizes when content change(Useful when displaying charts).
 
-#### New Features:
+### New Features:
 * GridLayout now has slot for GridItem.
 * Prop for displaying grid lines in GridLayout.
 * Prop for setting edit mode in GridLayout. Shortcuts the isDraggable and isResizable props.
@@ -25,7 +29,7 @@ This work is based on amd inspired by the original work with: [Vue Grid Layout](
 * Close button in GridItem for removing the GridItem from the GridLayout.
 * Added more events to GridLayout and GridItem.
 
-#### Major refactorings
+### Major refactorings
 * Converted code base to typescript.
 * Enforced proper coding style and type safety for typescript.
 * Using proper linting rules for vue, typescript and styles.

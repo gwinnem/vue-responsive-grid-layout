@@ -12,14 +12,15 @@
         v-for="layoutItem in layout"
         :key="layoutItem.i"
         v-bind="{ ...gridItemProps, ...layoutItemOptional(layoutItem) }"
-        @container-resized="emits(EGridLayoutEvent.CONTAINER_RESIZED, $event)"
         @move="emits(EGridLayoutEvent.ITEM_MOVE, $event)"
         @moved="emits(EGridLayoutEvent.ITEM_MOVED, $event)"
-        @remove-grid-item="removeGridItemFromLayout"
-        @resize="emits(EGridLayoutEvent.ITEM_RESIZE, $event)">
+        @resize="emits(EGridLayoutEvent.ITEM_RESIZE, $event)"
+        @container-resized="emits(EGridLayoutEvent.CONTAINER_RESIZED, $event)"
+        @remove-grid-item="removeGridItemFromLayout">
         <slot
           :item="layoutItem"
-          name="gridItemContent"></slot>
+          name="gridItemContent">
+        </slot>
       </GridItem>
     </slot>
   </div>
@@ -107,6 +108,11 @@
       }),
       required: false,
       type: Object as PropType<TBreakpoints>,
+    },
+    enableEditMode: {
+      default: true,
+      required: false,
+      type: Boolean,
     },
     horizontalShift: {
       default: true,

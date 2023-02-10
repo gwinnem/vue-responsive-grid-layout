@@ -41,13 +41,26 @@ The value should be a _natural number_.
 * required: `false`
 * type: `Object`
 
-Defines number of columns for each breakpoint
+Defines number of columns for each breakpoint.
+
+## enableEditMode
+* default: `true`
+* required: `false`
+* type: `Boolean`
+
+If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridItem`'s will be static.
+<br/>
+Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
 
 
 ## horizontalShift
 * default: `true`
 * required: `false`
 * type: `Boolean`
+
+When `true` the `GridItem`'s will be moved horizontally when two of them collides.
+<br/>
+When `false` the `GridItem`'s will be moved vertically when two of them collides.
 
 
 ### isBounded(Not implemented yet)
@@ -63,10 +76,11 @@ Says if the grid items are bounded to the container when dragging
 * required: `false`
 * type: `Boolean`
 
-Says if the grids items are draggable.
+When `true` the `GridItem`'s can be dragged to a new position in the layout.
+Except if a 'GridItem' is `static` then it will not be possible to drag it into a new position in the layout.
 
 
-### isMirrored(Not implemented yet)
+### isMirrored(Not implemented yet, was part of the original component)
 * default: `false`
 * required: `false`
 * type: `Boolean`
@@ -79,18 +93,24 @@ Says if the RTL/LTR should be reversed.
 * required: `false`
 * type: `Boolean`
 
-Says if the grids items are resizable.
+When `true` the `GridItem`'s can be resized both horizontally and vertically.
 
 
 ## layout
 * required: `true`
-* type: `Array`
+* type: `TLayout[]`
 
 This is the initial layout of the grid.
 
-The value must be an `Array` of `Object` items. Each item must have `i`, `x`, `y`, `w` and `h` properties.
+The value must be an `Array` of type `TLayout` items. Each item must have:
+* `h` The number of rows the `GridItem` will use.
+* `i` The index of the `GridItem` in the layout array.
+* `x` Column start position.
+* `y` Row start position.
+* `w` The number of columns the `GridItem` will use.
+properties.
 
-Please refer to the documentation for `GridItem` below for more information.
+Please refer to the documentation for [GridItem](./grid-item.md) for more details.
 
 
 ## margin
@@ -108,7 +128,7 @@ The value must be a two-element `Array` of `Number`. Each value is expressed in 
 * required: `false`
 * type: `Number`
 
-Says what is a maximal number of rows in the grid.
+The maximal number of rows in the `GridLayout`.
 
 
 ## preventCollision
