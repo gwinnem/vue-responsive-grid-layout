@@ -126,6 +126,7 @@
     },
     isResizable: {
       default: true,
+      required: false,
       type: Boolean,
     },
     layout: {
@@ -134,18 +135,22 @@
     },
     margin: {
       default: () => [10, 10],
+      required: false,
       type: Array as PropType<number[]>,
     },
     maxRows: {
       default: Infinity,
+      required: false,
       type: Number,
     },
     preventCollision: {
       default: false,
+      required: false,
       type: Boolean,
     },
     responsive: {
       default: false,
+      required: false,
       type: Boolean,
     },
     responsiveLayouts: {
@@ -173,10 +178,12 @@
     },
     useCssTransforms: {
       default: true,
+      required: false,
       type: Boolean,
     },
     verticalCompact: {
       default: true,
+      required: false,
       type: Boolean,
     },
   });
