@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitepress';
-import { demoBlockPlugin } from 'vitepress-theme-demoblock';
 import nav from './configs/nav';
 import sidebar from './configs/sidebar';
 
@@ -7,7 +6,6 @@ export default defineConfig({
   lang: 'en-US',
   title: 'Home',
   description: 'Documentation for vue-fluid-grid-layout component',
-  appearance: true,
 
   lastUpdated: true,
   cleanUrls: 'without-subfolders',
@@ -30,17 +28,11 @@ export default defineConfig({
     // options for markdown-it-toc
     toc: { includeLevel: [1, 2, 3] },
 
-    theme: {
-      light: 'github-light',
-      dark: 'github-dark'
-    },
+    // theme: {
+    //   light: 'github-light',
+    //   dark: 'github-dark'
+    // },
     lineNumbers: false,
-
-    config: (md) => {
-      md.use(demoBlockPlugin, {
-        cssPreprocessor: 'sass',
-      });
-    },
   },
 
   themeConfig: {
@@ -63,6 +55,23 @@ export default defineConfig({
     //   text: 'Edit this page on GitHub',
     // },
 
+    localeLinks: [
+      {
+        link: 'https://cn.vuejs.org',
+        text: '简体中文',
+        repo: 'https://github.com/vuejs-translations/docs-zh-cn'
+      },
+      {
+        link: 'https://ja.vuejs.org',
+        text: '日本語',
+        repo: 'https://github.com/vuejs-translations/docs-ja'
+      },
+      {
+        link: '/translations/',
+        text: 'Help Us Translate!',
+        isTranslationsDesc: true
+      }
+    ],
     socialLinks: [
       {
         icon: 'github',
@@ -85,8 +94,21 @@ export default defineConfig({
     ],
 
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2022-present Geirr Winnem',
+      license: {
+        text: 'MIT License',
+        link: 'https://opensource.org/licenses/MIT'
+      },
+      copyright: `Copyright © 2022-${new Date().getFullYear()} Geirr Winnem`
+    }
+  },
+
+  vite: {
+    server: {
+      host: true,
+      port: 9090,
+    },
+    json: {
+      stringify: true,
     },
   },
 });

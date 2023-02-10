@@ -1,4 +1,8 @@
-# GridItem Properties
+---
+footer: true
+---
+
+# GridItem Properties {#gridItemProperties}
 
 ## borderRadiusPx
 Default: 8
