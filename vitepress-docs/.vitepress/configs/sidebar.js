@@ -66,6 +66,10 @@ function getComponentsSidebar() {
         },
       ],
     },
+    {
+      text: 'CSS Variables',
+      link: '/components/css-variables',
+    },
   ];
 }
 

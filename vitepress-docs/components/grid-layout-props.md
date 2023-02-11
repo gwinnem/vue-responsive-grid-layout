@@ -5,7 +5,8 @@
 * required: `false`
 * type: `Boolean`
 
-Says if the container height should swell and contracts to fit contents.
+When `true` the `GridLayout` container is adjusting height and width based on the content.
+
 
 
 ## borderRadiusPx
@@ -14,14 +15,18 @@ Says if the container height should swell and contracts to fit contents.
 * type: `Number`
 
 Set's border-radius css value used for the GridItem.
+<br/>
+__This value is fully reactive.__
 
 
 ## breakpoints
-* default: `{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }`
+* default: `{ lg: 1200, md: 996, sm: 768, xs: 576, xxs: 0 }`
 * required: `false`
 * type: `Object`
 
-Breakpoints defined for responsive layout, the parameter represents the width of different devices: lg = large, md = medium, sm = small, xs = extra small.
+Breakpoints defined for responsive layout, the parameter represents the width of different devices:
+<br/>
+_lg = large, md = medium, sm = small, xs = extra small._
 <br/>
 Sets widths on wich column number changes.
 
@@ -42,6 +47,7 @@ The value should be a _natural number_.
 * type: `Object`
 
 Defines number of columns for each breakpoint.
+
 
 ## enableEditMode
 * default: `true`

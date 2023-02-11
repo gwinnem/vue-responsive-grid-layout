@@ -634,6 +634,10 @@ $grid-item-border-radius: v-bind(borderRadius);
     touch-action: none;
   }
 
+  &.static {
+    background-color: $grid-item-static-bg-color;
+  }
+
   &.css-transforms {
     right: auto;
     left: 0;

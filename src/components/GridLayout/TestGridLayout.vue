@@ -54,7 +54,7 @@
     compact,
     getAllCollisions,
     getLayoutItem,
-    moveElement, validateLayout,
+    moveElement,
   } from '@/core/helpers/utils';
   import {
     findOrGenerateResponsiveLayout,
@@ -182,7 +182,6 @@
     },
   });
 
-  // Events emitted from the component
   const emits = defineEmits<{
     (e: EGridLayoutEvent.CONTAINER_RESIZED, value: Event): void;
     (e: EGridLayoutEvent.ITEM_MOVE, value: Event): void;
@@ -193,14 +192,13 @@
     (e: EGridLayoutEvent.LAYOUT_CREATED, layout: TLayout): void;
     (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
     (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
-    (e: EGridLayoutEvent.LAYOUT_UPDATED, layout: TLayout): void;
     (e: EGridLayoutEvent.UPDATE_BREAKPOINT, breakPoint: string, layout: TLayout): void;
     (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
   }>();
 
-  // Global Eventbus
-  const eventBus = mitt<Events>();
-  provide(emitterKey, eventBus);
+  const emitter = mitt<Events>();
+
+  provide(emitterKey, emitter);
 
   const layoutItemRequired: TLayoutItemRequired = {
     h: 0,
@@ -227,10 +225,12 @@
     strategy: `scroll`,
   }));
 
-  const width = ref(0);
-  const mergedStyle = ref({});
-  const lastLayoutLength = ref(0);
   const isDragging = ref(false);
+  const lastBreakpoint = ref<TBreakpointsKeys>(<`lg` | `md` | `sm` | `xs` | `xxs` | ``>``);
+  const lastLayoutLength = ref(0);
+  const layouts = ref<TRecordBreakpoint<TLayout>>({});
+  const mergedStyle = ref({});
+  const layout = ref(props.layout);
   const placeholder = ref({
     h: 0,
     i: -1,
@@ -238,10 +238,10 @@
     x: 0,
     y: 0,
   });
-  const layouts = ref<TRecordBreakpoint<TLayout>>({});
-  const lastBreakpoint = ref<TBreakpointsKeys>(<`lg` | `md` | `sm` | `xs` | `xxs` | ``>``);
-  const originalLayout = ref(props.layout);
+  const width = ref(0);
+
   const gridLayoutWrapper = ref<HTMLDivElement | null>(null);
+
   const gridItemProps = computed<IGridLayoutGridItemItemProps>(() => ({
     borderRadiusPx: props.borderRadiusPx,
     breakpointCols: props.cols,
@@ -260,62 +260,27 @@
     width: width.value,
   }));
 
-  /**
-   * Find difference between two layouts.
-   * @param {TLayout}     layout          The layout to compare.
-   * @param {TLayout}     originalLayout  The original layout to compare with.
-   * @return {TLayout}                    New layout.
-   */
   // eslint-disable-next-line
   const findDifference = (layout: TLayout, originalLayout: TLayout): TLayout => {
-    // const uniqueResultOne = layout.filter(l => !originalLayout.some(ol => l.i === ol.i));
-    // const uniqueResultTwo = originalLayout.filter(ol => !layout.some(l => ol.i === l.i));
-    //
-    // return uniqueResultOne.concat(uniqueResultTwo);
-    // Find values that are in result1 but not in result2
-    const uniqueResultOne = layout.filter(obj => {
-      return !originalLayout.some(obj2 => {
-        return obj.i === obj2.i;
-      });
-    });
+    const uniqueResultOne = layout.filter(l => !originalLayout.some(ol => l.i === ol.i));
+    const uniqueResultTwo = originalLayout.filter(ol => !layout.some(l => ol.i === l.i));
 
-    // Find values that are in result2 but not in result1
-    const uniqueResultTwo = originalLayout.filter(obj => {
-      return !layout.some(obj2 => {
-        return obj.i === obj2.i;
-      });
-    });
-
-    // Combine the two arrays of unique entries#
     return uniqueResultOne.concat(uniqueResultTwo);
   };
 
-  const containerHeight = (): string => {
-    if(!props.autoSize || !props.layout) {
-      return ``;
-    }
+  const containerHeight = (): string | undefined => {
+    if(!props.autoSize || !props.layout) return;
 
     const [, m2] = props.margin;
-    //
+
     // eslint-disable-next-line consistent-return
     return `${bottom(props.layout) * (props.rowHeight + m2) + m2}px`;
-    // TODO Test this refactoring
-    // if(!props.autoSize) {
-    //   return `${bottom(props.layout) * (props.rowHeight + props.margin[1]) + props.margin[1]}px`;
-    // }
-    // return ``;
   };
 
   const updateHeight = (): void => {
-    mergedStyle.value = { height: containerHeight() };
-  };
+    const height = containerHeight();
 
-  /**
-   * Clearing all responsive layouts.
-   */
-  const initResponsiveFeatures = (): void => {
-    // clear layouts
-    originalLayout.value = { ...props.responsiveLayouts };
+    mergedStyle.value = { height };
   };
 
   // eslint-disable-next-line
@@ -333,17 +298,15 @@
   };
 
   const layoutUpdate = (): void => {
-    if(props.layout && originalLayout.value) {
-      if(props.layout.length !== originalLayout.value.length) {
-        console.error(`### LAYOUT UPDATE!`, props.layout.length, originalLayout.value.length);
-        const diff = findDifference(props.layout, originalLayout.value);
+    if(props.layout && layout.value) {
+      if(props.layout.length !== layout.value.length) {
+        const diff = findDifference(props.layout, layout.value);
 
         if(diff.length > 0) {
-          console.error(`diff`, diff);
-          if(props.layout.length > originalLayout.value.length) {
-            originalLayout.value = originalLayout.value.concat(diff);
+          if(props.layout.length > layout.value.length) {
+            layout.value = layout.value.concat(diff);
           } else {
-            originalLayout.value = originalLayout.value.filter(obj => {
+            layout.value = layout.value.filter(obj => {
               return !diff.some(obj2 => {
                 return obj.i === obj2.i;
               });
@@ -352,15 +315,15 @@
         }
 
         lastLayoutLength.value = props.layout.length;
-        initResponsiveFeatures();
+        layouts.value = { ...props.responsiveLayouts };
       }
 
       compact(props.layout, props.verticalCompact);
-      eventBus.emit(`updateWidth`, width.value);
+
       updateHeight();
 
-      emits(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
-      eventBus.emit(`recalculate-styles`);
+      emits(EGridLayoutEvent.UPDATE_LAYOUT, props.layout);
+      emitter.emit(`recalculate-styles`);
     }
   };
 
@@ -369,9 +332,9 @@
    * @param id {Number} The id of the GridItem to remove from the layout.
    */
   const removeGridItemFromLayout = (id: number): void => {
-    originalLayout.value = originalLayout.value.filter(item => item.i !== id);
-    compact(originalLayout.value, props.verticalCompact);
-    emits(EGridLayoutEvent.UPDATE_LAYOUT, originalLayout.value);
+    layout.value = layout.value.filter(item => item.i !== id);
+    compact(layout.value, props.verticalCompact);
+    emits(EGridLayoutEvent.UPDATE_LAYOUT, layout.value);
   };
 
   /**
@@ -379,28 +342,23 @@
    */
   const onWindowResize = (): void => {
     if(gridLayoutWrapper.value) {
-      width.value = gridLayoutWrapper.value.offsetWidth;
+      width.value = gridLayoutWrapper.value.clientWidth;
     }
-    // TODO check if event is used in other places
-    // eventBus.emit(`resize-event`);
   };
 
   /**
-   * Finds or generates new layouts for set breakpoints.
+   * Handler for the responsive prop.
    */
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
-    console.error(`responsiveGridLayout`, newBreakpoint, newCols);
 
-    // Save actual layout in layouts
     if(lastBreakpoint.value && !layouts.value[lastBreakpoint.value]) {
       layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
     }
 
-    // Find or generate a new layout
-    const newLayout = findOrGenerateResponsiveLayout(
-      originalLayout.value,
+    layouts.value[newBreakpoint] = findOrGenerateResponsiveLayout(
+      layout.value,
       layouts.value,
       props.breakpoints,
       newBreakpoint,
@@ -408,16 +366,14 @@
       props.verticalCompact,
     );
 
-    // Store the new layout
-    layouts.value[newBreakpoint] = newLayout;
     if(lastBreakpoint.value !== newBreakpoint) {
-      emits(EGridLayoutEvent.UPDATE_BREAKPOINT, newBreakpoint, newLayout);
+      emits(EGridLayoutEvent.UPDATE_BREAKPOINT, newBreakpoint, layout);
     }
 
     lastBreakpoint.value = newBreakpoint;
 
-    emits(EGridLayoutEvent.UPDATE_LAYOUT, newLayout);
-    eventBus.emit(`set-col-num`, getColsFromBreakpoint(newBreakpoint, props.cols));
+    emits(EGridLayoutEvent.UPDATE_LAYOUT, layout);
+    emitter.emit(`set-col-num`, getColsFromBreakpoint(newBreakpoint, props.cols));
   };
 
   const setBootstrapBreakpoints = (newValue: boolean): void => {
@@ -430,14 +386,12 @@
 
   /**
    * Handler for the resize-event
-   * Event names can be { resizestart, resizemove, resizende }
-   *
-   * @param {string}    eventName   Name of the event to handle.
-   * @param {number}    id          id of the GridItem
-   * @param {number}    x           x position in the layout.
-   * @param {number}    y           y position in the layout.
-   * @param {number}    h           height of the GridItem.
-   * @param {number}    w           width of the GridItem.
+   * @param eventName
+   * @param id
+   * @param x
+   * @param y
+   * @param h
+   * @param w
    */
   const resizeEventHandler = ([eventName, id, x, y, h, w]: TGridLayoutEvent): void => {
     const layoutItem = getLayoutItem(props.layout, id);
@@ -450,7 +404,8 @@
         ...l,
         h,
         w,
-      }).filter(item => item.i !== l.i);
+      })
+        .filter(item => item.i !== l.i);
 
       hasCollisions = collisions.length > 0;
 
@@ -460,6 +415,7 @@
 
         collisions.forEach(item => {
           if(item.x > l.x) leastX = Math.min(leastX, item.x);
+
           if(item.y > l.y) leastY = Math.min(leastY, item.y);
         });
 
@@ -484,30 +440,29 @@
       nextTick(() => {
         isDragging.value = true;
       });
-      eventBus.emit(`updateWidth`, width.value);
     } else {
       nextTick(() => {
         isDragging.value = false;
       });
     }
 
-    if(props.responsive) {
+    if(props.responsive && !props.useBootstrapBreakpoints) {
       responsiveGridLayout();
     }
 
     compact(props.layout, props.verticalCompact);
 
-    eventBus.emit(`recalculate-styles`);
+    emitter.emit(`recalculate-styles`);
     updateHeight();
 
     if(eventName === `resizeend`) {
-      emits(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
+      emits(EGridLayoutEvent.UPDATE_LAYOUT, props.layout);
     }
   };
 
   /**
    * Handler for dragmove, dragend and dragstart events.
-   * @param eventName {string}  Name of the event (dragstart, dragend or dragmove)
+   * @param eventName {string}  Name of the event
    * @param id        {number}  Id of the GridItem
    * @param x         {number}  GridItem's x position in the GridLayout
    * @param y         {number}  GridItem's y position in the GridLayout
@@ -516,11 +471,7 @@
    */
   const dragEventHandler = ([eventName, id, x, y, h, w]: TGridLayoutEvent): void => {
     const layoutItem = getLayoutItem(props.layout, id);
-    let l = layoutItem ?? { ...layoutItemRequired };
-    // GetLayoutItem sometimes returns null object
-    if(l === undefined || l === null) {
-      l = { ...layoutItemRequired };
-    }
+    const l = layoutItem ?? { ...layoutItemRequired };
 
     if(eventName === `dragmove` || eventName === `dragstart`) {
       placeholder.value.i = +id;
@@ -537,38 +488,40 @@
       });
     }
 
-    const tmpLayout = moveElement(props.layout, l, x, y, true, props.horizontalShift, props.preventCollision);
-    emits(EGridLayoutEvent.UPDATE_LAYOUT, tmpLayout);
+    emits(EGridLayoutEvent.UPDATE_LAYOUT, moveElement(props.layout, l, x, y, true, props.horizontalShift, props.preventCollision));
 
     compact(props.layout, props.verticalCompact);
 
-    eventBus.emit(`recalculate-styles`);
+    emitter.emit(`recalculate-styles`);
     updateHeight();
 
     if(eventName === `dragend`) {
-      emits(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
+      compact(props.layout, props.verticalCompact);
+      emits(EGridLayoutEvent.UPDATE_LAYOUT, props.layout);
     }
   };
 
   const onCreated = (): void => {
-    eventBus.on(`resize-event`, resizeEventHandler);
-    eventBus.on(`drag-event`, dragEventHandler);
+    emits(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
+
+    emitter.on(`resize-event`, resizeEventHandler);
+    emitter.on(`drag-event`, dragEventHandler);
     if(props.useBootstrapBreakpoints) {
       setBootstrapBreakpoints(true);
     }
-    emits(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
   };
 
   onCreated();
 
   onBeforeUnmount(() => {
     removeWindowEventListener(`resize`, onWindowResize);
-    eventBus.off(`resize-event`, resizeEventHandler);
-    eventBus.off(`drag-event`, dragEventHandler);
 
     if(erd.value && gridLayoutWrapper.value) {
       erd.value.uninstall(gridLayoutWrapper.value);
     }
+
+    emitter.off(`resize-event`, resizeEventHandler);
+    emitter.off(`drag-event`, dragEventHandler);
   });
 
   onBeforeMount(() => {
@@ -577,26 +530,22 @@
 
   onMounted(() => {
     emits(EGridLayoutEvent.LAYOUT_MOUNTED, props.layout);
-    validateLayout(originalLayout.value, `GridLayout`);
-    originalLayout.value = props.layout;
-
     nextTick(() => {
-      onWindowResize();
-      initResponsiveFeatures();
-      addWindowEventListener(`resize`, onWindowResize.bind(this));
+      layout.value = props.layout;
 
       nextTick(() => {
+        onWindowResize();
         layouts.value = { ...props.responsiveLayouts };
 
+        addWindowEventListener(`resize`, onWindowResize.bind(this));
         compact(props.layout, props.verticalCompact);
 
-        emits(EGridLayoutEvent.LAYOUT_MOUNTED, props.layout);
+        emits(EGridLayoutEvent.UPDATE_LAYOUT, props.layout);
         updateHeight();
-        nextTick(() => {
-          if(gridLayoutWrapper.value) {
-            erd.value.listenTo(gridLayoutWrapper.value, onWindowResize);
-          }
-        });
+
+        if(gridLayoutWrapper.value) {
+          erd.value.listenTo(gridLayoutWrapper.value, onWindowResize);
+        }
       });
     });
   });
@@ -606,7 +555,7 @@
   });
 
   watch(() => props.colNum, value => {
-    eventBus.emit(`set-col-num`, value);
+    emitter.emit(`set-col-num`, value);
   });
 
   watch(() => props.layout.length, () => {
@@ -620,8 +569,8 @@
 
   watch(() => props.responsive, value => {
     if(!value) {
-      emits(EGridLayoutEvent.UPDATE_LAYOUT, originalLayout.value);
-      eventBus.emit(`set-col-num`, props.colNum);
+      emits(EGridLayoutEvent.UPDATE_LAYOUT, layout.value);
+      emitter.emit(`set-col-num`, props.colNum);
     }
     onWindowResize();
   });

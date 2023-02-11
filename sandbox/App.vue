@@ -48,7 +48,6 @@
       <div class="col-sm">
         <grid-layout
           ref="gridLayout"
-          v-model:layout="demoLayout"
           :auto-size="autoResizeGridLayout"
           :border-radius-px="borderRadiusPx"
           :class="{grid: showGridLines}"
@@ -56,10 +55,12 @@
           :horizontal-shift="horizontalShift"
           :is-draggable="isDraggable"
           :is-resizable="isResizable"
+          :layout="responsiveData['lg']"
           :margin="[marginLeftRight, marginTopBottom]"
           :max-rows="maxRows"
           :prevent-collision="preventCollision"
           :responsive="isResponsive"
+          :responsive-layouts="responsiveData"
           :row-height="rowHeight"
           :show-close-button="showCloseButton"
           :use-bootstrap-breakpoints="useBootstrapBreakpoints"
@@ -90,7 +91,8 @@
 <script lang="ts" setup>
   import { GridLayout } from '../src';
   import { data } from './layoutPayload';
-  import { ref, watch } from 'vue';
+  import { responsiveData } from './responsiveLayoutPayload';
+  import { ref } from 'vue';
   import { TLayout } from '../src/core/types/helpers';
 
   const demoLayout = ref<TLayout>(data);
@@ -171,9 +173,6 @@
   margin: 5px;
 }
 
-.static {
-  background: #cce;
-}
 .vue-grid-item .text {
   font-size: 24px;
   text-align: center;
