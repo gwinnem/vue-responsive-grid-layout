@@ -32,7 +32,7 @@
   import interact from '@interactjs/interactjs';
   import { emitterKey } from '@/core/symbols/symbols';
   import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
-  import { TBreakpoints, TBreakpointsKeys } from '@/core/types/helpers';
+  import { TBreakpoints, TBreakpointsKeys } from '@/core/types/breakpoints';
   import { TInner } from '@/core/types/components';
   import { createCoreData, getControlPosition } from '@/core/helpers/draggableUtils';
   import { setTopLeft, setTransform, stringReplacer } from '@/core/helpers/utils';
@@ -114,10 +114,6 @@
     minW: {
       default: 1,
       type: Number,
-    },
-    observer: {
-      default: undefined,
-      type: [IntersectionObserver, undefined],
     },
     rowHeight: {
       required: true,
@@ -220,9 +216,9 @@
     'no-touch': isNoTouch.value,
     resizing: isResizing.value,
     static: props.static,
+    'use-radius': props.useBorderRadius,
     'vue-draggable-dragging': isDragging.value,
     'vue-resizable': resizableAndNotStatic.value,
-    'use-radius': props.useBorderRadius,
   }));
   const calcColWidth = (): number => {
     const [m1] = props.margin;
@@ -541,10 +537,6 @@
     if(interactObj.value) {
       interactObj.value.unset();
     }
-
-    if(props.observer) {
-      props.observer.unobserve(item.value);
-    }
   });
   onMounted(() => {
     if(props.lastBreakpoint) {
@@ -555,14 +547,7 @@
     tryMakeDraggable();
     createStyle();
   });
-  // Watches
-  watch(() => props.observer, () => {
-    if(props.observer && item.value) {
-      props.observer.observe(item.value);
-      // eslint-disable-next-line no-underscore-dangle
-      item.value.__INTERSECTION_OBSERVER_INDEX__ = props.i;
-    }
-  });
+
   watch(() => cols.value, () => {
     tryMakeResizable();
     emitContainerResized();

@@ -1,4 +1,4 @@
-import { TBreakpoints } from '../types/helpers';
+import { TBreakpoints } from '../types/breakpoints';
 
 export interface IGridLayoutGridItemItemProps {
   borderRadiusPx: number;

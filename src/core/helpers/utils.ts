@@ -251,3 +251,8 @@ export const setTransform = (top: number, left: number, width: number, height: n
   transform: `translate3d(${left}px,${top}px, 0)`,
   width: `${width}px`,
 });
+
+export const stringReplacer = (string: string, value: string, replacer: string): string => {
+  return string.trim()
+    .replace(value, replacer);
+};

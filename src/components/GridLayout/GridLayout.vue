@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="wrapper"
+    ref="gridLayoutWrapper"
     class="vue-grid-layout"
     :style="mergedStyle">
     <GridItem
@@ -12,11 +12,11 @@
         v-for="layoutItem in layout"
         :key="layoutItem.i"
         v-bind="{ ...gridItemProps, ...layoutItemOptional(layoutItem) }"
+        @container-resized="emits(EGridLayoutEvent.CONTAINER_RESIZED, $event)"
         @move="emits(EGridLayoutEvent.ITEM_MOVE, $event)"
         @moved="emits(EGridLayoutEvent.ITEM_MOVED, $event)"
-        @resize="emits(EGridLayoutEvent.ITEM_RESIZE, $event)"
-        @container-resized="emits(EGridLayoutEvent.CONTAINER_RESIZED, $event)"
-        @remove-grid-item="removeGridItemFromLayout">
+        @remove-grid-item="removeGridItemFromLayout"
+        @resize="emits(EGridLayoutEvent.ITEM_RESIZE, $event)">
         <slot
           :item="layoutItem"
           name="gridItemContent">
@@ -45,14 +45,7 @@
   import { Events } from '@/core/types/globals';
   import GridItem from '../GridItem/GridItem.vue';
   import { emitterKey } from '@/core/symbols/symbols';
-  import {
-    TBreakpoints,
-    TBreakpointsKeys,
-    TLayout,
-    TLayoutItemRequired,
-    TRecordBreakpoint,
-    TResponsiveLayout,
-  } from '@/core/types/helpers';
+  import { TLayout, TLayoutItemRequired, TResponsiveLayout } from '@/core/types/helpers';
   import { TGridLayoutEvent } from '@/core/types/components';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import {
@@ -70,6 +63,7 @@
   } from '@/core/helpers/responsiveUtils';
   import { IGridLayoutGridItemItemProps } from '@/core/interfaces/gridlayout-griditem-props';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
+  import { TBreakpoints, TBreakpointsKeys, TRecordBreakpoint } from '../../core/types/breakpoints';
 
   const props = defineProps({
     autoSize: {
@@ -245,7 +239,7 @@
   });
   const width = ref(0);
 
-  const wrapper = ref<HTMLDivElement | null>(null);
+  const gridLayoutWrapper = ref<HTMLDivElement | null>(null);
 
   const gridItemProps = computed<IGridLayoutGridItemItemProps>(() => ({
     borderRadiusPx: props.borderRadiusPx,
@@ -271,10 +265,6 @@
     const uniqueResultTwo = originalLayout.filter(ol => !layout.some(l => ol.i === l.i));
 
     return uniqueResultOne.concat(uniqueResultTwo);
-  };
-
-  const initResponsiveFeatures = (): void => {
-    layouts.value = { ...props.responsiveLayouts };
   };
 
   const containerHeight = (): string | undefined => {
@@ -324,7 +314,7 @@
         }
 
         lastLayoutLength.value = props.layout.length;
-        initResponsiveFeatures();
+        layouts.value = { ...props.responsiveLayouts };
       }
 
       compact(props.layout, props.verticalCompact);
@@ -350,14 +340,14 @@
    * Event handler for window resize event.
    */
   const onWindowResize = (): void => {
-    if(wrapper.value) {
-      width.value = wrapper.value.offsetWidth;
+    if(gridLayoutWrapper.value) {
+      width.value = gridLayoutWrapper.value.clientWidth;
     }
-
-    // TODO Add fluid grid adjustments here
-    // console.error(wrapper.value.clientWidth);
   };
 
+  /**
+   * Handler for the responsiv prop.
+   */
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
@@ -366,7 +356,7 @@
       layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
     }
 
-    const layoutResponsive = findOrGenerateResponsiveLayout(
+    layouts.value[newBreakpoint] = findOrGenerateResponsiveLayout(
       layout.value,
       layouts.value,
       props.breakpoints,
@@ -374,8 +364,6 @@
       newCols,
       props.verticalCompact,
     );
-
-    layouts.value[newBreakpoint] = layoutResponsive;
 
     if(lastBreakpoint.value !== newBreakpoint) {
       emits(EGridLayoutEvent.UPDATE_BREAKPOINT, newBreakpoint, layout);
@@ -387,7 +375,24 @@
     emitter.emit(`set-col-num`, getColsFromBreakpoint(newBreakpoint, props.cols));
   };
 
-  const resizeEvent = ([eventName, id, x, y, h, w]: TGridLayoutEvent): void => {
+  const setBootstrapBreakpoints = (newValue: boolean): void => {
+    if(!gridLayoutWrapper.value || !newValue) {
+      return;
+    }
+
+    console.error(gridLayoutWrapper.value.clientWidth);
+  };
+
+  /**
+   * Handler for the resize-event
+   * @param eventName
+   * @param id
+   * @param x
+   * @param y
+   * @param h
+   * @param w
+   */
+  const resizeEventHandler = ([eventName, id, x, y, h, w]: TGridLayoutEvent): void => {
     const layoutItem = getLayoutItem(props.layout, id);
     const l = layoutItem ?? { ...layoutItemRequired };
 
@@ -440,7 +445,9 @@
       });
     }
 
-    if(props.responsive) responsiveGridLayout();
+    if(props.responsive && !props.useBootstrapBreakpoints) {
+      responsiveGridLayout();
+    }
 
     compact(props.layout, props.verticalCompact);
 
@@ -452,7 +459,16 @@
     }
   };
 
-  const dragEvent = ([eventName, id, x, y, h, w]: TGridLayoutEvent): void => {
+  /**
+   * Handler for dragmove, dragend and dragstart events.
+   * @param eventName {string}  Name of the event
+   * @param id        {number}  Id of the GridItem
+   * @param x         {number}  GridItem's x position in the GridLayout
+   * @param y         {number}  GridItem's y position in the GridLayout
+   * @param h         {number}  Height of the GridItem in rows
+   * @param w         {number}  Width of the GridItem in columns
+   */
+  const dragEventHandler = ([eventName, id, x, y, h, w]: TGridLayoutEvent): void => {
     const layoutItem = getLayoutItem(props.layout, id);
     const l = layoutItem ?? { ...layoutItemRequired };
 
@@ -487,8 +503,11 @@
   const onCreated = (): void => {
     emits(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
 
-    emitter.on(`resize-event`, resizeEvent);
-    emitter.on(`drag-event`, dragEvent);
+    emitter.on(`resize-event`, resizeEventHandler);
+    emitter.on(`drag-event`, dragEventHandler);
+    if(props.useBootstrapBreakpoints) {
+      setBootstrapBreakpoints(true);
+    }
   };
 
   onCreated();
@@ -496,12 +515,12 @@
   onBeforeUnmount(() => {
     removeWindowEventListener(`resize`, onWindowResize);
 
-    if(erd.value && wrapper.value) {
-      erd.value.uninstall(wrapper.value);
+    if(erd.value && gridLayoutWrapper.value) {
+      erd.value.uninstall(gridLayoutWrapper.value);
     }
 
-    emitter.off(`resize-event`, resizeEvent);
-    emitter.off(`drag-event`, dragEvent);
+    emitter.off(`resize-event`, resizeEventHandler);
+    emitter.off(`drag-event`, dragEventHandler);
   });
 
   onBeforeMount(() => {
@@ -515,7 +534,7 @@
 
       nextTick(() => {
         onWindowResize();
-        initResponsiveFeatures();
+        layouts.value = { ...props.responsiveLayouts };
 
         addWindowEventListener(`resize`, onWindowResize.bind(this));
         compact(props.layout, props.verticalCompact);
@@ -523,11 +542,15 @@
         emits(EGridLayoutEvent.UPDATE_LAYOUT, props.layout);
         updateHeight();
 
-        if(wrapper.value) {
-          erd.value.listenTo(wrapper.value, onWindowResize);
+        if(gridLayoutWrapper.value) {
+          erd.value.listenTo(gridLayoutWrapper.value, onWindowResize);
         }
       });
     });
+  });
+
+  watch(() => props.useBootstrapBreakpoints, newValue => {
+    setBootstrapBreakpoints(newValue);
   });
 
   watch(() => props.colNum, value => {
@@ -559,8 +582,9 @@
         });
       }
 
-      if(props.responsive) responsiveGridLayout();
-
+      if(props.responsive && !props.useBootstrapBreakpoints) {
+        responsiveGridLayout();
+      }
       updateHeight();
     });
   });
