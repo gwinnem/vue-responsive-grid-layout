@@ -597,15 +597,20 @@
     inner.value.y = value;
     createStyle();
   });
+
+  const borderRadius = computed(() => {
+    return `${props.borderRadiusPx}px`;
+  });
+
 </script>
 
 <style lang="scss" scoped>
 @import '@/styles/variables.scss';
-
+$grid-item-border-radius: v-bind(borderRadius);
 .close-button {
   height: 18px;
   position: absolute;
-  right: 2px;
+  right: 3px;
   top: 3px;
   width: 18px;
   z-index: 20;
@@ -670,7 +675,7 @@
   }
 
   &.use-radius {
-    border-radius: 8px;
+    border-radius: $grid-item-border-radius;
   }
 
   &.disable-user-select {
