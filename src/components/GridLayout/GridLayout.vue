@@ -207,6 +207,7 @@
     x: 0,
     y: 0,
   };
+
   // TODO Verify these
   const layoutItemOptionalKeys = [
     `isDraggable`,
@@ -346,7 +347,7 @@
   };
 
   /**
-   * Handler for the responsiv prop.
+   * Handler for the responsive prop.
    */
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value);
@@ -380,7 +381,7 @@
       return;
     }
 
-    console.error(gridLayoutWrapper.value.clientWidth);
+    // console.error(gridLayoutWrapper.value.clientWidth);
   };
 
   /**
