@@ -1,7 +1,3 @@
----
-footer: true
----
-
 # GridItem Properties {#gridItemProperties}
 
 ## borderRadiusPx
@@ -129,9 +125,8 @@ Says what is a minimal width of the item. If `w` will be smaller then `minW` the
 
 The value is a number that is multiplied by `colWidth`.
 
-## observer
 
-### preserveAspectRatio(Not implemented)
+## preserveAspectRatio(Not implemented)
 * type: `Boolean`
 * required: `false`
 * default: `false`
@@ -149,7 +144,7 @@ If `true`, the GridItem will show a close button in the top right corner.
 
 When it is being clicked it will fire an event `remove-grid-item` which the `GridLayout` is listening for. The `GridItem` will then be removed from the `GridLayout`.
 
-### resizeIgnoreFrom(Not implemented)
+## resizeIgnoreFrom(Not implemented)
 * type: `String`
 * required: `false`
 * default: `'a, button'`
@@ -160,7 +155,7 @@ The value is `css-like` selector string.
 
 For more info please refer to `ignoreFrom` in [interact.js docs](http://interactjs.io/docs/#ignorable-selectors).
 
-### resizeOption(Not implemented)
+## resizeOption(Not implemented)
 * type: `Object`
 * required: `false`
 * default: `{}`
