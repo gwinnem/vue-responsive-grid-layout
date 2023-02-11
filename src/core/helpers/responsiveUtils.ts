@@ -1,10 +1,9 @@
 import {
-  TBreakpoints,
-  TBreakpointsKeys,
   findOrGenerateResponsiveLayoutFnc,
   TLayout, TResponsiveLayout,
 } from '../types/helpers';
 import { cloneLayout, compact, correctBounds } from './utils';
+import { TBreakpoints, TBreakpointsKeys } from '../types/breakpoints';
 
 export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpointsKeys[] => {
   return (Object.keys(breakpoints) as (keyof typeof breakpoints)[])
@@ -46,7 +45,6 @@ export const findOrGenerateResponsiveLayout: findOrGenerateResponsiveLayoutFnc =
 
 export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number): TBreakpointsKeys => {
   const sorted = sortBreakpoints(breakpoints);
-
   let [matching] = sorted;
 
   for(let i = 1; i < sorted.length; i++) {
@@ -54,7 +52,6 @@ export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number)
 
     if(width > (breakpoints[breakpointName] ?? 1)) matching = breakpointName;
   }
-
   return matching;
 };
 

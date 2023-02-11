@@ -1,6 +1,5 @@
 import { EMovingDirections } from '../enums/EMovingDirections';
-
-export type TBreakpointsKeys = `lg` | `md` | `sm` | `xs` | `xxs` | ``;
+import { TBreakpoints, TBreakpointsKeys, TRecordBreakpoint } from './breakpoints';
 
 export type TLayoutItemRequired = { w: number; h: number; x: number; y: number; i: number };
 export type TLayoutItemOptional = {
@@ -16,13 +15,9 @@ export type TLayoutItemOptional = {
 
 export type TLayoutItem = TLayoutItemRequired & TLayoutItemOptional;
 export type TLayout = TLayoutItem[];
+export type TResponsiveLayout = TRecordBreakpoint<TLayout>;
 
 export type TMovingDirection = keyof typeof EMovingDirections
-
-export type TRecordBreakpoint<Type> = Partial<Record<TBreakpointsKeys, Type>>;
-export type TBreakpoints = TRecordBreakpoint<number>;
-
-export type TResponsiveLayout = TRecordBreakpoint<TLayout>;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type findOrGenerateResponsiveLayoutFnc = (
@@ -33,6 +28,3 @@ export type findOrGenerateResponsiveLayoutFnc = (
   cols: number,
   verticalCompact: boolean,
 ) => TLayout;
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export type setPositionFnc<Position> = (top: number, left: number, width: number, height: number) => Position;

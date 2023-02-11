@@ -2,15 +2,12 @@ import { CSSProperties } from 'vue';
 import {
   TLayout,
   TLayoutItem,
-  // LayoutItemsByYAxis,
   TMovingDirection,
-  setPositionFnc,
 } from '../types/helpers';
 import { EMovingDirections } from '../enums/EMovingDirections';
 
 export const bottom = (layout: TLayout): number => {
   let max = 0;
-
   let bottomY: number;
 
   for(let i = 0; i < layout.length; i++) {
@@ -46,7 +43,7 @@ export const getFirstCollision = (layout: TLayout, layoutItem: TLayoutItem): TLa
   }
 };
 
-export const getStatics = (layout: TLayout): TLayoutItem[] => layout.filter(l => l.static);
+export const getStaticGridItems = (layout: TLayout): TLayoutItem[] => layout.filter(l => l.static);
 export const sortLayoutItemsByRowCol = (layout: TLayout): TLayout => {
   return [...layout].sort((a, b) => {
     if(a.y === b.y && a.x === b.x) return 0;
@@ -73,9 +70,11 @@ export const compactItem = (compareWith: TLayout, l: TLayoutItem, verticalCompac
   return l;
 };
 export const compact = (layout: TLayout, verticalCompact: boolean): TLayout | undefined => {
-  if(!layout) return;
+  if(!layout) {
+    return;
+  }
 
-  const compareWith = getStatics(layout);
+  const compareWith = getStaticGridItems(layout);
   const sorted = sortLayoutItemsByRowCol(layout);
   const out = Array(layout.length);
 
@@ -97,7 +96,7 @@ export const compact = (layout: TLayout, verticalCompact: boolean): TLayout | un
 };
 
 export const correctBounds = (layout: TLayout, bounds: { cols: number }): TLayout => {
-  const collidesWith = getStatics(layout);
+  const collidesWith = getStaticGridItems(layout);
 
   for(let i = 0; i < layout.length; i++) {
     const l = layout[i];
@@ -238,7 +237,7 @@ export const moveElement = (
   return layout;
 };
 
-export const setTopLeft: setPositionFnc<CSSProperties> = (top, left, width, height) => ({
+export const setTopLeft = (top: number, left: number, width: number, height: number): CSSProperties => ({
   height: `${height}px`,
   left: `${left}px`,
   position: `absolute`,
@@ -252,8 +251,3 @@ export const setTransform = (top: number, left: number, width: number, height: n
   transform: `translate3d(${left}px,${top}px, 0)`,
   width: `${width}px`,
 });
-
-export const stringReplacer = (string: string, value: string, replacer: string): string => {
-  return string.trim()
-    .replace(value, replacer);
-};
