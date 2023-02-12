@@ -310,7 +310,7 @@
   watch(
     () => thisLayout?.margin,
     newMargin => {
-      if(!newMargin || (newMargin[0] == margin.value[0] && newMargin[1] == margin.value[1])) {
+      if(!newMargin || (newMargin[0] === margin.value[0] && newMargin[1] === margin.value[1])) {
         return;
       }
       margin.value = newMargin.map(m => Number(m));
@@ -361,8 +361,7 @@
   }
 
   function setColNum(colNum: number): void {
-    const col = colNum.toString();
-    cols.value = parseInt(col);
+    cols.value = colNum;
   }
 
   // eventbus
@@ -487,97 +486,98 @@
   }
 
   function handleResize(event: MouseEvent): void {
-    {
-      if(props.static) return;
-      const position = getControlPosition(event);
-      // Get the current drag point from the event. This is used as the offset.
-      if(position == null) return; // not possible but satisfies flow
-      const { x, y } = position;
+    if(props.static) return;
+    const position = getControlPosition(event);
+    // Get the current drag point from the event. This is used as the offset.
+    if(position == null) return; // not possible but satisfies flow
+    const { x, y } = position;
 
-      const newSize = { height: 0, width: 0 };
-      let pos;
-      switch(event.type) {
-        case `resizestart`: {
-          tryMakeResizable();
-          previousW.value = innerW.value;
-          previousH.value = innerH.value;
-          pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
-          newSize.width = pos.width;
-          newSize.height = pos.height;
-          resizing.value = newSize;
-          isResizing.value = true;
-          break;
+    const newSize = { height: 0, width: 0 };
+    let pos;
+    switch(event.type) {
+      case `resizestart`: {
+        tryMakeResizable();
+        previousW.value = innerW.value;
+        previousH.value = innerH.value;
+        pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+        newSize.width = pos.width;
+        newSize.height = pos.height;
+        resizing.value = newSize;
+        isResizing.value = true;
+        break;
+      }
+      case `resizemove`: {
+        //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
+        const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
+        if(renderRtl.value) {
+          newSize.width = Number(resizing.value?.width) - coreEvent.deltaX / transformScale.value;
+        } else {
+          newSize.width = Number(resizing.value?.width) + coreEvent.deltaX / transformScale.value;
         }
-        case `resizemove`: {
-          //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
-          const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
-          if(renderRtl.value) {
-            newSize.width = Number(resizing.value?.width) - coreEvent.deltaX / transformScale.value;
-          } else {
-            newSize.width = Number(resizing.value?.width) + coreEvent.deltaX / transformScale.value;
-          }
-          newSize.height = Number(resizing.value?.height) + coreEvent.deltaY / transformScale.value;
+        newSize.height = Number(resizing.value?.height) + coreEvent.deltaY / transformScale.value;
 
-          /// console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-          resizing.value = newSize;
-          break;
-        }
-        case `resizeend`: {
-          // console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
-          pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
-          newSize.width = pos.width;
-          newSize.height = pos.height;
-          //                        console.log("### resize end => " + JSON.stringify(newSize));
-          resizing.value = null;
-          isResizing.value = false;
-          break;
-        }
+        /// console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+        resizing.value = newSize;
+        break;
       }
-
-      // Get new WH
-      pos = calcWH(newSize.height, newSize.width);
-      if(pos.w < props.minW) {
-        pos.w = props.minW;
+      case `resizeend`: {
+        // console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
+        pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+        newSize.width = pos.width;
+        newSize.height = pos.height;
+        //                        console.log("### resize end => " + JSON.stringify(newSize));
+        resizing.value = null;
+        isResizing.value = false;
+        break;
       }
-      if(pos.w > props.maxW) {
-        pos.w = props.maxW;
+      default: {
+        // Do nothing just to avoid linting complaints
       }
-      if(pos.h < props.minH) {
-        pos.h = props.minH;
-      }
-      if(pos.h > props.maxH) {
-        pos.h = props.maxH;
-      }
-
-      if(pos.h < 1) {
-        pos.h = 1;
-      }
-      if(pos.w < 1) {
-        pos.w = 1;
-      }
-
-      lastW.value = x;
-      lastH.value = y;
-
-      if(innerW.value !== pos.w || innerH.value !== pos.h) {
-        emit(EGridItemEvent.RESIZE, props.i, pos.h, pos.w, newSize.height, newSize.width);
-      }
-      if(
-        event.type === `resizeend`
-        && (previousW.value !== innerW.value || previousH.value !== innerH.value)
-      ) {
-        emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
-      }
-      const data = {
-        eventType: event.type,
-        h: pos.h,
-        i: props.i,
-        w: pos.w,
-        x: innerX.value,
-        y: innerY.value,
-      };
-      eventBus.emit(`resizeEvent`, data);
     }
+
+    // Get new WH
+    pos = calcWH(newSize.height, newSize.width);
+    if(pos.w < props.minW) {
+      pos.w = props.minW;
+    }
+    if(pos.w > props.maxW) {
+      pos.w = props.maxW;
+    }
+    if(pos.h < props.minH) {
+      pos.h = props.minH;
+    }
+    if(pos.h > props.maxH) {
+      pos.h = props.maxH;
+    }
+
+    if(pos.h < 1) {
+      pos.h = 1;
+    }
+    if(pos.w < 1) {
+      pos.w = 1;
+    }
+
+    lastW.value = x;
+    lastH.value = y;
+
+    if(innerW.value !== pos.w || innerH.value !== pos.h) {
+      emit(EGridItemEvent.RESIZE, props.i, pos.h, pos.w, newSize.height, newSize.width);
+    }
+    if(
+      event.type === `resizeend`
+      && (previousW.value !== innerW.value || previousH.value !== innerH.value)
+    ) {
+      emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
+    }
+    const data = {
+      eventType: event.type,
+      h: pos.h,
+      i: props.i,
+      w: pos.w,
+      x: innerX.value,
+      y: innerY.value,
+    };
+    eventBus.emit(`resizeEvent`, data);
   }
 
   function handleDrag(event: MouseEvent): void {
@@ -670,6 +670,9 @@
         //                        console.log("### drag end => " + JSON.stringify(newPosition));
         dragging.value = newPosition as IGridItemPosition;
         break;
+      }
+      default: {
+        // Do nothing just to avoid linting complaints
       }
     }
 
