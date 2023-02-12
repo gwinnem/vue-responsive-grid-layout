@@ -1,29 +1,17 @@
-import GridItem from './GridItem/GridItem.vue';
-import GridLayout from './GridLayout/GridLayout.vue';
+import { App } from 'vue';
+import GridItem from './Grid/GridItem.vue';
+import GridLayout from './Grid/GridLayout.vue';
 
-const VueFluidGridLayout = {
-  GridItem,
-  GridLayout,
+export { GridItem, GridLayout };
+
+const components = [GridLayout, GridItem];
+
+const Vue3GridLayout = {
+  install(App: App): void {
+    components.forEach(item => {
+      App.component(item.name, item);
+    });
+  },
 };
 
-export {
-  GridItem,
-  GridLayout,
-};
-
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-function install(app: any): void {
-  if(app.$_VueFluidGridLayout) {
-    return;
-  }
-
-  app.$_VueFluidGridLayout = true;
-  (Object.keys(VueFluidGridLayout) as (keyof typeof VueFluidGridLayout)[]).forEach(name => {
-    app.component(name, VueFluidGridLayout[name]);
-  });
-}
-
-export default {
-  VueFluidGridLayout,
-  install,
-};
+export default Vue3GridLayout;

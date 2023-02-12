@@ -2,6 +2,8 @@
  * Events emitted by the GridLayout component
  */
 export enum EGridLayoutEvent {
+  BREAKPOINT_CHANGED = `breakpoint-changed`,
+  COLUMNS_CHANGED = `columns-changed`,
   CONTAINER_RESIZED = `container-resized`,
   ITEM_MOVE = `item-move`,
   ITEM_MOVED = `item-moved`,

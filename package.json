@@ -72,11 +72,13 @@
   },
   "dependencies": {
     "@interactjs/actions": "^1.10.17",
+    "@interactjs/auto-scroll": "^1.10.17",
     "@interactjs/auto-start": "^1.10.17",
     "@interactjs/dev-tools": "^1.10.17",
     "@interactjs/interactjs": "^1.10.17",
     "@interactjs/modifiers": "^1.10.17",
     "element-resize-detector": "^1.2.4",
+    "interactjs": "^1.10.17",
     "mitt": "^3.0.0"
   },
   "devDependencies": {

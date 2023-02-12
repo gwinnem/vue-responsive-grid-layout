@@ -2,79 +2,99 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <form>
+        <form style="border-radius: 8px;">
           <fieldset>
             <legend>Test bench</legend>
             <label for="rowHeight">Row Height(px)</label>
-            <input v-model="rowHeight" type="number" id="rowHeight" placeholder="Row Height"/>
+            <input id="rowHeight" v-model="rowHeight" type="number"/>
             <label for="colNum">Max Columns</label>
-            <input v-model="colNum" id="colNum" type="number" placeholder="Max Columns"/>
+            <input id="colNum" v-model="colNum" type="number"/>
             <label for="maxRows">Max Rows</label>
-            <input v-model="maxRows" id="maxRows" type="number" placeholder="Max rows"/>
+            <input id="maxRows" v-model="maxRows" type="number"/>
             <label for="mtb">Margin Top / Bottom</label>
-            <input v-model="marginTopBottom" id="mtb" type="number" placeholder="Margin Top / Bottom" disabled/>
+            <input id="mtb" v-model="marginTopBottom" disabled type="number"/>
             <label for="mlr">Margin Left / Right</label>
-            <input v-model="marginLeftRight" id="mlr" type="number" placeholder="Margin Left / Right" disabled/>
+            <input id="mlr" v-model="marginLeftRight" disabled type="number"/>
             <label for="borderRadius">Border Radius</label>
-            <input v-model="borderRadiusPx" id="borderRadius" type="number" placeholder="Border Radius"/>
+            <input id="borderRadius" v-model="borderRadiusPx" type="number"/>
             <br/>
-            <label for="draggable">isDraggable</label>
-            <input v-model="isDraggable" id="draggable" type="checkbox">
-            <label for="resize">isResizable</label>
-            <input v-model="isResizable" id="resize" type="checkbox">
-            <label for="responsive">responsive</label>
-            <input v-model="isResponsive" id="responsive" type="checkbox">
-            <label for="gridlines">showGridLines</label>
-            <input v-model="showGridLines" id="gridlines" type="checkbox">
             <label for="autosize">autosize</label>
-            <input v-model="autoResizeGridLayout" id="autosize" type="checkbox">
-            <label for="verticalCompact">verticalCompact</label>
-            <input v-model="vertCompact" id="verticalCompact" type="checkbox">
+            <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
             <label for="horizontalShift">horizontalShift</label>
-            <input v-model="horizontalShift" id="horizontalShift" type="checkbox">
-            <label for="useBorderRadius">useBorderRadius</label>
-            <input v-model="useBorderRadius" id="useBorderRadius" type="checkbox">
+            <input id="horizontalShift" v-model="horizontalShift" type="checkbox">
+            <label for="isBounded">isBounded</label>
+            <input id="isBounded" v-model="isBounded" type="checkbox">
+            <label for="isDraggable">isDraggable</label>
+            <input id="isDraggable" v-model="isDraggable" type="checkbox">
+            <label for="isMirrored">isMirrored</label>
+            <input id="isMirrored" v-model="isMirrored" type="checkbox">
+            <label for="isResizable">isResizable</label>
+            <input id="isResizable" v-model="isResizable" type="checkbox">
+            <label for="isResponsive">isResponsive</label>
+            <input id="isResponsive" v-model="isResponsive" type="checkbox">
             <label for="preventCollision">preventCollision</label>
-            <input v-model="preventCollision" id="preventCollision" type="checkbox">
+            <input id="preventCollision" v-model="preventCollision" type="checkbox">
             <label for="showCloseButton">showCloseButton</label>
-            <input v-model="showCloseButton" id="showCloseButton" type="checkbox">
-            <label for="useBootstrapBreakpoints">useBootstrapBreakpoints</label>
-            <input v-model="useBootstrapBreakpoints" id="useBootstrapBreakpoints" type="checkbox">
+            <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
+            <label for="showGridLines">showGridLines</label>
+            <input id="showGridLines" v-model="showGridLines" type="checkbox">
+            <label for="useBorderRadius">useBorderRadius</label>
+            <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox">
+            <label for="verticalCompact">verticalCompact</label>
+            <input id="verticalCompact" v-model="verticalCompact" type="checkbox">
           </fieldset>
         </form>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-        <grid-layout
-          ref="gridLayout"
-          :auto-size="autoResizeGridLayout"
-          :border-radius-px="borderRadiusPx"
-          :class="{grid: showGridLines}"
-          :col-num="colNum"
-          :horizontal-shift="horizontalShift"
-          :is-draggable="isDraggable"
-          :is-resizable="isResizable"
-          :layout="responsiveData['lg']"
-          :margin="[marginLeftRight, marginTopBottom]"
-          :max-rows="maxRows"
-          :prevent-collision="preventCollision"
-          :responsive="isResponsive"
-          :responsive-layouts="responsiveData"
-          :row-height="rowHeight"
-          :show-close-button="showCloseButton"
-          :use-bootstrap-breakpoints="useBootstrapBreakpoints"
-          :use-border-radius="useBorderRadius"
-          :use-css-transform="true"
-          :vertical-compact="vertCompact"
-          @item-resize="containerResized"
-          @update-breakpoint="breakpointUpdated">
-          <template #gridItemContent="slotProps">
-            <span class="text">
-              {{ slotProps.item.i }}
-            </span>
-          </template>
-        </grid-layout>
+        <div class="layout">
+          <div style="font-size: 0; height: 1px; margin:0; padding: 0;"></div>
+          <div
+            class="droppable-element"
+            draggable="true"
+            @drag="drag"
+            @dragend="dragend">
+            Droppable Element (Drag me!)
+          </div>
+          <div id="content">
+            <GridLayout
+              ref="refLayout"
+              v-model:layout="testLayout"
+              :auto-size="autoResizeGridLayout"
+              :class="{grid: showGridLines}"
+              :col-num="colNum"
+              :is-bounded="isBounded"
+              :is-draggable="isDraggable"
+              :is-mirrored="isMirrored"
+              :is-resizable="isResizable"
+              :responsive="isResponsive"
+              :row-height="rowHeight"
+              :show-close-button="showCloseButton"
+              :use-css-transforms="true"
+              :vertical-compact="verticalCompact"
+              @columns-changed="colNumChanged">
+              <GridItem
+                v-for="item in testLayout"
+                :key="item.i"
+                :h="item.h"
+                :i="item.i"
+                :min-h="3"
+                :min-w="3"
+                :ref="el => setChildRef(el)"
+                :show-close-button="showCloseButton"
+                :x="item.x"
+                :y="item.y"
+                :w="item.w"
+                class="test"
+                @resized="handleResize">
+                <span class="text">
+                  {{ item.i }}
+                </span>
+              </GridItem>
+            </GridLayout>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -89,59 +109,182 @@
 </template>
 
 <script lang="ts" setup>
-  import { GridLayout } from '../src';
-  import { data } from './layoutPayload';
-  import { responsiveData } from './responsiveLayoutPayload';
-  import { ref } from 'vue';
-  import { TLayout } from '../src/core/types/helpers';
+  import { ref, onMounted, nextTick } from "vue";
+  import { testData } from "./test";
 
-  const demoLayout = ref<TLayout>(data);
-  const colNum = ref(12);
-  const rowHeight = ref(30);
-  const showGridLines = ref(false);
-  const isDraggable = ref(true);
-  const isResizable = ref(true);
-  const isResponsive = ref(false);
-  const marginTopBottom = ref(10); // TODO Not working as expected
-  const marginLeftRight = ref(10); // TODO Not working as expected
-  const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
+  import GridLayout from "../src/components/Grid/GridLayout.vue";
+  import GridItem from "../src/components/Grid/GridItem.vue";
+
   const autoResizeGridLayout = ref(true);
-  const vertCompact= ref(true);
-  const horizontalShift = ref(false);
-  const maxRows = ref(40);
-  const useBorderRadius = ref(true);
   const borderRadiusPx = ref(8);
+  const colNum = ref(12);
+  const horizontalShift = ref(false);
+  const isBounded = ref(false);
+  const isDraggable = ref(true);
+  const isMirrored = ref(false); // TODO Not auto updating
+  const isResizable = ref(true);
+  const isResponsive = ref(true);
+  const marginLeftRight = ref(10); // TODO Not working as expected
+  const marginTopBottom = ref(10); // TODO Not working as expected
+  const maxRows = ref(40);
   const preventCollision = ref(false);
+  const rowHeight = ref(30);
+  const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
   const showCloseButton = ref(true);
-  const useBootstrapBreakpoints = ref(false);
+  const showGridLines = ref(false);
+  const useBorderRadius = ref(false);
+  const verticalCompact = ref(true);
 
-  const containerResized = (e: Event): void => {
-    console.error(`containerResized=> GridItem: i=`, e);
+  let testLayout = ref(testData);
+  const refLayout = ref();
+  const mapCache: Map<string, any> = new Map();
+  let orgColNum = colNum.value;
+  const colNumChanged = (value: number): void => {
+    if(orgColNum !== value){
+      orgColNum = value;
+      colNum.value = value;
+    }
+  };
+  function handleResize(i: string | number, w: number, h: number, x: number, y: number) {
+    console.log(i, w, h, x, y);
+  }
+
+  function setChildRef(vm: any) {
+    if(vm && vm.i) {
+      mapCache.set(vm.i, vm);
+    }
+  }
+
+  let mouseXY = {
+    x: 0,
+    y: 0,
+  };
+  let DragPos = {
+    x: 0,
+    y: 0,
+    w: 1,
+    h: 1,
+    i: ``,
   };
 
-  const breakpointUpdated = (newBreakpoint: string, layout: TLayout): void => {
-    // console.error(`breakpointUpdated`, newBreakpoint, layout);
-  };
+  function drag(e: DragEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+    const t = document.getElementById("content") as HTMLElement;
+    let parentRect = t.getBoundingClientRect();
+    let mouseInGrid = false;
+    if(
+      mouseXY.x > parentRect.left &&
+      mouseXY.x < parentRect.right &&
+      mouseXY.y > parentRect.top &&
+      mouseXY.y < parentRect.bottom
+    ) {
+      mouseInGrid = true;
+    }
+    if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === "drop") === -1) {
+      testLayout.value.push({
+        x: (testLayout.value.length * 2) % colNum.value,
+        y: testLayout.value.length + colNum.value, // puts it at the bottom
+        w: 3,
+        h: 4,
+        i: "drop"
+      });
+    }
 
-  // watch(() => borderRadiusPx.value, (newValue) => {
-  //   console.error(newValue);
-  // });
+    let index = testLayout.value.findIndex(item => item.i === "drop");
+
+    if(index !== -1) {
+      try {
+        refLayout.value.defaultGridItem.$el.style.display = "none";
+      } catch {
+        // Do nothing
+      }
+      let el = mapCache.get("drop");
+      if(!el) return;
+      console.log("jjj");
+
+      el.dragging = {
+        top: mouseXY.y - parentRect.top,
+        left: mouseXY.x - parentRect.left
+      };
+      let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
+      if(mouseInGrid === true) {
+        refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 3, 4);
+        DragPos.i = String(index);
+        DragPos.x = testLayout.value[index].x;
+        DragPos.y = testLayout.value[index].y;
+      }
+      if(mouseInGrid === false) {
+        refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 3, 4);
+        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
+      }
+    }
+  }
+
+  function dragend() {
+    const t = document.getElementById("content") as HTMLElement;
+    let parentRect = t.getBoundingClientRect();
+    let mouseInGrid = false;
+    if(
+      mouseXY.x > parentRect.left &&
+      mouseXY.x < parentRect.right &&
+      mouseXY.y > parentRect.top &&
+      mouseXY.y < parentRect.bottom
+    ) {
+      mouseInGrid = true;
+    }
+
+    if(mouseInGrid === true) {
+      refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 3, 4);
+      testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
+      // UNCOMMENT below if you want to add a grid-item
+      nextTick(() => {
+        testLayout.value.push({
+          x: DragPos.x,
+          y: DragPos.y,
+          w: 3,
+          h: 4,
+          i: DragPos.i
+        });
+        refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 3, 4);
+        mapCache.delete("drop");
+      });
+    }
+  }
+
+  function addDragOverEvent(e: DragEvent) {
+    mouseXY.x = e.clientX;
+    mouseXY.y = e.clientY;
+  }
+
+  onMounted(() => {
+    document.addEventListener("dragover", addDragOverEvent);
+  });
 </script>
 
 <style lang="scss" scoped>
 @import '../src/styles/index.scss';
+form {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
 #rowHeight {
   max-width: 70px !important;
 }
+
 #colNum {
   max-width: 70px !important;
 }
+
 #mlr {
   max-width: 70px !important;
 }
+
 #mtb {
   max-width: 70px !important;
 }
+
 #maxRows {
   max-width: 70px !important;
 }
@@ -152,6 +295,7 @@
 
 .container {
   background: #646cff;
+  min-width: 330px;
 }
 
 .grid::before {
@@ -174,15 +318,38 @@
 }
 
 .vue-grid-item .text {
-  font-size: 24px;
-  text-align: center;
-  position: absolute;
-  top: 0;
   bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
+  font-size: 24px;
   height: 100%;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
   width: 100%;
+}
+
+.layout {
+  background-color: #58749f;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  //margin-left: 9px;
+  //margin-right: 9px;
+}
+
+.test {
+  background-color: #a86666;
+}
+
+.droppable-element {
+  background: #fdd;
+  border: 1px solid black;
+  border-radius: 8px;
+  cursor: grab;
+  margin: 10px 0 0 10px;
+  padding: 10px;
+  text-align: center;
+  width: 150px;
 }
 </style>
