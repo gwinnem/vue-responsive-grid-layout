@@ -41,7 +41,7 @@
   import useCurrentInstance from '@/hooks/useInstance';
   import { IGridLayoutProps } from './grid-layout-props.interface';
   import { ILayoutData } from './layout-data.interface';
-  import { EGridItemEvent } from "../../core/enums/EGridItemEvents";
+  import { EGridItemEvent } from '../../core/enums/EGridItemEvents';
 
   const { proxy } = useCurrentInstance();
 
@@ -76,7 +76,7 @@
     (e: EGridItemEvent.RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
   }>();
 
-  interface PropsChild {
+  export interface IGridItemProps {
     isDraggable?: boolean | null;
     isResizable?: boolean | null;
     isBounded?: boolean | null;
@@ -97,27 +97,20 @@
     dragOption?: {[key: string]: any};
     resizeOption?: {[key: string]: any};
   }
-  interface Pos {
+  interface IGridItemPosition {
     left?: number;
     right?: number;
     top: number;
     width: number;
     height: number;
   }
-  interface WH {
+  interface IGridItemWidthHeight {
     width: number;
     height: number;
   }
-  // interface Placeholder {
-  //   x: number
-  //   y: number
-  //   w: number
-  //   h: number
-  //   i: number | string
-  // }
 
   // Props Data
-  const props = withDefaults(defineProps<PropsChild>(), {
+  const props = withDefaults(defineProps<IGridItemProps>(), {
     isDraggable: null,
     isResizable: null,
     isBounded: null,
@@ -150,9 +143,9 @@
   const useStyleCursor = ref<boolean>(true);
 
   const isDragging = ref(false);
-  const dragging = ref<Pos | null>(null);
+  const dragging = ref<IGridItemPosition | null>(null);
   const isResizing = ref(false);
-  const resizing = ref<WH | null>(null);
+  const resizing = ref<IGridItemWidthHeight | null>(null);
   const lastX = ref(NaN);
   const lastY = ref(NaN);
   const lastW = ref(NaN);
@@ -327,47 +320,47 @@
   );
 
   //
-  function updateWidthHandler(width: number) {
+  function updateWidthHandler(width: number): void {
     updateWidth(width);
   }
-  function compactHandler(layout?: Layout) {
+  function compactHandler(layout?: Layout): void {
     selfCompact(layout);
   }
-  function setDraggableHandler(isDraggable: boolean) {
+  function setDraggableHandler(isDraggable: boolean): void {
     if(props.isDraggable === null) {
       draggable.value = isDraggable;
     }
   }
 
-  function setResizableHandler(isResizable: boolean) {
+  function setResizableHandler(isResizable: boolean): void {
     if(props.isResizable === null) {
       resizable.value = isResizable;
     }
   }
-  function setBoundedHandler(isBounded: boolean) {
+  function setBoundedHandler(isBounded: boolean): void {
     if(props.isBounded === null) {
       bounded.value = isBounded;
     }
   }
 
-  function setTransformScaleHandler(tScale: number) {
+  function setTransformScaleHandler(tScale: number): void {
     transformScale.value = tScale;
   }
 
-  function setRowHeightHandler(rHeight: number) {
+  function setRowHeightHandler(rHeight: number): void {
     rowHeight.value = rHeight;
   }
 
-  function setMaxRowsHandler(mRows: number) {
+  function setMaxRowsHandler(mRows: number): void {
     maxRows.value = mRows;
   }
 
-  function directionchangeHandler() {
+  function directionchangeHandler(): void {
     rtl.value = getDocumentDir() === `rtl`;
     selfCompact();
   }
 
-  function setColNum(colNum: number) {
+  function setColNum(colNum: number): void {
     const col = colNum.toString();
     cols.value = parseInt(col);
   }
@@ -435,7 +428,7 @@
     createStyle();
   });
   // methods
-  function createStyle() {
+  function createStyle(): void {
     if(props.x + props.w > cols.value) {
       innerX.value = 0;
       innerW.value = props.w > cols.value ? cols.value : props.w;
@@ -479,10 +472,10 @@
     }
     styleObj.value = sty;
   }
-  function emitContainerResized() {
+  function emitContainerResized(): void {
     // this.style has width and height with trailing 'px'. The
     // resized event is without them
-    const styleProps = {} as WH;
+    const styleProps = {} as IGridItemWidthHeight;
     for(const prop of [`width`, `height`]) {
       const val = styleObj.value[prop];
       const matches = val.match(/^(\d+)px$/);
@@ -492,7 +485,7 @@
     emit(EGridItemEvent.CONTAINER_RESIZED, props.i, props.h, props.w, styleProps.height, styleProps.width);
   }
 
-  function handleResize(event: MouseEvent) {
+  function handleResize(event: MouseEvent): void {
     {
       if(props.static) return;
       const position = getControlPosition(event);
@@ -586,7 +579,7 @@
     }
   }
 
-  function handleDrag(event: MouseEvent) {
+  function handleDrag(event: MouseEvent): void {
     if(props.static) return;
     if(isResizing.value) return;
 
@@ -621,7 +614,7 @@
           newPosition.left = cLeft - pLeft;
         }
         newPosition.top = cTop - pTop;
-        dragging.value = newPosition as Pos;
+        dragging.value = newPosition as IGridItemPosition;
         isDragging.value = true;
         break;
       }
@@ -674,7 +667,7 @@
         //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);
         //                        console.log("### drag => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
         //                        console.log("### drag end => " + JSON.stringify(newPosition));
-        dragging.value = newPosition as Pos;
+        dragging.value = newPosition as IGridItemPosition;
         break;
       }
     }
@@ -709,7 +702,7 @@
     };
     eventBus.emit(`dragEvent`, data);
   }
-  function calcPosition(x: number, y: number, w: number, h: number): Pos {
+  function calcPosition(x: number, y: number, w: number, h: number): IGridItemPosition {
     const colWidth = calcColWidth();
     // add rtl support
     let out;
@@ -767,7 +760,7 @@
   }
 
   // Helper for generating column width
-  function calcColWidth() {
+  function calcColWidth(): number {
     const colWidth = (containerWidth.value - margin.value[0] * (cols.value + 1)) / cols.value;
     // console.log("### COLS=" + this.cols + " COL WIDTH=" + colWidth + " MARGIN " + this.margin[0]);
     return colWidth;
@@ -776,12 +769,12 @@
   // calcGridItemWHPx(w, colWidth, margin[0])
   // or
   // calcGridItemWHPx(h, rowHeight, margin[1])
-  function calcGridItemWHPx(gridUnits: number, colOrRowSize: number, marginPx: number) {
+  function calcGridItemWHPx(gridUnits: number, colOrRowSize: number, marginPx: number): number {
     if(!Number.isFinite(gridUnits)) return gridUnits;
     return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
   }
   // Similar to _.clamp
-  function clamp(num: number, lowerBound: number, upperBound: number) {
+  function clamp(num: number, lowerBound: number, upperBound: number): number {
     return Math.max(Math.min(num, upperBound), lowerBound);
   }
   /**
@@ -810,18 +803,18 @@
     h = Math.max(Math.min(h, maxRows.value - innerY.value), 0);
     return { w, h };
   }
-  function updateWidth(width: number, colNum?: number) {
+  function updateWidth(width: number, colNum?: number): void {
     containerWidth.value = width;
     if(colNum !== undefined && colNum !== null) {
       cols.value = colNum;
     }
   }
-  function selfCompact(layout?: Layout) {
+  function selfCompact(layout?: Layout): void {
     const a = layout;
     createStyle();
   }
 
-  function tryMakeDraggable() {
+  function tryMakeDraggable(): void {
     if(interactObj.value === null || interactObj.value === undefined) {
       interactObj.value = interact(this$refsItem.value);
       if(!useStyleCursor.value) {
@@ -851,7 +844,7 @@
       });
     }
   }
-  function tryMakeResizable() {
+  function tryMakeResizable():void {
     if(interactObj.value === null || interactObj.value === undefined) {
       interactObj.value = interact(this$refsItem.value);
       if(!useStyleCursor.value) {
@@ -914,7 +907,7 @@
     }
   }
   const $slots = useSlots();
-  function autoSize() {
+  function autoSize(): void {
     // ok here we want to calculate if a resize is needed
     previousW.value = innerW.value;
     previousH.value = innerH.value;
