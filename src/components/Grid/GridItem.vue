@@ -111,20 +111,20 @@
 
   // Props Data
   const props = withDefaults(defineProps<IGridItemProps>(), {
+    dragAllowFrom: null,
+    dragIgnoreFrom: `a, button`,
+    dragOption: () => ({}),
+    isBounded: null,
     isDraggable: null,
     isResizable: null,
-    isBounded: null,
-    static: false,
-    minH: 1,
-    minW: 1,
     maxH: Infinity,
     maxW: Infinity,
-    dragIgnoreFrom: `a, button`,
-    dragAllowFrom: null,
-    resizeIgnoreFrom: `a, button`,
+    minH: 1,
+    minW: 1,
     preserveAspectRatio: false,
-    dragOption: () => ({}),
+    resizeIgnoreFrom: `a, button`,
     resizeOption: () => ({}),
+    static: false,
   });
 
   // item dom
@@ -184,14 +184,14 @@
   });
   const classObj = computed(() => {
     return {
-      "vue-resizable": resizableAndNotStatic.value,
-      static: props.static,
-      resizing: isResizing.value,
-      "vue-draggable-dragging": isDragging.value,
       cssTransforms: useCssTransforms.value,
-      "render-rtl": renderRtl.value,
       "disable-userselect": isDragging.value,
       "no-touch": isAndroid.value && draggableOrResizableAndNotStatic.value,
+      "render-rtl": renderRtl.value,
+      resizing: isResizing.value,
+      static: props.static,
+      "vue-draggable-dragging": isDragging.value,
+      "vue-resizable": resizableAndNotStatic.value,
     };
   });
 
@@ -480,6 +480,7 @@
       const val = styleObj.value[prop];
       const matches = val.match(/^(\d+)px$/);
       if(!matches) return;
+      // eslint-disable-next-line prefer-destructuring
       styleProps[prop] = matches[1];
     }
     emit(EGridItemEvent.CONTAINER_RESIZED, props.i, props.h, props.w, styleProps.height, styleProps.width);
@@ -493,7 +494,7 @@
       if(position == null) return; // not possible but satisfies flow
       const { x, y } = position;
 
-      const newSize = { width: 0, height: 0 };
+      const newSize = { height: 0, width: 0 };
       let pos;
       switch(event.type) {
         case `resizestart`: {
@@ -569,11 +570,11 @@
       }
       const data = {
         eventType: event.type,
+        h: pos.h,
         i: props.i,
+        w: pos.w,
         x: innerX.value,
         y: innerY.value,
-        h: pos.h,
-        w: pos.w,
       };
       eventBus.emit(`resizeEvent`, data);
     }
@@ -590,7 +591,7 @@
     const { x, y } = position;
 
     // let shouldUpdate = false;
-    const newPosition = { top: 0, left: 0 };
+    const newPosition = { left: 0, top: 0 };
     switch(event.type) {
       case `dragstart`: {
         previousX.value = innerX.value;
@@ -694,11 +695,11 @@
     }
     const data = {
       eventType: event.type,
+      h: innerH.value,
       i: props.i,
+      w: innerW.value,
       x: pos.x,
       y: pos.y,
-      h: innerH.value,
-      w: innerW.value,
     };
     eventBus.emit(`dragEvent`, data);
   }
@@ -708,25 +709,23 @@
     let out;
     if(renderRtl.value) {
       out = {
+        height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
         right: Math.round(colWidth * x + (x + 1) * margin.value[0]),
         top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
         // 0 * Infinity === NaN, which causes problems with resize constriants;
         // Fix this if it occurs.
         // Note we do it here rather than later because Math.round(Infinity) causes deopt
         width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
-        height:
-          h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
       };
     } else {
       out = {
+        height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
         left: Math.round(colWidth * x + (x + 1) * margin.value[0]),
         top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
         // 0 * Infinity === NaN, which causes problems with resize constriants;
         // Fix this if it occurs.
         // Note we do it here rather than later because Math.round(Infinity) causes deopt
         width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
-        height:
-          h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
       };
     }
 
@@ -791,7 +790,7 @@
     // ...
     // w = (width + margin) / (colWidth + margin)
     let w = Math.round((width + margin.value[0]) / (colWidth + margin.value[0]));
-    let h = 0;
+    let h;
     if(!autoSizeFlag) {
       h = Math.round((height + margin.value[1]) / (rowHeight.value + margin.value[1]));
     } else {
@@ -801,7 +800,7 @@
     // Capping
     w = Math.max(Math.min(w, cols.value - innerX.value), 0);
     h = Math.max(Math.min(h, maxRows.value - innerY.value), 0);
-    return { w, h };
+    return { h, w };
   }
   function updateWidth(width: number, colNum?: number): void {
     containerWidth.value = width;
@@ -824,8 +823,8 @@
     }
     if(draggable.value && !props.static) {
       const opts = {
-        ignoreFrom: props.dragIgnoreFrom,
         allowFrom: props.dragAllowFrom,
+        ignoreFrom: props.dragIgnoreFrom,
         ...props.dragOption,
       };
       // @ts-ignore
@@ -862,20 +861,20 @@
       const opts = {
         // allowFrom: "." + this.resizableHandleClass.trim().replace(" ", "."),
         edges: {
+          bottom: `.${resizableHandleClass.value.trim().replace(` `, `.`)}`,
           left: false,
           right: `.${resizableHandleClass.value.trim().replace(` `, `.`)}`,
-          bottom: `.${resizableHandleClass.value.trim().replace(` `, `.`)}`,
           top: false,
         },
         ignoreFrom: props.resizeIgnoreFrom,
         restrictSize: {
-          min: {
-            height: minimum.height * transformScale.value,
-            width: minimum.width * transformScale.value,
-          },
           max: {
             height: maximum.height * transformScale.value,
             width: maximum.width * transformScale.value,
+          },
+          min: {
+            height: minimum.height * transformScale.value,
+            width: minimum.width * transformScale.value,
           },
         },
         ...props.resizeOption,
@@ -945,11 +944,11 @@
       emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
       const data = {
         eventType: `resizeend`,
+        h: pos.h,
         i: props.i,
+        w: pos.w,
         x: innerX.value,
         y: innerY.value,
-        h: pos.h,
-        w: pos.w,
       };
       eventBus.emit(`resizeEvent`, data);
     }
