@@ -53,7 +53,7 @@
   import { addWindowEventListener, removeWindowEventListener, EventsData } from '@/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
 
-  interface IGridLayoutProps {
+  export interface IGridLayoutProps {
     autoSize?: boolean;
     breakpoints?: { xxl: number; xl: number; lg: number; md: number; sm: number; xs: number; xxs: number };
     colNum?: number;
