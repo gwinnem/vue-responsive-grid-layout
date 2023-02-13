@@ -1,5 +1,5 @@
 {
-  "name": "vue-dashboard-layout-component",
+  "name": "vue-responsive-grid-layout",
   "version": "1.0.0",
   "description": "Vue 3 Dynamic Grid / Dashboard layout with drag, drop and resizable actions.",
   "author": "Geirr Winnem <geirr@winnem.tech>",
@@ -27,8 +27,8 @@
     "composition api",
     "vue component library"
   ],
-  "main": "dist/my-component.umd.js",
-  "module": "my-component.es.js",
+  "main": "dist/vue-responsive-grid-layout.umd.js",
+  "module": "vue-responsive-grid-layout.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist/*",
@@ -37,16 +37,16 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/my-component.es.js",
-      "require": "./dist/my-component.umd.js"
+      "import": "./dist/vue-responsive-grid-layout.es.js",
+      "require": "./dist/vue-responsive-grid-layout.umd.js"
     }
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gwinnem/vue-dashboard-layout-component.git"
+    "url": "https://github.com/gwinnem/vue-responsive-grid-layout.git"
   },
   "bugs": {
-    "url": "https://github.com/gwinnem/vue-dashboard-layout-component/issues"
+    "url": "https://github.com/gwinnem/vue-responsive-grid-layout/issues"
   },
   "scripts": {
     "dev": "vite --host",
@@ -141,7 +141,7 @@
     "not dead"
   ],
   "peerDependencies": {
-    "vue": "^3.2.45"
+    "vue": "^3.2.0"
   },
   "engines": {
     "node": ">= 14.18.0"
