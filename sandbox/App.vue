@@ -106,6 +106,7 @@
                 :x="item.x"
                 :y="item.y"
                 class="test"
+                @remove-grid-item="removeGridItem"
                 @resized="handleResize">
                 <span class="text">
                   {{ itemTitle(item) }}
@@ -166,6 +167,12 @@
     }
   };
 
+  const removeGridItem = (id: string | number): void => {
+    testLayout.value = testLayout.value.filter((item) => {
+      return item.i !== id;
+    });
+  };
+
   const itemTitle = (item: LayoutItem): string => {
       let result = item.i;
       if(item.static) {
@@ -215,8 +222,8 @@
       testLayout.value.push({
         x: (testLayout.value.length * 2) % colNum.value,
         y: testLayout.value.length + colNum.value, // puts it at the bottom
-        w: 3,
-        h: 4,
+        w: 2,
+        h: 2,
         i: "drop"
       });
     }
@@ -240,13 +247,13 @@
       };
       let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
       if(mouseInGrid === true) {
-        refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 3, 4);
+        refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 2, 2);
         DragPos.i = String(index);
         DragPos.x = testLayout.value[index].x;
         DragPos.y = testLayout.value[index].y;
       }
       if(mouseInGrid === false) {
-        refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 3, 4);
+        refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 2, 2);
         testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
       }
     }
@@ -257,27 +264,28 @@
     let parentRect = t.getBoundingClientRect();
     let mouseInGrid = false;
     if(
-      mouseXY.x > parentRect.left &&
-      mouseXY.x < parentRect.right &&
-      mouseXY.y > parentRect.top &&
-      mouseXY.y < parentRect.bottom
+      mouseXY.x > parentRect.left
+      && mouseXY.x < parentRect.right
+      && mouseXY.y > parentRect.top
+      && mouseXY.y < parentRect.bottom
     ) {
       mouseInGrid = true;
     }
 
     if(mouseInGrid === true) {
-      refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 3, 4);
+      refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 2, 2);
       testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
-      // UNCOMMENT below if you want to add a grid-item
       nextTick(() => {
         testLayout.value.push({
           x: DragPos.x,
           y: DragPos.y,
-          w: 3,
-          h: 4,
+          w: 1,
+          h: 1,
+          minH:1,
+          minW:1,
           i: DragPos.i
         });
-        refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 3, 4);
+        refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 2, 2);
         mapCache.delete("drop");
       });
     }

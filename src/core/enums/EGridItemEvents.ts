@@ -5,6 +5,7 @@ export enum EGridItemEvent {
   CONTAINER_RESIZED = `container-resized`,
   MOVE = `move`,
   MOVED = `moved`,
+  REMOVE_ITEM = `remove-grid-item`,
   RESIZE = `resize`,
   RESIZED = `resized`,
 }

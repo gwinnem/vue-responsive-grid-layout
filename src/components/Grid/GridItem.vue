@@ -4,12 +4,17 @@
     class="vue-grid-item"
     :class="classObj"
     :style="styleObj">
+    <img
+      v-if="showCloseButton"
+      alt="Close Button"
+      class="close-button"
+      src="../../assets/close.svg"
+      @click="closeClicked(props.i)" />
     <slot :style="styleObj"></slot>
     <span
       v-if="resizableAndNotStatic"
       ref="handle"
       :class="resizableHandleClass"></span>
-    <!--<span v-if="draggable" ref="dragHandle" class="vue-draggable-handle"></span>-->
   </div>
 </template>
 <script lang="ts">
@@ -66,12 +71,12 @@
     compact?: undefined;
     directionchange: undefined;
   }>;
-  // console.log(thisLayout, eventBus)
 
   const emit = defineEmits<{
     (e: EGridItemEvent.CONTAINER_RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
     (e: EGridItemEvent.MOVE, i: number | string, x: number, y: number): void;
     (e: EGridItemEvent.MOVED, i: number | string, x: number, y: number): void;
+    (e: EGridItemEvent.REMOVE_ITEM, i: string | number): void;
     (e: EGridItemEvent.RESIZE, i: number | string, h: number, w: number, height: number, width: number): void;
     (e: EGridItemEvent.RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
   }>();
@@ -94,9 +99,11 @@
     dragAllowFrom?: string | null;
     resizeIgnoreFrom?: string;
     preserveAspectRatio?: boolean;
-    dragOption?: {[key: string]: any};
-    resizeOption?: {[key: string]: any};
+    dragOption?: { [key: string]: any };
+    resizeOption?: { [key: string]: any };
+    showCloseButton?: boolean;
   }
+
   interface IGridItemPosition {
     left?: number;
     right?: number;
@@ -104,6 +111,7 @@
     width: number;
     height: number;
   }
+
   interface IGridItemWidthHeight {
     width: number;
     height: number;
@@ -114,6 +122,7 @@
     dragAllowFrom: null,
     dragIgnoreFrom: `a, button`,
     dragOption: () => ({}),
+    i: ``,
     isBounded: null,
     isDraggable: null,
     isResizable: null,
@@ -124,6 +133,7 @@
     preserveAspectRatio: false,
     resizeIgnoreFrom: `a, button`,
     resizeOption: () => ({}),
+    showCloseButton: true,
     static: false,
   });
 
@@ -152,7 +162,6 @@
   const lastH = ref(NaN);
   const styleObj = ref({} as any);
   const rtl = ref(false);
-
   const dragEventSet = ref(false);
   const resizeEventSet = ref(false);
 
@@ -168,6 +177,10 @@
   const bounded = ref<boolean | null>(null);
 
   const interactObj = ref<Interactable | null>(null);
+
+  const closeClicked = (id: string | number): void => {
+    emit(EGridItemEvent.REMOVE_ITEM, id);
+  };
   // computed
 
   const resizableAndNotStatic = computed(() => {
@@ -177,7 +190,8 @@
     return (draggable.value || resizable.value) && !props.static;
   });
   const isAndroid = computed(() => {
-    return navigator.userAgent.toLowerCase().indexOf(`android`) !== -1;
+    return navigator.userAgent.toLowerCase()
+      .indexOf(`android`) !== -1;
   });
   const renderRtl = computed(() => {
     return thisLayout?.isMirrored ? !rtl.value : rtl.value;
@@ -323,9 +337,11 @@
   function updateWidthHandler(width: number): void {
     updateWidth(width);
   }
+
   function compactHandler(layout?: Layout): void {
-    selfCompact(layout);
+    selfCompact();
   }
+
   function setDraggableHandler(isDraggable: boolean): void {
     if(props.isDraggable === null) {
       draggable.value = isDraggable;
@@ -337,6 +353,7 @@
       resizable.value = isResizable;
     }
   }
+
   function setBoundedHandler(isBounded: boolean): void {
     if(props.isBounded === null) {
       bounded.value = isBounded;
@@ -391,7 +408,7 @@
     eventBus.off(`directionchange`, directionchangeHandler);
     eventBus.off(`setColNum`, setColNum);
     if(interactObj.value) {
-      interactObj.value.unset(); // destroy interact intance
+      interactObj.value.unset(); // destroy interact instance
     }
   });
 
@@ -426,6 +443,7 @@
     useStyleCursor.value = thisLayout?.useStyleCursor as boolean;
     createStyle();
   });
+
   // methods
   function createStyle(): void {
     if(props.x + props.w > cols.value) {
@@ -471,6 +489,7 @@
     }
     styleObj.value = sty;
   }
+
   function emitContainerResized(): void {
     // this.style has width and height with trailing 'px'. The
     // resized event is without them
@@ -490,9 +509,15 @@
     const position = getControlPosition(event);
     // Get the current drag point from the event. This is used as the offset.
     if(position == null) return; // not possible but satisfies flow
-    const { x, y } = position;
+    const {
+      x,
+      y,
+    } = position;
 
-    const newSize = { height: 0, width: 0 };
+    const newSize = {
+      height: 0,
+      width: 0,
+    };
     let pos;
     switch(event.type) {
       case `resizestart`: {
@@ -588,10 +613,16 @@
 
     // Get the current drag point from the event. This is used as the offset.
     if(position === null) return; // not possible but satisfies flow
-    const { x, y } = position;
+    const {
+      x,
+      y,
+    } = position;
 
     // let shouldUpdate = false;
-    const newPosition = { left: 0, top: 0 };
+    const newPosition = {
+      left: 0,
+      top: 0,
+    };
     switch(event.type) {
       case `dragstart`: {
         previousX.value = innerX.value;
@@ -706,6 +737,7 @@
     };
     eventBus.emit(`dragEvent`, data);
   }
+
   function calcPosition(x: number, y: number, w: number, h: number): IGridItemPosition {
     const colWidth = calcColWidth();
     // add rtl support
@@ -734,6 +766,7 @@
 
     return out;
   }
+
   /**
    * Translate x and y coordinates from pixels to grid units.
    * @param  {Number} top  Top position (relative to parent) in pixels.
@@ -758,7 +791,10 @@
     x = Math.max(Math.min(x, cols.value - innerW.value), 0);
     y = Math.max(Math.min(y, maxRows.value - innerH.value), 0);
 
-    return { x, y };
+    return {
+      x,
+      y,
+    };
   }
 
   // Helper for generating column width
@@ -767,6 +803,7 @@
     // console.log("### COLS=" + this.cols + " COL WIDTH=" + colWidth + " MARGIN " + this.margin[0]);
     return colWidth;
   }
+
   // This can either be called:
   // calcGridItemWHPx(w, colWidth, margin[0])
   // or
@@ -775,10 +812,12 @@
     if(!Number.isFinite(gridUnits)) return gridUnits;
     return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
   }
+
   // Similar to _.clamp
   function clamp(num: number, lowerBound: number, upperBound: number): number {
     return Math.max(Math.min(num, upperBound), lowerBound);
   }
+
   /**
    * Given a height and width in pixel values, calculate grid units.
    * @param  {Number} height Height in pixels.
@@ -786,7 +825,7 @@
    * @param  {Boolean} autoSizeFlag  function autoSize identifier.
    * @return {Object} w, h as grid units.
    */
-  function calcWH(height: number, width: number, autoSizeFlag = false): {w: number; h: number} {
+  function calcWH(height: number, width: number, autoSizeFlag = false): { w: number; h: number } {
     const colWidth = calcColWidth();
 
     // width = colWidth * w - (margin * (w - 1))
@@ -803,16 +842,20 @@
     // Capping
     w = Math.max(Math.min(w, cols.value - innerX.value), 0);
     h = Math.max(Math.min(h, maxRows.value - innerY.value), 0);
-    return { h, w };
+    return {
+      h,
+      w,
+    };
   }
+
   function updateWidth(width: number, colNum?: number): void {
     containerWidth.value = width;
     if(colNum !== undefined && colNum !== null) {
       cols.value = colNum;
     }
   }
-  function selfCompact(layout?: Layout): void {
-    const a = layout;
+
+  function selfCompact(): void {
     createStyle();
   }
 
@@ -846,7 +889,8 @@
       });
     }
   }
-  function tryMakeResizable():void {
+
+  function tryMakeResizable(): void {
     if(interactObj.value === null || interactObj.value === undefined) {
       interactObj.value = interact(this$refsItem.value);
       if(!useStyleCursor.value) {
@@ -864,9 +908,11 @@
       const opts = {
         // allowFrom: "." + this.resizableHandleClass.trim().replace(" ", "."),
         edges: {
-          bottom: `.${resizableHandleClass.value.trim().replace(` `, `.`)}`,
+          bottom: `.${resizableHandleClass.value.trim()
+            .replace(` `, `.`)}`,
           left: false,
-          right: `.${resizableHandleClass.value.trim().replace(` `, `.`)}`,
+          right: `.${resizableHandleClass.value.trim()
+            .replace(` `, `.`)}`,
           top: false,
         },
         ignoreFrom: props.resizeIgnoreFrom,
@@ -908,7 +954,9 @@
       });
     }
   }
+
   const $slots = useSlots();
+
   function autoSize(): void {
     // ok here we want to calculate if a resize is needed
     previousW.value = innerW.value;
@@ -937,7 +985,7 @@
       pos.w = 1;
     }
 
-    // this.lastW = x; // basically, this is copied from resizehandler, but shouldn't be needed
+    // this.lastW = x; // basically, this is copied from resize handler, but shouldn't be needed
     // this.lastH = y;
 
     if(innerW.value !== pos.w || innerH.value !== pos.h) {
@@ -964,81 +1012,88 @@
     ...props,
   });
 </script>
-<style>
+<style lang="scss" scoped>
+@import '@/styles/variables.scss';
+
+$grid-item-border-radius: v-bind(borderRadius);
+
+.close-button {
+  height: 18px;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 18px;
+  z-index: 20;
+}
+
+.close-button:hover {
+  cursor: pointer;
+  filter: brightness(0) invert(1);
+}
+
 .vue-grid-item {
+  background-color: $grid-item-bg-color;
   box-sizing: border-box;
+  color: $grid-item-text-color;
+  font-size: $grid-item-font-size;
   touch-action: none;
   transition: all 200ms ease;
   transition-property: left, top, right;
-  /* add right for rtl */
-}
 
-.vue-grid-item.no-touch {
-  -ms-touch-action: none;
-  touch-action: none;
-}
+  &.no-touch {
+    touch-action: none;
+  }
 
-.vue-grid-item.cssTransforms {
-  transition-property: transform;
-  left: 0;
-  right: auto;
-}
+  &.static {
+    background-color: $grid-item-static-bg-color;
+  }
 
-.vue-grid-item.cssTransforms.render-rtl {
-  left: auto;
-  right: 0;
-}
+  &.css-transforms {
+    right: auto;
+    left: 0;
+    transition-property: transform;
+  }
 
-.vue-grid-item.resizing {
-  opacity: 0.6;
-  z-index: 3;
-}
+  &.resizing {
+    z-index: 3;
+    opacity: .6;
+  }
 
-.vue-grid-item.vue-draggable-dragging {
-  transition: none;
-  z-index: 3;
-}
+  &.vue-draggable-dragging {
+    z-index: 3;
+    transition: none;
+  }
 
-.vue-grid-item.vue-grid-placeholder {
-  background: red;
-  opacity: 0.2;
-  transition-duration: 100ms;
-  z-index: 2;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
+  &.vue-grid-placeholder {
+    z-index: 2;
+    user-select: none;
+    background: $grid-item-placeholder-bg-color;
+    opacity: $grid-item-placeholder-opacity;
+    transition-duration: 100ms;
+  }
 
-.vue-grid-item > .vue-resizable-handle {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  bottom: 0;
-  right: 0;
-  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg08IS0tIEdlbmVyYXRvcjogQWRvYmUgRmlyZXdvcmtzIENTNiwgRXhwb3J0IFNWRyBFeHRlbnNpb24gYnkgQWFyb24gQmVhbGwgKGh0dHA6Ly9maXJld29ya3MuYWJlYWxsLmNvbSkgLiBWZXJzaW9uOiAwLjYuMSAgLS0+DTwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DTxzdmcgaWQ9IlVudGl0bGVkLVBhZ2UlMjAxIiB2aWV3Qm94PSIwIDAgNiA2IiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmMDAiIHZlcnNpb249IjEuMSINCXhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiDQl4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjZweCIgaGVpZ2h0PSI2cHgiDT4NCTxnIG9wYWNpdHk9IjAuMzAyIj4NCQk8cGF0aCBkPSJNIDYgNiBMIDAgNiBMIDAgNC4yIEwgNCA0LjIgTCA0LjIgNC4yIEwgNC4yIDAgTCA2IDAgTCA2IDYgTCA2IDYgWiIgZmlsbD0iIzAwMDAwMCIvPg0JPC9nPg08L3N2Zz4=");
-  background-position: bottom right;
-  padding: 0 3px 3px 0;
-  background-repeat: no-repeat;
-  background-origin: content-box;
-  box-sizing: border-box;
-  cursor: se-resize;
-}
+  & > .vue-resizable-handle {
+    position: absolute;
+    right: 1px;
+    bottom: 1px;
+    z-index: 20;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    padding: 0 3px 3px 0;
+    cursor: se-resize;
+    background-image: url('../../assets/resize.svg');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-origin: content-box;
+  }
 
-.vue-grid-item > .vue-rtl-resizable-handle {
-  bottom: 0;
-  left: 0;
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAuMDAwMDAwMDAwMDAwMDAyIiBoZWlnaHQ9IjEwLjAwMDAwMDAwMDAwMDAwMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KIDwhLS0gQ3JlYXRlZCB3aXRoIE1ldGhvZCBEcmF3IC0gaHR0cDovL2dpdGh1Yi5jb20vZHVvcGl4ZWwvTWV0aG9kLURyYXcvIC0tPgogPGc+CiAgPHRpdGxlPmJhY2tncm91bmQ8L3RpdGxlPgogIDxyZWN0IGZpbGw9Im5vbmUiIGlkPSJjYW52YXNfYmFja2dyb3VuZCIgaGVpZ2h0PSIxMiIgd2lkdGg9IjEyIiB5PSItMSIgeD0iLTEiLz4KICA8ZyBkaXNwbGF5PSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgeT0iMCIgeD0iMCIgaGVpZ2h0PSIxMDAlIiB3aWR0aD0iMTAwJSIgaWQ9ImNhbnZhc0dyaWQiPgogICA8cmVjdCBmaWxsPSJ1cmwoI2dyaWRwYXR0ZXJuKSIgc3Ryb2tlLXdpZHRoPSIwIiB5PSIwIiB4PSIwIiBoZWlnaHQ9IjEwMCUiIHdpZHRoPSIxMDAlIi8+CiAgPC9nPgogPC9nPgogPGc+CiAgPHRpdGxlPkxheWVyIDE8L3RpdGxlPgogIDxsaW5lIGNhbnZhcz0iI2ZmZmZmZiIgY2FudmFzLW9wYWNpdHk9IjEiIHN0cm9rZS1saW5lY2FwPSJ1bmRlZmluZWQiIHN0cm9rZS1saW5lam9pbj0idW5kZWZpbmVkIiBpZD0ic3ZnXzEiIHkyPSItNzAuMTc4NDA3IiB4Mj0iMTI0LjQ2NDE3NSIgeTE9Ii0zOC4zOTI3MzciIHgxPSIxNDQuODIxMjg5IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIi8+CiAgPGxpbmUgc3Ryb2tlPSIjNjY2NjY2IiBzdHJva2UtbGluZWNhcD0idW5kZWZpbmVkIiBzdHJva2UtbGluZWpvaW49InVuZGVmaW5lZCIgaWQ9InN2Z181IiB5Mj0iOS4xMDY5NTciIHgyPSIwLjk0NzI0NyIgeTE9Ii0wLjAxODEyOCIgeDE9IjAuOTQ3MjQ3IiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KICA8bGluZSBzdHJva2UtbGluZWNhcD0idW5kZWZpbmVkIiBzdHJva2UtbGluZWpvaW49InVuZGVmaW5lZCIgaWQ9InN2Z183IiB5Mj0iOSIgeDI9IjEwLjA3MzUyOSIgeTE9IjkiIHgxPSItMC42NTU2NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9IiM2NjY2NjYiIGZpbGw9Im5vbmUiLz4KIDwvZz4KPC9zdmc+);
-  background-position: bottom left;
-  padding-left: 3px;
-  background-repeat: no-repeat;
-  background-origin: content-box;
-  cursor: sw-resize;
-  right: auto;
-}
+  &.use-radius {
+    border-radius: $grid-item-border-radius;
+  }
 
-.vue-grid-item.disable-userselect {
-  user-select: none;
+  &.disable-user-select {
+    user-select: none;
+  }
 }
 </style>

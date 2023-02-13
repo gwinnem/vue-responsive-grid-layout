@@ -90,10 +90,10 @@
       xs: 480,
       xxs: 0,
     }),
-    colNum: 16,
+    colNum: 12,
     cols: () => ({
-      xxl: 16,
-      xl: 14,
+      xxl: 12,
+      xl: 12,
       lg: 12,
       md: 10,
       sm: 6,
