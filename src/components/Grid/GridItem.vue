@@ -204,6 +204,7 @@
       "render-rtl": renderRtl.value,
       resizing: isResizing.value,
       static: props.static,
+      "vue-draggable": draggable.value && !props.static,
       "vue-draggable-dragging": isDragging.value,
       "vue-resizable": resizableAndNotStatic.value,
     };
@@ -1035,6 +1036,7 @@ $grid-item-border-radius: v-bind(borderRadius);
   background-color: $grid-item-bg-color;
   box-sizing: border-box;
   color: $grid-item-text-color;
+  cursor: default !important;
   font-size: $grid-item-font-size;
   touch-action: none;
   transition: all 200ms ease;
@@ -1059,9 +1061,14 @@ $grid-item-border-radius: v-bind(borderRadius);
     opacity: .6;
   }
 
+  &.vue-draggable {
+    cursor: grab !important;
+  }
+
   &.vue-draggable-dragging {
-    z-index: 3;
+    cursor: grabbing !important;
     transition: none;
+    z-index: 3;
   }
 
   &.vue-grid-placeholder {
