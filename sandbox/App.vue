@@ -47,16 +47,33 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-sm-2">
+        <div
+          class="droppable-element"
+          draggable="true"
+          @drag="drag"
+          @dragend="dragend">
+          Droppable Element (Drag me!)
+        </div>
+      </div>
+      <div class="col-sm-7">
+        <div class="layoutJSON">
+          Displayed as <code>[x, y, w, h]</code>:
+          <div class="columns">
+            <div v-for="item in testLayout">
+              <b>{{item.i}}</b>: [{{item.x}}, {{item.y}}, {{item.w}}, {{item.h}}]
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <textarea style="width: 100%"/>
+      </div>
+    </div>
+    <div style="font-size: 0; height: 5px; margin:0; padding: 0;"></div>
+    <div class="row">
       <div class="col-sm">
         <div class="layout">
-          <div style="font-size: 0; height: 1px; margin:0; padding: 0;"></div>
-          <div
-            class="droppable-element"
-            draggable="true"
-            @drag="drag"
-            @dragend="dragend">
-            Droppable Element (Drag me!)
-          </div>
           <div id="content">
             <GridLayout
               ref="refLayout"
@@ -68,6 +85,8 @@
               :is-draggable="isDraggable"
               :is-mirrored="isMirrored"
               :is-resizable="isResizable"
+              :max-rows="maxRows"
+              :prevent-collision="preventCollision"
               :responsive="isResponsive"
               :row-height="rowHeight"
               :show-close-button="showCloseButton"
@@ -77,19 +96,19 @@
               <GridItem
                 v-for="item in testLayout"
                 :key="item.i"
+                :ref="el => setChildRef(el)"
                 :h="item.h"
                 :i="item.i"
                 :min-h="3"
                 :min-w="3"
-                :ref="el => setChildRef(el)"
                 :show-close-button="showCloseButton"
+                :w="item.w"
                 :x="item.x"
                 :y="item.y"
-                :w="item.w"
                 class="test"
                 @resized="handleResize">
                 <span class="text">
-                  {{ item.i }}
+                  {{ itemTitle(item) }}
                 </span>
               </GridItem>
             </GridLayout>
@@ -109,11 +128,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, nextTick } from "vue";
-  import { testData } from "./test";
+  import { ref, onMounted, nextTick } from 'vue';
+  import { testData } from './test';
 
-  import GridLayout from "../src/components/Grid/GridLayout.vue";
-  import GridItem from "../src/components/Grid/GridItem.vue";
+  import GridLayout from '../src/components/Grid/GridLayout.vue';
+  import GridItem from '../src/components/Grid/GridItem.vue';
+  import { LayoutItem } from '../src/helpers/utils';
 
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
@@ -135,16 +155,26 @@
   const useBorderRadius = ref(false);
   const verticalCompact = ref(true);
 
-  let testLayout = ref(testData);
+  const testLayout = ref(testData);
   const refLayout = ref();
   const mapCache: Map<string, any> = new Map();
   let orgColNum = colNum.value;
   const colNumChanged = (value: number): void => {
-    if(orgColNum !== value){
+    if(orgColNum !== value) {
       orgColNum = value;
       colNum.value = value;
     }
   };
+
+  const itemTitle = (item: LayoutItem): string => {
+      let result = item.i;
+      if(item.static) {
+        result += " - Static";
+      }
+      return result;
+    }
+  ;
+
   function handleResize(i: string | number, w: number, h: number, x: number, y: number) {
     console.log(i, w, h, x, y);
   }
@@ -200,8 +230,9 @@
         // Do nothing
       }
       let el = mapCache.get("drop");
-      if(!el) return;
-      console.log("jjj");
+      if(!el) {
+        return;
+      }
 
       el.dragging = {
         top: mouseXY.y - parentRect.top,
@@ -264,6 +295,7 @@
 
 <style lang="scss" scoped>
 @import '../src/styles/index.scss';
+
 form {
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -347,9 +379,22 @@ form {
   border: 1px solid black;
   border-radius: 8px;
   cursor: grab;
-  margin: 10px 0 0 10px;
+  margin: 0;
   padding: 10px;
   text-align: center;
-  width: 150px;
+  max-width: 150px;
+}
+
+.layoutJSON {
+  background: #ddd;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.columns {
+  -moz-columns: 120px;
+  -webkit-columns: 120px;
+  columns: 120px;
 }
 </style>
