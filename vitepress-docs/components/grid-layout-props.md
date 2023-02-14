@@ -69,7 +69,7 @@ When `true` the `GridItem`'s will be moved horizontally when two of them collide
 When `false` the `GridItem`'s will be moved vertically when two of them collides.
 
 
-### isBounded(Not implemented yet)
+## isBounded
 * default: `false`
 * required: `false`
 * type: `Boolean`
@@ -86,7 +86,7 @@ When `true` the `GridItem`'s can be dragged to a new position in the layout.
 Except if a 'GridItem' is `static` then it will not be possible to drag it into a new position in the layout.
 
 
-### isMirrored(Not implemented yet, was part of the original component)
+## isMirrored(Not reactive)
 * default: `false`
 * required: `false`
 * type: `Boolean`
@@ -116,7 +116,7 @@ The value must be an `Array` of type `TLayout` items. Each item must have:
 * `w` The number of columns the `GridItem` will use.
 properties.
 
-Please refer to the documentation for [GridItem](./grid-item.md) for more details.
+Please refer to the documentation for [GridItem](grid-item.md) for more details.
 
 
 ## margin
@@ -163,7 +163,7 @@ The keys of the `Object` are breakpoint names and each value is an `Array` of `O
 Setting the prop after the creation of the GridLayout has no effect.
 
 
-### restoreOnDrag(Not implemented)
+## restoreOnDrag(Not implemented)
 * default: `false`
 * required: `false`
 * type: `Boolean`
@@ -199,7 +199,7 @@ If set to true, it adds a grid layout, displaying the size of each box in the Gr
 
 
 ## staticGridItemBackgroundColor
-* default:
+* default: `#58749f`
 * required: `false`
 * type: `String`
 
@@ -212,25 +212,6 @@ The background color(hex value) to be added to GridItems which are static.
 * type: `Number`
 
 Sets a scaling factor to the size of the grid items, 1 is 100%
-
-## useBootstrapBreakpoints
-* default: `false`
-* required: `false`
-* type: `Boolean`
-
-When set to `true` the layout will adjust the colNums based on the breakpoints used in Bootstrap.
-<br/>
-Also the prop cols will be ignored and the `GridLayout` cols value will be adjusted according to the table below.
-
-#### Breakpoints used
-| Width     | Columns | Size              |
-|-----------|---------|-------------------|
-| <   576px | 2       | Extra small       |
-| =>  576px | 4       | Small             |
-| =>  768px | 6       | Medium            |
-| =>  992px | 10      | Large             |
-| => 1200px | 12      | Extra large       |
-| => 1400px | 12      | Extra extra large |
 
 
 ## useBorderRadius
