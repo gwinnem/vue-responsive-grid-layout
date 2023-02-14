@@ -6,7 +6,7 @@ export { GridItem, GridLayout };
 
 const components = [GridLayout, GridItem];
 
-const Vue3GridLayout = {
+const VueResponsiveGridLayout = {
   install(App: App): void {
     components.forEach(item => {
       App.component(item.name, item);
@@ -14,4 +14,4 @@ const Vue3GridLayout = {
   },
 };
 
-export default Vue3GridLayout;
+export default VueResponsiveGridLayout;
