@@ -42,48 +42,54 @@
     validateLayout,
     cloneLayout,
     getAllCollisions,
-    Layout,
-    LayoutItem,
+    TLayout,
+    TLayoutItem,
   } from '@/helpers/utils';
   import {
     getBreakpointFromWidth,
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
   } from '@/helpers/responsiveUtils';
-  import { addWindowEventListener, removeWindowEventListener, EventsData } from '@/helpers/DOM';
+  import { addWindowEventListener, removeWindowEventListener, IEventsData } from '@/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
+  import { IBreakpoints, IColumns } from './grid-layout-props.interface';
 
   export interface IGridLayoutProps {
     autoSize?: boolean;
-    breakpoints?: { xxl: number; xl: number; lg: number; md: number; sm: number; xs: number; xxs: number };
+    borderRadiusPx?: number;
+    breakpoints?: IBreakpoints;
     colNum?: number;
-    cols?: { xxl: number; xl: number; lg: number; md: number; sm: number; xs: number; xxs: number };
+    cols?: IColumns;
+    enableEditMode?: boolean;
+    horizontalShift?: boolean;
     isBounded?: boolean;
     isDraggable?: boolean;
     isMirrored?: boolean;
     isResizable?: boolean;
-    layout: Layout;
+    layout: TLayout;
     margin?: number[];
     maxRows?: number;
     preventCollision?: boolean;
     responsive?: boolean;
-    responsiveLayouts?: { [key: string]: any };
+    responsiveLayouts?: { [key: string]: TLayout };
     restoreOnDrag?: boolean;
     rowHeight?: number;
     showCloseButton?: boolean;
+    staticGridItemBackgroundColor?: string;
     transformScale?: number;
     useBorderRadius?: boolean;
     useCssTransforms?: boolean;
-    useStyleCursor?: boolean;
     verticalCompact?: boolean;
   }
-
   // Props Data
   const props = withDefaults(defineProps<IGridLayoutProps>(), {
     autoSize: true,
-    breakpoints: () => ({
+    borderRadiusPx: 8,
+    breakpoints: (): IBreakpoints => ({
       xxl: 1600,
+      // eslint-disable-next-line vue/sort-keys
       xl: 1400,
+      // eslint-disable-next-line vue/sort-keys
       lg: 1200,
       md: 996,
       sm: 768,
@@ -91,9 +97,11 @@
       xxs: 0,
     }),
     colNum: 12,
-    cols: () => ({
+    cols: (): IColumns => ({
       xxl: 12,
+      // eslint-disable-next-line vue/sort-keys
       xl: 12,
+      // eslint-disable-next-line vue/sort-keys
       lg: 12,
       md: 10,
       sm: 6,
@@ -110,12 +118,12 @@
     responsive: false,
     responsiveLayouts: () => ({}),
     restoreOnDrag: false,
-    rowHeight: 100,
+    rowHeight: 150,
     showCloseButton: false,
+    staticGridItemBackgroundColor: `#58749f`,
     transformScale: 1,
     useBorderRadius: false,
     useCssTransforms: true,
-    useStyleCursor: true,
     verticalCompact: true,
   });
 
@@ -132,9 +140,9 @@
     x: 0,
     y: 0,
   });
-  const layouts = ref<{ [key: string]: Layout | any }>({}); // array to store all layouts from different breakpoints
+  const layouts = ref<{ [key: string]: TLayout | any }>({}); // array to store all layouts from different breakpoints
   const lastBreakpoint = ref<string | null>(null); // store last active breakpoint
-  const originalLayout = ref<Layout | null>(null);
+  const originalLayout = ref<TLayout | null>(null);
   const erd = ref<elementResizeDetectorMaker.Erd | null>(null);
   const positionsBeforeDrag = ref<{ [key: string]: string }>();
   // layout dom
@@ -143,8 +151,8 @@
   const defaultGridItem = ref();
   const colNum = ref(props.colNum);
   const eventBus: Emitter<{
-    resizeEvent?: EventsData;
-    dragEvent?: EventsData;
+    resizeEvent?: IEventsData;
+    dragEvent?: IEventsData;
     updateWidth: number | null;
     setColNum: number;
     setRowHeight: number;
@@ -159,18 +167,18 @@
   provide(`eventBus`, eventBus);
 
   const emit = defineEmits<{
-    (e: EGridLayoutEvent.LAYOUT_CREATED, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_UPDATED, layout: Layout): void;
-    (e: EGridLayoutEvent.LAYOUT_READY, layout: Layout): void;
-    (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: Layout): void;
-    (e: EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint: string, layout: Layout): void;
+    (e: EGridLayoutEvent.LAYOUT_CREATED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_UPDATED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
+    (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
+    (e: EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint: string, layout: TLayout): void;
     (e: EGridLayoutEvent.COLUMNS_CHANGED, colNum: number): void;
   }>();
 
   // Accessible references of functions for removing in beforeDestroy
-  function resizeEventHandler(data?: EventsData): void {
+  function resizeEventHandler(data?: IEventsData): void {
     if(!data) {
       resizeEvent();
     } else {
@@ -186,7 +194,7 @@
     }
   }
 
-  function dragEventHandler(data?: EventsData): void {
+  function dragEventHandler(data?: IEventsData): void {
     if(!data) {
       dragEvent();
     } else {
@@ -422,7 +430,7 @@
       l = {
         x: 0,
         y: 0,
-      } as LayoutItem;
+      } as TLayoutItem;
     }
 
     if(eventName === `dragstart` && !props.verticalCompact) {
@@ -494,7 +502,7 @@
       l = {
         h: 0,
         w: 0,
-      } as LayoutItem;
+      } as TLayoutItem;
     }
     w = Number(w);
     h = Number(h);
@@ -571,7 +579,7 @@
 
     // Find or generate a new layout.
     const layout = findOrGenerateResponsiveLayout(
-      originalLayout.value as Layout,
+      originalLayout.value as TLayout,
       layouts.value,
       props.breakpoints,
       newBreakpoint,
@@ -600,7 +608,7 @@
   }
 
   // find difference in layouts
-  function findDifference(layout: Layout, originalLayout: Layout): LayoutItem[] {
+  function findDifference(layout: TLayout, originalLayout: TLayout): TLayoutItem[] {
     // Find values that are in result1 but not in result2
     const uniqueResultOne = layout.filter(obj => {
       return !originalLayout.some(obj2 => {

@@ -1,26 +1,49 @@
-import { Layout } from "../../helpers/utils";
+import { TLayout } from '../../helpers/utils';
+
+export interface IBreakpoints {
+  xxl: number;
+  xl: number;
+  lg: number;
+  md: number;
+  sm: number;
+  xs: number;
+  xxs: number;
+}
+
+export interface IColumns {
+  xxl: number;
+  xl: number;
+  lg: number;
+  md: number;
+  sm: number;
+  xs: number;
+  xxs: number;
+}
 
 export interface IGridLayoutProps {
   autoSize?: boolean;
-  breakpoints?: { lg: number; md: number; sm: number; xs: number; xxs: number };
+  borderRadiusPx?: number;
+  breakPoints?: IBreakpoints;
   colNum?: number;
-  cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
+  cols?: IColumns;
+  enableEditMode?: boolean;
+  horizontalShift?: boolean;
   isBounded?: boolean;
   isDraggable?: boolean;
   isMirrored?: boolean;
   isResizable?: boolean;
-  layout: Layout;
+  layout: TLayout;
   margin?: number[];
   maxRows?: number;
   preventCollision?: boolean;
   responsive?: boolean;
-  responsiveLayouts?: { [key: string]: any };
+  responsiveLayouts?: { [key: string]: TLayout };
   restoreOnDrag?: boolean;
   rowHeight?: number;
   showCloseButton?: boolean;
+  staticGridItemBackgroundColor?: string;
   transformScale?: number;
   useBorderRadius?: boolean;
   useCssTransforms?: boolean;
-  useStyleCursor?: boolean;
   verticalCompact?: boolean;
 }

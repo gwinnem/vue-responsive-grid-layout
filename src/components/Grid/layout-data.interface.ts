@@ -1,5 +1,5 @@
 import elementResizeDetectorMaker from 'element-resize-detector';
-import { Layout } from '../../helpers/utils';
+import { TLayout } from '../../helpers/utils';
 
 export interface IPlaceholder {
   x: number;
@@ -15,9 +15,9 @@ export interface ILayoutData {
   lastLayoutLength: number;
   isDragging: boolean;
   placeholder: IPlaceholder;
-  layouts: { [key: string]: Layout | any };
+  layouts: { [key: string]: TLayout | any };
   lastBreakpoint: string | null;
-  originalLayout: Layout | null;
+  originalLayout: TLayout | null;
   erd: elementResizeDetectorMaker.Erd | null;
   positionsBeforeDrag: { [key: string]: string };
   this$refsLayout: HTMLElement;
