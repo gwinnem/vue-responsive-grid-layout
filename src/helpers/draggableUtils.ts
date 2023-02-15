@@ -1,15 +1,14 @@
-// Get {x, y} positions from event.
-export function getControlPosition(e: MouseEvent) {
-  return offsetXYFromParentOf(e);
-}
-
-export interface Point {
+export interface IPoint {
   x: number;
   y: number;
 }
 
+function isNum(num: number): boolean {
+  return !Number.isNaN(num);
+}
+
 // Get from offsetParent
-export function offsetXYFromParentOf(evt: MouseEvent): Point {
+export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
   const t = evt.target as HTMLElement;
   const offsetParent = t.offsetParent || document.body;
   const offsetParentRect = t.offsetParent === document.body ? {
@@ -29,7 +28,12 @@ export function offsetXYFromParentOf(evt: MouseEvent): Point {
   };
 }
 
-export interface DraggableCoreData {
+// Get {x, y} positions from event.
+export function getControlPosition(e: MouseEvent): IPoint {
+  return offsetXYFromParentOf(e);
+}
+
+export interface IDraggableCoreData {
   deltaX: number;
   deltaY: number;
   lastX: number;
@@ -38,13 +42,13 @@ export interface DraggableCoreData {
   y: number;
 }
 
-// Create an data object exposed by <DraggableCore>'s events
+// Create a data object exposed by <DraggableCore>'s events
 export function createCoreData(
   lastX: number,
   lastY: number,
   x: number,
   y: number,
-): DraggableCoreData {
+): IDraggableCoreData {
   // State changes are often (but not always!) async. We want the latest value.
   const isStart = !isNum(lastX);
 
@@ -68,8 +72,4 @@ export function createCoreData(
     x,
     y,
   };
-}
-
-function isNum(num: number) {
-  return typeof num === `number` && !isNaN(num);
 }

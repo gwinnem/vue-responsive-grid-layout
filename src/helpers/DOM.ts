@@ -1,6 +1,6 @@
-export type Direction = `ltr` | `rtl` | `auto`
+export type TDirection = `ltr` | `rtl` | `auto`
 
-let currentDir: Direction = `auto`;
+const currentDir: TDirection = `auto`;
 
 function hasDocument(): boolean {
   return typeof document !== `undefined`;
@@ -10,26 +10,13 @@ function hasWindow(): boolean {
   return typeof window !== `undefined`;
 }
 
-export function getDocumentDir(): Direction | string {
+export function getDocumentDir(): TDirection | string {
   if(!hasDocument()) {
     return currentDir;
   }
-  const direction = typeof document.dir !== `undefined`
+  return typeof document.dir !== `undefined`
     ? document.dir
     : document.getElementsByTagName(`html`)[0].getAttribute(`dir`) || `auto`;
-  return direction;
-}
-
-export function setDocumentDir(dir: Direction): boolean {
-  // export function setDocumentDir(dir){
-  if(!hasDocument) {
-    currentDir = dir;
-    return false;
-  }
-
-  const html = document.getElementsByTagName(`html`)[0];
-  html.setAttribute(`dir`, dir);
-  return true;
 }
 
 export function addWindowEventListener(event: string, callback: () => any): boolean {
@@ -48,11 +35,11 @@ export function removeWindowEventListener(event: string, callback: () => any): v
   window.removeEventListener(event, callback);
 }
 
-export interface EventsData {
+export interface IEventsData {
   eventType: string | symbol;
+  h: number;
   i: string | number;
+  w: number;
   x: number;
   y: number;
-  h: number;
-  w: number;
 }

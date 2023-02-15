@@ -1,25 +1,35 @@
-export interface LayoutItemRequired {
+export interface ILayoutItemRequired {
   w: number;
   h: number;
   x: number;
   y: number;
-  i: string;
+  i: string | number;
 }
 
-export type LayoutItem = LayoutItemRequired & {
+export type TLayoutItem = ILayoutItemRequired & {
   minW?: number;
   minH?: number;
   maxW?: number;
   maxH?: number;
   moved?: boolean;
-  static?: boolean;
+  isStatic?: boolean;
   isDraggable?: boolean;
   isResizable?: boolean;
 }
 
-export type Layout = LayoutItem[]
+export type TLayout = TLayoutItem[]
 
-export type Size = { width: number; height: number }
+export type TSizeWH = { w: number; h: number }
+
+/**
+ * Get all static elements.
+ * @param  {Array} layout Array of layout objects.
+ * @return {Array}        Array of static layout items..
+ */
+export function getStatics(layout: TLayout): TLayoutItem[] {
+  // return [];
+  return layout.filter(l => l.isStatic);
+}
 
 /**
  * Return the bottom coordinate of the layout.
@@ -27,7 +37,7 @@ export type Size = { width: number; height: number }
  * @param  {Array} layout Layout array.
  * @return {Number}       Bottom coordinate.
  */
-export function bottom(layout: Layout): number {
+export function bottom(layout: TLayout): number {
   let max = 0;
   let bottomY;
   for(let i = 0, len = layout.length; i < len; i++) {
@@ -37,7 +47,12 @@ export function bottom(layout: Layout): number {
   return max;
 }
 
-export function cloneLayout(layout: Layout): Layout {
+// Fast path to cloning, since this is monomorphic
+export function cloneLayoutItem(layoutItem: TLayoutItem): TLayoutItem {
+  return JSON.parse(JSON.stringify(layoutItem));
+}
+
+export function cloneLayout(layout: TLayout): TLayout {
   const newLayout = Array(layout.length);
   for(let i = 0, len = layout.length; i < len; i++) {
     newLayout[i] = cloneLayoutItem(layout[i]);
@@ -45,23 +60,88 @@ export function cloneLayout(layout: Layout): Layout {
   return newLayout;
 }
 
-// Fast path to cloning, since this is monomorphic
-export function cloneLayoutItem(layoutItem: LayoutItem): LayoutItem {
-  return JSON.parse(JSON.stringify(layoutItem));
-}
-
 /**
  * Given two layout items, check if they collide.
  *
  * @return {Boolean}   True if colliding.
  */
-export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
+export function collides(l1: TLayoutItem, l2: TLayoutItem): boolean {
   if(l1 === l2) return false; // same element
   if(l1.x + l1.w <= l2.x) return false; // l1 is left of l2
   if(l1.x >= l2.x + l2.w) return false; // l1 is right of l2
   if(l1.y + l1.h <= l2.y) return false; // l1 is above l2
   if(l1.y >= l2.y + l2.h) return false; // l1 is below l2
   return true; // boxes overlap
+}
+
+/**
+ * Returns the first item this layout collides with.
+ * It doesn't appear to matter which order we approach this from, although
+ * perhaps that is the wrong thing to do.
+ *
+ * @param  {TLayout}     layout     The entire grid layout.
+ * @param  {TLayoutItem} layoutItem Layout item.
+ * @return {TLayoutItem|undefined}  A colliding layout item, or undefined.
+ */
+export function getFirstCollision(layout: TLayout, layoutItem: TLayoutItem): TLayoutItem | undefined {
+  for(let i = 0, len = layout.length; i < len; i++) {
+    if(collides(layout[i], layoutItem)) {
+      return layout[i];
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Get layout items sorted from top left to right and down.
+ *
+ * @return {Array} Array of layout objects.
+ * @return {Array}        Layout, sorted static items first.
+ */
+export function sortLayoutItemsByRowCol(layout: TLayout): TLayout {
+  const a: TLayoutItem[] = [];
+  return a.concat(layout)
+    .sort((itemA, itemB) => {
+      if(itemA.y === itemB.y && itemA.x === itemB.x) {
+        return 0;
+      }
+
+      if(itemA.y > itemB.y || (itemA.y === itemB.y && itemA.x > itemB.x)) {
+        return 1;
+      }
+
+      return -1;
+    });
+}
+
+/**
+ * Compact an item in the layout.
+ */
+export function compactItem(
+  compareWith: TLayout,
+  l: TLayoutItem,
+  verticalCompact: boolean,
+  minPositions?: any,
+): TLayoutItem {
+  if(verticalCompact) {
+    // Move the element up as far as it can go without colliding.
+    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+      l.y--;
+    }
+  } else if(minPositions) {
+    const minY = minPositions[l.i].y;
+    while (l.y > minY && !getFirstCollision(compareWith, l)) {
+      l.y--;
+    }
+  }
+
+  // Move it down, and keep moving it down if it's colliding.
+  let collisions;
+  // eslint-disable-next-line no-cond-assign
+  while ((collisions = getFirstCollision(compareWith, l))) {
+    l.y = collisions.y + collisions.h;
+  }
+  return l;
 }
 
 /**
@@ -74,7 +154,7 @@ export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
  * @param {Object} minPositions
  * @return {Array}       Compacted Layout.
  */
-export function compact(layout: Layout, verticalCompact: boolean, minPositions?: any): Layout {
+export function compact(layout: TLayout, verticalCompact: boolean, minPositions?: any): TLayout {
   // Statics go in the compareWith array right away so items flow around them.
   const compareWith = getStatics(layout);
   // We go through the items by row and column.
@@ -86,7 +166,7 @@ export function compact(layout: Layout, verticalCompact: boolean, minPositions?:
     let l = sorted[i];
 
     // Don't move static elements
-    if(!l.static) {
+    if(!l.isStatic) {
       l = compactItem(compareWith, l, verticalCompact, minPositions);
 
       // Add to comparison array. We only collide with items before this one.
@@ -105,41 +185,12 @@ export function compact(layout: Layout, verticalCompact: boolean, minPositions?:
 }
 
 /**
- * Compact an item in the layout.
- */
-export function compactItem(
-  compareWith: Layout,
-  l: LayoutItem,
-  verticalCompact: boolean,
-  minPositions?: any,
-): LayoutItem {
-  if(verticalCompact) {
-    // Move the element up as far as it can go without colliding.
-    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
-      l.y--;
-    }
-  } else if(minPositions) {
-    const minY = minPositions[l.i].y;
-    while (l.y > minY && !getFirstCollision(compareWith, l)) {
-      l.y--;
-    }
-  }
-
-  // Move it down, and keep moving it down if it's colliding.
-  let collides;
-  while ((collides = getFirstCollision(compareWith, l))) {
-    l.y = collides.y + collides.h;
-  }
-  return l;
-}
-
-/**
  * Given a layout, make sure all elements fit within its bounds.
  *
  * @param  {Array} layout Layout array.
  * @param  {Number} bounds Number of columns.
  */
-export function correctBounds(layout: Layout, bounds: { cols: number }): Layout {
+export function correctBounds(layout: TLayout, bounds: { cols: number }): TLayout {
   const collidesWith = getStatics(layout);
   for(let i = 0, len = layout.length; i < len; i++) {
     const l = layout[i];
@@ -150,7 +201,7 @@ export function correctBounds(layout: Layout, bounds: { cols: number }): Layout 
       l.x = 0;
       l.w = bounds.cols;
     }
-    if(!l.static) {
+    if(!l.isStatic) {
       collidesWith.push(l);
     } else {
       // If this is static and collides with other statics, we must move it down.
@@ -168,64 +219,42 @@ export function correctBounds(layout: Layout, bounds: { cols: number }): Layout 
  *
  * @param  {Array}  layout Layout array.
  * @param  {String} id     ID
- * @return {LayoutItem}    Item at ID.
+ * @return {TLayoutItem}    Item at ID.
  */
 export function getLayoutItem(
-  layout: Layout,
+  layout: TLayout,
   id: string | number | undefined,
-): LayoutItem | undefined {
+): TLayoutItem | undefined {
   for(let i = 0, len = layout.length; i < len; i++) {
-    if(layout[i].i === id) return layout[i];
+    if(layout[i].i === id) {
+      return layout[i];
+    }
   }
+  return undefined;
 }
 
-/**
- * Returns the first item this layout collides with.
- * It doesn't appear to matter which order we approach this from, although
- * perhaps that is the wrong thing to do.
- *
- * @param  {Object} layoutItem Layout item.
- * @return {Object|undefined}  A colliding layout item, or undefined.
- */
-export function getFirstCollision(layout: Layout, layoutItem: LayoutItem): LayoutItem | undefined {
-  for(let i = 0, len = layout.length; i < len; i++) {
-    if(collides(layout[i], layoutItem)) return layout[i];
-  }
-}
-
-export function getAllCollisions(layout: Layout, layoutItem: LayoutItem): LayoutItem[] {
+export function getAllCollisions(layout: TLayout, layoutItem: TLayoutItem): TLayoutItem[] {
   return layout.filter(l => collides(l, layoutItem));
-}
-
-/**
- * Get all static elements.
- * @param  {Array} layout Array of layout objects.
- * @return {Array}        Array of static layout items..
- */
-export function getStatics(layout: Layout): LayoutItem[] {
-  // return [];
-  return layout.filter(l => l.static);
 }
 
 /**
  * Move an element. Responsible for doing cascading movements of other elements.
  *
  * @param  {Array}      layout Full layout to modify.
- * @param  {LayoutItem} l      element to move.
+ * @param  {TLayoutItem} l      element to move.
  * @param  {Number}     [x]    X position in grid units.
  * @param  {Number}     [y]    Y position in grid units.
- * @param  {Boolean}    [isUserAction] If true, designates that the item we're moving is
- *                                     being dragged/resized by th euser.
+ * @param  {Boolean}    [isUserAction] If true, designates that the item we're moving is being dragged/resized by the user.
  */
 export function moveElement(
-  layout: Layout,
-  l: LayoutItem,
+  layout: TLayout,
+  l: TLayoutItem,
   x: number | undefined,
   y: number | undefined,
   isUserAction?: boolean,
   preventCollision?: boolean,
-): Layout {
-  if(l.static) return layout;
+): TLayout {
+  if(l.isStatic) return layout;
 
   // Short-circuit if nothing to do.
   // if (l.y === y && l.x === x) return layout;
@@ -266,9 +295,11 @@ export function moveElement(
     if(l.y > collision.y && l.y - collision.y > collision.h / 4) continue;
 
     // Don't move static items - we have to move *this* element away
-    if(collision.static) {
+    if(collision.isStatic) {
+      // eslint-disable-next-line no-use-before-define
       layout = moveElementAwayFromCollision(layout, collision, l, isUserAction);
     } else {
+      // eslint-disable-next-line no-use-before-define
       layout = moveElementAwayFromCollision(layout, l, collision, isUserAction);
     }
   }
@@ -281,29 +312,29 @@ export function moveElement(
  * We attempt to move it up if there's room, otherwise it goes below.
  *
  * @param  {Array} layout            Full layout to modify.
- * @param  {LayoutItem} collidesWith Layout item we're colliding with.
- * @param  {LayoutItem} itemToMove   Layout item we're moving.
+ * @param  {TLayoutItem} collidesWith Layout item we're colliding with.
+ * @param  {TLayoutItem} itemToMove   Layout item we're moving.
  * @param  {Boolean} [isUserAction]  If true, designates that the item we're moving is being dragged/resized
  *                                   by the user.
  */
 export function moveElementAwayFromCollision(
-  layout: Layout,
-  collidesWith: LayoutItem,
-  itemToMove: LayoutItem,
+  layout: TLayout,
+  collidesWith: TLayoutItem,
+  itemToMove: TLayoutItem,
   isUserAction?: boolean,
-): Layout {
+): TLayout {
   const preventCollision = false; // we're already colliding
   // If there is enough space above the collision to put this element, move it there.
   // We only do this on the main collision as this can get funky in cascades and cause
   // unwanted swapping behavior.
   if(isUserAction) {
-    // Make a mock item so we don't modify the item here, only modify in moveElement.
-    const fakeItem: LayoutItem = {
-      x: itemToMove.x,
-      y: itemToMove.y,
-      w: itemToMove.w,
+    // Make a mock item, so we don't modify the item here, only modify in moveElement.
+    const fakeItem: TLayoutItem = {
       h: itemToMove.h,
       i: `-1`,
+      w: itemToMove.w,
+      x: itemToMove.x,
+      y: itemToMove.y,
     };
     fakeItem.y = Math.max(collidesWith.y - itemToMove.h, 0);
     if(!getFirstCollision(layout, fakeItem)) {
@@ -323,17 +354,7 @@ export function moveElementAwayFromCollision(
   return moveElement(layout, itemToMove, undefined, itemToMove.y + 1, preventCollision);
 }
 
-/**
- * Helper to convert a number to a percentage string.
- *
- * @param  {Number} num Any number
- * @return {String}     That number as a percentage.
- */
-export function perc(num: number): string {
-  return `${num * 100}%`;
-}
-
-export interface TransformStyle {
+export interface ITransformStyle {
   transform: string;
   WebkitTransform: string;
   MozTransform: string;
@@ -349,18 +370,18 @@ export function setTransform(
   left: number,
   width: number,
   height: number,
-): TransformStyle {
+): ITransformStyle {
   // Replace unitless items with px
   const translate = `translate3d(${left}px,${top}px, 0)`;
   return {
-    transform: translate,
-    WebkitTransform: translate,
     MozTransform: translate,
-    msTransform: translate,
     OTransform: translate,
-    width: `${width}px`,
+    WebkitTransform: translate,
     height: `${height}px`,
+    msTransform: translate,
     position: `absolute`,
+    transform: translate,
+    width: `${width}px`,
   };
 }
 
@@ -378,22 +399,22 @@ export function setTransformRtl(
   right: number,
   width: number,
   height: number,
-): TransformStyle {
+): ITransformStyle {
   // Replace unitless items with px
   const translate = `translate3d(${right * -1}px,${top}px, 0)`;
   return {
-    transform: translate,
-    WebkitTransform: translate,
     MozTransform: translate,
-    msTransform: translate,
     OTransform: translate,
-    width: `${width}px`,
+    WebkitTransform: translate,
     height: `${height}px`,
+    msTransform: translate,
     position: `absolute`,
+    transform: translate,
+    width: `${width}px`,
   };
 }
 
-export interface TopLeftStyle {
+export interface ITopLeftStyle {
   top: string;
   left: string;
   width: string;
@@ -401,13 +422,13 @@ export interface TopLeftStyle {
   position: `absolute`;
 }
 
-export function setTopLeft(top: number, left: number, width: number, height: number): TopLeftStyle {
+export function setTopLeft(top: number, left: number, width: number, height: number): ITopLeftStyle {
   return {
-    top: `${top}px`,
-    left: `${left}px`,
-    width: `${width}px`,
     height: `${height}px`,
+    left: `${left}px`,
     position: `absolute`,
+    top: `${top}px`,
+    width: `${width}px`,
   };
 }
 
@@ -421,7 +442,7 @@ export function setTopLeft(top: number, left: number, width: number, height: num
  * @returns {{top: string, right: string, width: string, height: string, position: string}}
  */
 
-export interface TopRightStyle {
+export interface ITopRightStyle {
   top: string;
   right: string;
   width: string;
@@ -434,98 +455,15 @@ export function setTopRight(
   right: number,
   width: number,
   height: number,
-): TopRightStyle {
+): ITopRightStyle {
   return {
-    top: `${top}px`,
-    right: `${right}px`,
-    width: `${width}px`,
     height: `${height}px`,
     position: `absolute`,
+    right: `${right}px`,
+    top: `${top}px`,
+    width: `${width}px`,
   };
 }
-
-/**
- * Get layout items sorted from top left to right and down.
- *
- * @return {Array} Array of layout objects.
- * @return {Array}        Layout, sorted static items first.
- */
-export function sortLayoutItemsByRowCol(layout: Layout): Layout {
-  const a: LayoutItem[] = [];
-  return a.concat(layout)
-    .sort((a, b) => {
-      if(a.y === b.y && a.x === b.x) {
-        return 0;
-      }
-
-      if(a.y > b.y || (a.y === b.y && a.x > b.x)) {
-        return 1;
-      }
-
-      return -1;
-    });
-}
-
-/**
- * Generate a layout using the initialLayout and children as a template.
- * Missing entries will be added, extraneous ones will be truncated.
- *
- * @param  {Array}  initialLayout Layout passed in through props.
- * @param  {String} breakpoint    Current responsive breakpoint.
- * @param  {Boolean} verticalCompact Whether or not to compact the layout vertically.
- * @return {Array}                Working layout.
- */
-
-/*
-export function synchronizeLayoutWithChildren(initialLayout: Layout, children: Array<React.Element>|React.Element,
-                                              cols: number, verticalCompact: boolean): Layout {
-  // ensure 'children' is always an array
-  if (!Array.isArray(children)) {
-    children = [children];
-  }
-  initialLayout = initialLayout || [];
-
-  // Generate one layout item per child.
-  let layout: Layout = [];
-  for (let i = 0, len = children.length; i < len; i++) {
-    let newItem;
-    const child = children[i];
-
-    // Don't overwrite if it already exists.
-    const exists = getLayoutItem(initialLayout, child.key || "1" /!* FIXME satisfies Flow *!/);
-    if (exists) {
-      newItem = exists;
-    } else {
-      const g = child.props._grid;
-
-      // Hey, this item has a _grid property, use it.
-      if (g) {
-        if (!isProduction) {
-          validateLayout([g], 'ReactGridLayout.children');
-        }
-        // Validated; add it to the layout. Bottom 'y' possible is the bottom of the layout.
-        // This allows you to do nice stuff like specify {y: Infinity}
-        if (verticalCompact) {
-          newItem = cloneLayoutItem({...g, y: Math.min(bottom(layout), g.y), i: child.key});
-        } else {
-          newItem = cloneLayoutItem({...g, y: g.y, i: child.key});
-        }
-      }
-      // Nothing provided: ensure this is added to the bottom
-      else {
-        newItem = cloneLayoutItem({w: 1, h: 1, x: 0, y: bottom(layout), i: child.key || "1"});
-      }
-    }
-    layout[i] = newItem;
-  }
-
-  // Correct the layout.
-  layout = correctBounds(layout, {cols: cols});
-  layout = compact(layout, verticalCompact);
-
-  return layout;
-}
-*/
 
 /**
  * Validate a layout. Throws errors.
@@ -534,7 +472,7 @@ export function synchronizeLayoutWithChildren(initialLayout: Layout, children: A
  * @param  {String} [contextName] Context name for errors.
  * @throw  {Error}                Validation error.
  */
-export function validateLayout(layout: Layout, contextName?: string): void {
+export function validateLayout(layout: TLayout, contextName?: string): void {
   contextName = contextName || `Layout`;
   const subProps = [`x`, `y`, `w`, `h`];
   const keyArr = [];
@@ -562,40 +500,10 @@ export function validateLayout(layout: Layout, contextName?: string): void {
     }
     keyArr.push(item.i);
 
-    if(item.static !== undefined && typeof item.static !== `boolean`) {
+    if(item.isStatic !== undefined && typeof item.isStatic !== `boolean`) {
       throw new Error(`VueGridLayout: ${contextName}[${i}].static must be a boolean!`);
     }
   }
-}
-
-// Flow can't really figure this out, so we just use Object
-export function autoBindHandlers(el: HTMLElement, fns: string[]): void {
-  fns.forEach(key => (el[key] = el[key].bind(el)));
-}
-
-/**
- * Convert a JS object to CSS string. Similar to React's output of CSS.
- * @param obj
- * @returns {string}
- */
-interface JSStyle {
-  [key: string]: string;
-}
-
-export function createMarkup(obj: JSStyle): string {
-  const keys = Object.keys(obj);
-  if(!keys.length) return ``;
-  let i;
-  const len = keys.length;
-  let result = ``;
-
-  for(i = 0; i < len; i++) {
-    const key = keys[i];
-    const val = obj[key];
-    result += `${hyphenate(key)}:${addPx(key, val)};`;
-  }
-
-  return result;
 }
 
 /* The following list is defined in React's core */
@@ -607,13 +515,13 @@ export const IS_UNITLESS = {
   columnCount: true,
   flex: true,
   flexGrow: true,
-  flexPositive: true,
-  flexShrink: true,
   flexNegative: true,
   flexOrder: true,
-  gridRow: true,
-  gridColumn: true,
+  flexPositive: true,
+  flexShrink: true,
   fontWeight: true,
+  gridColumn: true,
+  gridRow: true,
   lineClamp: true,
   lineHeight: true,
   opacity: true,
@@ -633,19 +541,6 @@ export const IS_UNITLESS = {
 };
 
 /**
- * Will add px to the end of style values which are Numbers.
- * @param name
- * @param value
- * @returns {*}
- */
-export function addPx(name: string, value: number | string) {
-  if(typeof value === `number` && !IS_UNITLESS[name]) {
-    return `${value}px`;
-  }
-  return value;
-}
-
-/**
  * Hyphenate a camelCase string.
  *
  * @param {String} str
@@ -654,22 +549,7 @@ export function addPx(name: string, value: number | string) {
 
 export const hyphenateRE = /([a-z\d])([A-Z])/g;
 
-export function hyphenate(str: string) {
+export function hyphenate(str: string): string {
   return str.replace(hyphenateRE, `$1-$2`)
     .toLowerCase();
-}
-
-export function findItemInArray(array: any[], property: string, value: any) {
-  for(let i = 0; i < array.length; i++) if(array[i][property] == value) return true;
-
-  return false;
-}
-
-export function findAndRemove(array: any[], property: string, value: any) {
-  array.forEach((result, index) => {
-    if(result[property] === value) {
-      // Remove from array
-      array.splice(index, 1);
-    }
-  });
 }
