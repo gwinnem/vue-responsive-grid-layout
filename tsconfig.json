@@ -8,42 +8,44 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "isolatedModules": true,
     "lib": [
       "es6",
       "dom",
       "dom.iterable",
       "scripthost",
-      "es2016.Array.Include",
+      "es2016.Array.Include"
     ],
     "module": "es6",
     "moduleResolution": "node",
     "newLine": "lf",
+    "noEmit": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "paths": {
       "@/*": [
-        "src/*",
-      ],
+        "src/*"
+      ]
     },
     "resolveJsonModule": true,
-    "sourceMap": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
     "strict": true,
     "target": "es6",
     "types": [
       "node",
       "vue",
       "vite/client",
-      "vitest/globals",
-      "@intlify/unplugin-vue-i18n/messages"
-    ],
+      "vitest/globals"
+    ]
   },
   "exclude": [
     "src/**/__tests__/*",
     "src/**/*.cy.ts",
     "**/*.spec.ts",
     "/dist",
-    "node_modules",
+    "node_modules/*",
   ],
-  "include": [],
+  "include": ["src/**/*.ts"],
   "references": [],
 }
