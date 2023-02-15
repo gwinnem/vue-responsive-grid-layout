@@ -41,6 +41,7 @@
       "require": "./dist/vue-responsive-grid-layout.umd.js"
     }
   },
+  "homepage": "https://www.winnem.tech",
   "repository": {
     "type": "git",
     "url": "https://github.com/gwinnem/vue-responsive-grid-layout.git"
@@ -51,6 +52,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build && npm run build:types",
+    "build:only": "vite build",
     "build:types": "vue-tsc --project tsconfig.build-types.json --declaration --emitDeclarationOnly --outDir dist/types ",
     "typecheck": "vue-tsc --project tsconfig.build-types.json --noEmit",
     "lint": "eslint \"src/**/*.{js,ts,vue}\" --color",
