@@ -9,7 +9,7 @@ When `true` the `GridLayout` container is adjusting height and width based on th
 
 
 
-## borderRadiusPx
+## borderRadiusPx(Not reactive)
 * default: `8`
 * required: `false`
 * type: `Number`
@@ -49,7 +49,7 @@ The value should be a _natural number_.
 Defines number of columns for each breakpoint.
 
 
-## enableEditMode
+## enableEditMode(Not implemented)
 * default: `true`
 * required: `false`
 * type: `Boolean`
@@ -59,7 +59,7 @@ If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridI
 Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
 
 
-## horizontalShift
+## horizontalShift(Not implemented)
 * default: `true`
 * required: `false`
 * type: `Boolean`
@@ -119,7 +119,7 @@ properties.
 Please refer to the documentation for [GridItem](grid-item.md) for more details.
 
 
-## margin
+## margin(Not reactive)
 * default: `[10, 10]`
 * required: `false`
 * type: `Array`
@@ -153,7 +153,7 @@ Says if grid items will move when being dragged over.
 Says if the layout should be responsive to window width
 
 
-## responsiveLayouts
+## responsiveLayouts(Must be tested)
 * default : `{}`
 * required: `false`
 * type: `Object`
@@ -163,7 +163,7 @@ The keys of the `Object` are breakpoint names and each value is an `Array` of `O
 Setting the prop after the creation of the GridLayout has no effect.
 
 
-## restoreOnDrag(Not implemented)
+## restoreOnDrag(Must be tested)
 * default: `false`
 * required: `false`
 * type: `Boolean`
@@ -198,15 +198,7 @@ The `GridLayout` is listening for this event and will remove the `GridItem` will
 If set to true, it adds a grid layout, displaying the size of each box in the GridLayout.
 
 
-## staticGridItemBackgroundColor
-* default: `#58749f`
-* required: `false`
-* type: `String`
-
-The background color(hex value) to be added to GridItems which are static.
-
-
-## transformScale(Not implemented)
+## transformScale(Must be tested)
 * default: 1
 * required: `false`
 * type: `Number`

@@ -107,6 +107,14 @@ Says if item is resizable.
 If default value is `null` then it's inherited from parent.
 
 
+## isStatic
+* default: `false`
+* required: `false`
+* type: `Boolean`
+
+Says if item is static (won't be draggable, resizable or moved by other items).
+
+
 ## maxH
 * default: `Infinity`
 * required: `false`
@@ -154,17 +162,6 @@ The value is a number that is multiplied by `colWidth`.
 If 'true', forces the GridItem to preserve its aspect ratio when resizing.
 
 
-## showCloseButton
-* default: `true`
-* required: `false`
-* type: `Boolean`
-
-
-If `true`, the GridItem will show a close button in the top right corner.
-
-When it is being clicked it will fire an event `remove-grid-item` which the `GridLayout` is listening for. The `GridItem` will then be removed from the `GridLayout`.
-
-
 ## resizeIgnoreFrom
 * default: `'a, button'`
 * required: `false`
@@ -185,12 +182,15 @@ For more info please refer to `ignoreFrom` in [interact.js docs](http://interact
 Pass through object for the grid item [interact.js resizable configuration](https://interactjs.io/docs/resizable/)
 
 
-## static
-* default: `false`
+## showCloseButton
+* default: `true`
 * required: `false`
 * type: `Boolean`
 
-Says if item is static (won't be draggable, resizable or moved by other items).
+
+If `true`, the GridItem will show a close button in the top right corner.
+
+When it is being clicked it will fire an event `remove-grid-item` which the `GridLayout` is listening for. The `GridItem` will then be removed from the `GridLayout`.
 
 
 ## useBorderRadius
