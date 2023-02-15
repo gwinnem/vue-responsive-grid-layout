@@ -1,11 +1,11 @@
 import App from './App.vue'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import GridLayout from '../src/components/index';
+import GridLayout from '../dist/vue-responsive-grid-layout.mjs'
+import GridItem  from '../dist/vue-responsive-grid-layout.mjs'
 import { createApp } from 'vue'
 
 const app = createApp(App)
 
 app.use(GridLayout)
+app.use(GridItem)
 
 app.mount('#app')
