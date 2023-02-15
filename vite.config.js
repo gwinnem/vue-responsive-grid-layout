@@ -8,12 +8,12 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, `src/components/index.ts`),
       // Name of the library.
-      fileName: `vue-fluid-grid-layout`,
+      fileName: `vue-responsive-grid-layout`,
       formats: [
         `es`,
         `umd`,
       ],
-      name: `vue-fluid-grid-component`,
+      name: `vue-responsive-grid-component`,
     },
     outDir: `./dist`,
     rollupOptions: {
@@ -26,9 +26,6 @@ export default defineConfig({
     },
   },
   define: { 'process.env': {} },
-  optimizeDeps: {
-    include: [`interactjs`],
-  },
   plugins: [
     vue(),
   ],
