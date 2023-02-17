@@ -1,27 +1,23 @@
 <template>
   <span class="text">
-    {{ text }}
+    {{ props.text }}
     <button>xxx</button>
     <span class="vue-draggable-handle"></span>
   </span>
 </template>
 
-<script lang="ts">
-  export default {
-    name: `CustomDragElement`,
-    props: {
-      text: {
-        type: String,
-        default: `x`,
-      },
-    },
-    mounted(): void {
-      console.log(`### ${this.text} ready!`);
-    },
-  };
+<script lang="ts" setup>
+
+  interface IProps {
+    text: string;
+  }
+
+  const props = withDefaults(defineProps<IProps>(), {
+    text: `x`,
+  });
 </script>
 
-<style>
+<style lang="scss" scoped>
 .vue-draggable-handle {
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><circle cx='5' cy='5' r='5' fill='#999999'/></svg>") no-repeat bottom right;
   background-origin: content-box;
