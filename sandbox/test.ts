@@ -1,4 +1,4 @@
-import { TLayout } from "../src/helpers/utils";
+import { TLayout } from "../src/components/Grid/layout-definition";
 
 export const testData: TLayout = [
   { x:0, y:0, w:2, h:2, i:0 },
