@@ -1,5 +1,5 @@
 import elementResizeDetectorMaker from 'element-resize-detector';
-import { TLayout } from '@/helpers/utils';
+import { TLayout } from './layout-definition';
 
 export interface IPlaceholder {
   x: number;

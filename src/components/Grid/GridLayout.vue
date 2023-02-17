@@ -39,8 +39,6 @@
     validateLayout,
     cloneLayout,
     getAllCollisions,
-    TLayout,
-    TLayoutItem,
   } from '@/helpers/utils';
   import {
     getBreakpointFromWidth,
@@ -50,6 +48,7 @@
   import { addWindowEventListener, removeWindowEventListener, IEventsData } from '@/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
+  import { TLayout, TLayoutItem } from './layout-definition';
 
   interface IGridLayoutProps {
     autoSize?: boolean;
@@ -213,10 +212,12 @@
     layouts.value[newBreakpoint] = layout;
 
     if(lastBreakpoint.value !== newBreakpoint) {
+      // noinspection TypeScriptValidateTypes
       emit(EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint, layout);
     }
 
     // new prop sync
+    // noinspection TypeScriptValidateTypes
     emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
 
     lastBreakpoint.value = newBreakpoint;

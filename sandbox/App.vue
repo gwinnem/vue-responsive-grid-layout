@@ -142,7 +142,7 @@
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem  from '../src/components/Grid/GridItem.vue';
-  import { TLayoutItem } from '../src/helpers/utils';
+  import { TLayoutItem } from '../src/components/Grid/layout-definition';
 
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
