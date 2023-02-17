@@ -381,8 +381,6 @@ form {
   background-color: #58749f;
   border-radius: 8px;
   margin-bottom: 20px;
-  //margin-left: 9px;
-  //margin-right: 9px;
 }
 
 .test {
