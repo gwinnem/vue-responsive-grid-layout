@@ -1,6 +1,6 @@
 import App from './App.vue'
-import GridLayout from '../dist/vue-responsive-grid-layout.mjs'
-import GridItem  from '../dist/vue-responsive-grid-layout.mjs'
+import GridLayout from '../src/components/Grid/GridLayout.vue';
+import GridItem  from '../src/components/Grid/GridItem.vue';
 import { createApp } from 'vue'
 
 const app = createApp(App)
