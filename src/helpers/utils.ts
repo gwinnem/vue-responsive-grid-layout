@@ -1,31 +1,12 @@
 import { TMovingDirection, EMovingDirections } from '@/core/helpers/moving-directions';
-
-export interface ILayoutItemRequired {
-  w: number;
-  h: number;
-  x: number;
-  y: number;
-  i: string | number;
-}
-
-export type TLayoutItem = ILayoutItemRequired & {
-  minW?: number;
-  minH?: number;
-  maxW?: number;
-  maxH?: number;
-  moved?: boolean;
-  isStatic?: boolean;
-  isDraggable?: boolean;
-  isResizable?: boolean;
-}
-
-export type TLayout = TLayoutItem[]
+import { TLayout, TLayoutItem } from '@/components/Grid/layout-definition';
 
 /**
  * Get all static elements.
  * @param  {Array} layout Array of layout objects.
  * @return {Array}        Array of static layout items..
  */
+// eslint-disable-next-line no-undef
 export function getStatics(layout: TLayout): TLayoutItem[] {
   // return [];
   return layout.filter(l => l.isStatic);
