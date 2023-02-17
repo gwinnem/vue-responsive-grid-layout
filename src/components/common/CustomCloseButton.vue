@@ -2,7 +2,7 @@
   <button
     class="btn-close"
     type="button"
-    @click="closeItem">
+    @click="removeItem">
     <span class="icon-cross"></span>
     <span class="visually-hidden">Close</span>
   </button>
@@ -23,7 +23,10 @@
     (e: EGridItemEvent.REMOVE_ITEM, value: string | number): void;
   }>();
 
-  const closeItem = (): void => {
+  const removeItem = (): void => {
+    if(Number(props.i) === -1) {
+      return;
+    }
     emit(EGridItemEvent.REMOVE_ITEM, props.i);
   };
 </script>
@@ -71,7 +74,7 @@
 
 .btn-close {
   align-items: center;
-  background: blueviolet;
+  background: #464548;
   border: 0;
   border-radius: 50%;
   cursor: pointer !important;
