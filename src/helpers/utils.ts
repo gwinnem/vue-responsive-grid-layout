@@ -261,7 +261,7 @@ export function moveElement(
   if(l.isStatic) {
     return layout;
   }
-  console.error(`moveElement`, horizontalShift);
+
   // Short-circuit if nothing to do.
   // if (l.y === y && l.x === x) return layout;
 
@@ -513,7 +513,7 @@ export function validateLayout(layout: TLayout, contextName?: string): void {
   contextName = contextName || `Layout`;
   const subProps = [`x`, `y`, `w`, `h`];
   const keyArr = [];
-  if(!Array.isArray(layout)) throw new Error(`${contextName} must be an array!`);
+
   for(let i = 0, len = layout.length; i < len; i++) {
     const item = layout[i];
     for(let j = 0; j < subProps.length; j++) {
