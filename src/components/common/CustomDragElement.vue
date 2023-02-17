@@ -1,7 +1,6 @@
 <template>
   <span class="text">
-    {{ props.text }}
-    <button>xxx</button>
+    <button>{{ props.text }}</button>
     <span class="vue-draggable-handle"></span>
   </span>
 </template>
