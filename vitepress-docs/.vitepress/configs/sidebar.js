@@ -13,11 +13,25 @@ function getApiSidebar() {
       items: [
         {
           text: 'Interfaces',
-          link: '/api/interfaces',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              text: 'Layout',
+              link: '/api/interfaces-layout',
+            }
+          ],
         },
         {
           text: 'Types',
-          link: '/api/types/',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              text: 'Layout',
+              link: '/api/types-layout',
+            },
+          ],
         }
       ],
     },
@@ -40,8 +54,12 @@ function getComponentsSidebar() {
               link: '/components/grid-layout-props',
             },
             {
-              text: 'Events',
+              text: 'VUE Events',
               link: '/components/grid-layout-events',
+            },
+            {
+              text: 'Eventbus Events',
+              link: '/components/grid-layout-event-bus-events',
             },
           ],
         },
@@ -55,8 +73,12 @@ function getComponentsSidebar() {
               link: '/components/grid-item-props',
             },
             {
-              text: 'Events',
+              text: 'VUE Events',
               link: '/components/grid-item-events',
+            },
+            {
+              text: 'Eventbus Events',
+              link: '/components/grid-item-event-bus-events',
             },
             {
               text: 'Slots',
@@ -67,8 +89,21 @@ function getComponentsSidebar() {
       ],
     },
     {
-      text: 'CSS Variables',
-      link: '/components/css-variables',
+      text: 'Styling',
+      items: [
+        {
+          text: 'Variables',
+          link: '/components/css-variables',
+        },
+        {
+          text: 'GridLayout',
+          link: '/components/css-grid-layout',
+        },
+        {
+          text: 'GridItem',
+          link: '/components/css-grid-item',
+        },
+      ],
     },
   ];
 }

@@ -1,4 +1,4 @@
-# GridLayout Events
+# GridLayout VUE Events
 
 ## container-resized
 
@@ -71,3 +71,4 @@ layoutUpdatedEvent: function(newLayout: Layout): void {
   console.log("Updated layout: ", newLayout);
 }
 ```
+

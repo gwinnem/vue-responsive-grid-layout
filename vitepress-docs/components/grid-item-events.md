@@ -1,4 +1,4 @@
-# GridItem Events
+# GridItem VUE  Events
 
 ## container-resized
 Container Resized event
