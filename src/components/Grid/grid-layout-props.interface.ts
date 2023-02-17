@@ -1,4 +1,4 @@
-import { TLayout } from '../../helpers/utils';
+import { TLayout } from '../../core/helpers/utils';
 
 export interface IBreakpoints {
   xxl: number;

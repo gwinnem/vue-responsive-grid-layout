@@ -26,10 +26,10 @@
   import { Interactable } from '@interactjs/core/Interactable';
   import {
     setTopLeft, setTopRight, setTransformRtl, setTransform,
-  } from '@/helpers/utils';
-  import { getControlPosition, createCoreData } from '@/helpers/draggableUtils';
-  import { getColsFromBreakpoint, TBreakpoints } from '@/helpers/responsiveUtils';
-  import { getDocumentDir, IEventsData } from '@/helpers/DOM';
+  } from '@/core/helpers/utils';
+  import { getControlPosition, createCoreData } from '@/core/helpers/draggableUtils';
+  import { getColsFromBreakpoint, TBreakpoints } from '@/core/helpers/responsiveUtils';
+  import { getDocumentDir, IEventsData } from '@/core/helpers/DOM';
 
   import '@interactjs/auto-start';
   import '@interactjs/auto-scroll';

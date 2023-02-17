@@ -39,13 +39,13 @@
     validateLayout,
     cloneLayout,
     getAllCollisions,
-  } from '@/helpers/utils';
+  } from '@/core/helpers/utils';
   import {
     getBreakpointFromWidth,
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
-  } from '@/helpers/responsiveUtils';
-  import { addWindowEventListener, removeWindowEventListener, IEventsData } from '@/helpers/DOM';
+  } from '@/core/helpers/responsiveUtils';
+  import { addWindowEventListener, removeWindowEventListener, IEventsData } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
   import { TLayout, TLayoutItem } from './layout-definition';
