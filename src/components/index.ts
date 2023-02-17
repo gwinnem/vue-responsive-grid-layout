@@ -1,5 +1,6 @@
 import GridItem from './Grid/GridItem.vue';
 import GridLayout from './Grid/GridLayout.vue';
+import CustomCloseButton from './common/CustomCloseButton.vue';
 
 const components = {
   GridItem,
@@ -16,6 +17,7 @@ function install(app: any): void {
 }
 
 export {
+  CustomCloseButton,
   GridItem,
   GridLayout,
 };
