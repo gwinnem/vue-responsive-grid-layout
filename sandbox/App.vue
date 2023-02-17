@@ -12,9 +12,9 @@
             <label for="maxRows">Max Rows</label>
             <input id="maxRows" v-model="maxRows" type="number"/>
             <label for="mtb">Margin Top / Bottom</label>
-            <input id="mtb" v-model="marginTopBottom" disabled type="number"/>
+            <input id="mtb" v-model="marginTopBottom" type="number"/>
             <label for="mlr">Margin Left / Right</label>
-            <input id="mlr" v-model="marginLeftRight" disabled type="number"/>
+            <input id="mlr" v-model="marginLeftRight" type="number"/>
             <label for="borderRadius">Border Radius</label>
             <input id="borderRadius" v-model="borderRadiusPx" type="number"/>
             <br/>
@@ -32,8 +32,12 @@
             <input id="isResizable" v-model="isResizable" type="checkbox">
             <label for="isResponsive">isResponsive</label>
             <input id="isResponsive" v-model="isResponsive" type="checkbox">
+            <label for="preserveAspectRatio">preserveAspectRatio</label>
+            <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox">
             <label for="preventCollision">preventCollision</label>
             <input id="preventCollision" v-model="preventCollision" type="checkbox">
+            <label for="restoreOnDrag">restoreOnDrag</label>
+            <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">
             <label for="showCloseButton">showCloseButton</label>
             <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
             <label for="showGridLines">showGridLines</label>
@@ -88,8 +92,10 @@
               :max-rows="maxRows"
               :prevent-collision="preventCollision"
               :responsive="isResponsive"
+              :restore-on-drag="restoreOnDrag"
               :row-height="rowHeight"
               :show-close-button="showCloseButton"
+              :use-border-radius="useBorderRadius"
               :use-css-transforms="true"
               :vertical-compact="verticalCompact"
               @columns-changed="colNumChanged">
@@ -99,15 +105,17 @@
                 :ref="el => setChildRef(el)"
                 :h="item.h"
                 :i="item.i"
-                :min-h="3"
-                :min-w="3"
+                :isStatic="item.isStatic"
+                :min-h="item.minH"
+                :min-w="item.minW"
+                :preserve-aspect-ratio="preserveAspectRatio"
                 :show-close-button="showCloseButton"
+                :use-border-radius="useBorderRadius"
                 :w="item.w"
                 :x="item.x"
                 :y="item.y"
                 class="test"
-                @remove-grid-item="removeGridItem"
-                @resized="handleResize">
+                @remove-grid-item="removeGridItem">
                 <span class="text">
                   {{ itemTitle(item) }}
                 </span>
@@ -129,12 +137,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, nextTick } from 'vue';
+  import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue';
   import { testData } from './test';
-
   import GridLayout from '../src/components/Grid/GridLayout.vue';
-  import GridItem from '../src/components/Grid/GridItem.vue';
-  import { LayoutItem } from '../src/helpers/utils';
+  import GridItem  from '../src/components/Grid/GridItem.vue';
+  import { TLayoutItem } from '../src/helpers/utils';
 
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
@@ -148,9 +155,11 @@
   const marginLeftRight = ref(10); // TODO Not working as expected
   const marginTopBottom = ref(10); // TODO Not working as expected
   const maxRows = ref(40);
+  const preserveAspectRatio = ref(false);
   const preventCollision = ref(false);
-  const rowHeight = ref(30);
+  const rowHeight = ref(50);
   const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
+  const restoreOnDrag = ref(true);
   const showCloseButton = ref(true);
   const showGridLines = ref(false);
   const useBorderRadius = ref(false);
@@ -173,18 +182,13 @@
     });
   };
 
-  const itemTitle = (item: LayoutItem): string => {
+  const itemTitle = (item: TLayoutItem): string => {
       let result = item.i;
-      if(item.static) {
+      if(item.isStatic) {
         result += " - Static";
       }
-      return result;
-    }
-  ;
-
-  function handleResize(i: string | number, w: number, h: number, x: number, y: number) {
-    console.log(i, w, h, x, y);
-  }
+      return <string>result;
+    };
 
   function setChildRef(vm: any) {
     if(vm && vm.i) {
@@ -299,11 +303,13 @@
   onMounted(() => {
     document.addEventListener("dragover", addDragOverEvent);
   });
+  onBeforeUnmount(() => {
+    document.removeEventListener("dragover", addDragOverEvent);
+  });
 </script>
 
 <style lang="scss" scoped>
-@import '../src/styles/index.scss';
-
+@import '../src/styles/variables';
 form {
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -388,9 +394,10 @@ form {
   border-radius: 8px;
   cursor: grab;
   margin: 0;
+  height: 100px;
   padding: 10px;
   text-align: center;
-  max-width: 150px;
+  max-width: 250px;
 }
 
 .layoutJSON {
