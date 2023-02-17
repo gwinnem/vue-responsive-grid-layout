@@ -85,6 +85,7 @@
               :auto-size="autoResizeGridLayout"
               :class="{grid: showGridLines}"
               :col-num="colNum"
+              :horizontal-shift="horizontalShift"
               :is-bounded="isBounded"
               :is-draggable="isDraggable"
               :is-mirrored="isMirrored"

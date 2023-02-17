@@ -231,11 +231,10 @@
     h?: number,
     w?: number,
   ): void {
-    // console.log(eventName + " id=" + id + ", x=" + x + ", y=" + y);
     let l = getLayoutItem(props.layout, id);
 
     // GetLayoutItem sometimes returns null object
-    if(l === undefined || l === null) {
+    if(l === undefined) {
       l = {
         x: 0,
         y: 0,
@@ -245,11 +244,11 @@
     if(eventName === `dragstart` && !props.verticalCompact) {
       // noinspection TypeScriptValidateTypes
       positionsBeforeDrag.value = props.layout.reduce(
-        (result, { i, x, y }) => ({
+        (result, { i, tmpX, tmpY }) => ({
           ...result,
           [i]: {
-            x,
-            y,
+            tmpX,
+            tmpY,
           },
         }),
         {},
@@ -265,7 +264,6 @@
       nextTick(() => {
         isDragging.value = true;
       });
-      // this.$broadcast("updateWidth", this.width);
       eventBus.emit(`updateWidth`, width.value);
     } else {
       nextTick(() => {
@@ -274,8 +272,7 @@
     }
 
     // Move the element to the dragged location.
-    // this.layout = moveElement(this.layout, l, x, y, true, this.preventCollision)
-    const layout = moveElement(props.layout, l, x, y, true, props.preventCollision);
+    const layout = moveElement(props.layout, l, x as number, y as number, true, props.horizontalShift as boolean, props.preventCollision);
     emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
 
     if(props.restoreOnDrag) {
@@ -307,20 +304,20 @@
   ): void {
     let l = getLayoutItem(props.layout, id);
     // getLayoutItem sometimes return null object
-    if(l === undefined || l === null) {
+    if(l === undefined) {
       l = {
         h: 0,
         w: 0,
       } as TLayoutItem;
     }
-    w = Number(w);
-    h = Number(h);
+    const internalW = Number(w);
+    const internalH = Number(h);
     let hasCollisions;
     if(props.preventCollision) {
       const collisions = getAllCollisions(props.layout, {
         ...l,
-        h,
-        w,
+        h: internalH,
+        w: internalW,
       })
         .filter(
           layoutItem => layoutItem.i !== l?.i,
@@ -344,8 +341,8 @@
 
     if(!hasCollisions) {
       // Set new width and height.
-      l.w = w;
-      l.h = h;
+      l.w = internalW;
+      l.h = internalH;
     }
 
     if(eventName === `resizestart` || eventName === `resizemove`) {
@@ -364,7 +361,9 @@
       });
     }
 
-    if(props.responsive) responsiveGridLayout();
+    if(props.responsive) {
+      responsiveGridLayout();
+    }
 
     compact(props.layout, props.verticalCompact);
     eventBus.emit(`compact`);
@@ -436,14 +435,15 @@
   }
 
   function layoutUpdate(): void {
-    if(props.layout !== undefined && originalLayout.value !== undefined && originalLayout.value?.length > 0) {
-      if(props.layout.length !== originalLayout.value?.length) {
-        const diff = findDifference(props.layout, originalLayout.value);
+    const testLayout = originalLayout as TLayout;
+    if(originalLayout.value !== undefined && testLayout.length > 0) {
+      if(props.layout.length !== testLayout.length) {
+        const diff = findDifference(props.layout, testLayout);
         if(diff.length > 0) {
-          if(props.layout.length > originalLayout.value.length) {
-            originalLayout.value = originalLayout.value.concat(diff);
+          if(props.layout.length > testLayout.length) {
+            originalLayout.value = testLayout.concat(diff);
           } else {
-            originalLayout.value = originalLayout.value.filter(obj => {
+            originalLayout.value = testLayout.filter(obj => {
               return !diff.some(obj2 => {
                 return obj.i === obj2.i;
               });
@@ -463,9 +463,7 @@
   }
 
   function onWindowResize(): void {
-    if(refsLayout.value !== null && refsLayout.value !== undefined) {
-      width.value = refsLayout.value.offsetWidth;
-    }
+    width.value = refsLayout.value.offsetWidth;
     eventBus.emit(`resizeEvent`);
   }
 
@@ -475,7 +473,7 @@
     eventBus.off(`dragEvent`, dragEventHandler);
     removeWindowEventListener(`resize`, onWindowResize);
     if(erd.value) {
-      erd.value.uninstall(refsLayout.value);
+      erd.value?.uninstall(refsLayout.value);
     }
   });
 
@@ -508,7 +506,7 @@
             strategy: `scroll`, // <- For ultra performance.
             // See https://github.com/wnr/element-resize-detector/issues/110 about callOnAdd.
           });
-          erd.value.listenTo(refsLayout.value, () => {
+          erd.value?.listenTo(refsLayout.value, () => {
             onWindowResize();
           });
         });

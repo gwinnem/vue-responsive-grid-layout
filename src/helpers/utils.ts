@@ -1,3 +1,5 @@
+import { TMovingDirection, EMovingDirections } from '@/core/helpers/moving-directions';
+
 export interface ILayoutItemRequired {
   w: number;
   h: number;
@@ -18,8 +20,6 @@ export type TLayoutItem = ILayoutItemRequired & {
 }
 
 export type TLayout = TLayoutItem[]
-
-export type TSizeWH = { w: number; h: number }
 
 /**
  * Get all static elements.
@@ -240,32 +240,43 @@ export function getAllCollisions(layout: TLayout, layoutItem: TLayoutItem): TLay
 /**
  * Move an element. Responsible for doing cascading movements of other elements.
  *
- * @param  {Array}      layout Full layout to modify.
- * @param  {TLayoutItem} l      element to move.
- * @param  {Number}     [x]    X position in grid units.
- * @param  {Number}     [y]    Y position in grid units.
- * @param  {Boolean}    [isUserAction] If true, designates that the item we're moving is being dragged/resized by the user.
+ * @param  {TLayout}      layout              Full layout to modify.
+ * @param  {TLayoutItem}  l                   element to move.
+ * @param  {Number}       [x]                 X position in grid units.
+ * @param  {Number}       [y]                 Y position in grid units.
+ * @param  {Boolean}      [isUserAction]      If true, designates that the item we're moving is being dragged/resized by the user.
+ * @param  {Boolean}      [horizontalShift]   If true, the GridItems will move left or right when the moving element is passing over a GridItem.
+ * @param  {Boolean}      [preventCollision]  If true, the moving element will not be moving other elements to make space for a possible drop.
+ * @return {TLayout}                          The updated layout.
  */
 export function moveElement(
   layout: TLayout,
   l: TLayoutItem,
-  x: number | undefined,
-  y: number | undefined,
-  isUserAction?: boolean,
+  x: number,
+  y: number,
+  isUserAction: boolean,
+  horizontalShift: boolean,
   preventCollision?: boolean,
 ): TLayout {
-  if(l.isStatic) return layout;
-
+  if(l.isStatic) {
+    return layout;
+  }
+  console.error(`moveElement`, horizontalShift);
   // Short-circuit if nothing to do.
   // if (l.y === y && l.x === x) return layout;
 
   const oldX = l.x;
   const oldY = l.y;
 
-  const movingUp = y && l.y > y;
-  // This is quite a bit faster than extending the object
-  if(typeof x === `number`) l.x = x;
-  if(typeof y === `number`) l.y = y;
+  const moving = {
+    DOWN: oldY < y,
+    LEFT: oldX > x,
+    RIGHT: oldX < x,
+    UP: oldY > y,
+  };
+
+  l.x = x;
+  l.y = y;
   l.moved = true;
 
   // If this collides with anything, move it.
@@ -273,7 +284,9 @@ export function moveElement(
   // to ensure, in the case of multiple collisions, that we're getting the
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout);
-  if(movingUp) sorted = sorted.reverse();
+
+  if(moving.UP) sorted = sorted.reverse();
+
   const collisions = getAllCollisions(sorted, l);
 
   if(preventCollision && collisions.length) {
@@ -286,21 +299,26 @@ export function moveElement(
   // Move each item that collides away from this element.
   for(let i = 0, len = collisions.length; i < len; i++) {
     const collision = collisions[i];
-    // console.log('resolving collision between', l.i, 'at', l.y, 'and', collision.i, 'at', collision.y);
 
-    // Short circuit so we can't infinite loop
-    if(collision.moved) continue;
+    // Short circuit so we can't loop infinite
+    if(collision.moved) {
+      continue;
+    }
 
     // This makes it feel a bit more precise by waiting to swap for just a bit when moving up.
-    if(l.y > collision.y && l.y - collision.y > collision.h / 4) continue;
+    if(l.y > collision.y && l.y - collision.y > collision.h / 4) {
+      continue;
+    }
+
+    const movingDirection = (Object.keys(moving) as EMovingDirections[]).filter(k => moving[k])?.[0];
 
     // Don't move static items - we have to move *this* element away
     if(collision.isStatic) {
       // eslint-disable-next-line no-use-before-define
-      layout = moveElementAwayFromCollision(layout, collision, l, isUserAction);
+      layout = moveElementAwayFromCollision(layout, collision, l, isUserAction, movingDirection, horizontalShift);
     } else {
       // eslint-disable-next-line no-use-before-define
-      layout = moveElementAwayFromCollision(layout, l, collision, isUserAction);
+      layout = moveElementAwayFromCollision(layout, l, collision, isUserAction, movingDirection, horizontalShift);
     }
   }
 
@@ -311,17 +329,21 @@ export function moveElement(
  * This is where the magic needs to happen - given a collision, move an element away from the collision.
  * We attempt to move it up if there's room, otherwise it goes below.
  *
- * @param  {Array} layout            Full layout to modify.
- * @param  {TLayoutItem} collidesWith Layout item we're colliding with.
- * @param  {TLayoutItem} itemToMove   Layout item we're moving.
- * @param  {Boolean} [isUserAction]  If true, designates that the item we're moving is being dragged/resized
- *                                   by the user.
+ * @param  {TLayout} layout             Full layout to modify.
+ * @param  {TLayoutItem} collidesWith   Layout item we're colliding with.
+ * @param  {TLayoutItem} itemToMove     Layout item we're moving.
+ * @param  {Boolean} [isUserAction]     If true, designates that the item we're moving is being dragged/resized by the user.
+ * @param  {Boolean} [movingDirection]
+ * @param  {Boolean} [horizontalShift]
+ * @return {TLayout}                    The modified layout.
  */
 export function moveElementAwayFromCollision(
   layout: TLayout,
   collidesWith: TLayoutItem,
   itemToMove: TLayoutItem,
-  isUserAction?: boolean,
+  isUserAction: boolean,
+  movingDirection: TMovingDirection,
+  horizontalShift: boolean,
 ): TLayout {
   const preventCollision = false; // we're already colliding
   // If there is enough space above the collision to put this element, move it there.
@@ -336,22 +358,37 @@ export function moveElementAwayFromCollision(
       x: itemToMove.x,
       y: itemToMove.y,
     };
+
     fakeItem.y = Math.max(collidesWith.y - itemToMove.h, 0);
+
     if(!getFirstCollision(layout, fakeItem)) {
-      return moveElement(layout, itemToMove, undefined, fakeItem.y, preventCollision);
+      return moveElement(layout, itemToMove, fakeItem.x, fakeItem.y, isUserAction, horizontalShift, preventCollision);
     }
   }
-  /*
-  layout: Layout,
-  l: LayoutItem,
-  x: number,
-  y: number,
-  isUserAction: boolean,
-  preventCollision: boolean
-  */
-  // Previously this was optimized to move below the collision directly, but this can cause problems
-  // with cascading moves, as an item may actually leapflog a collision and cause a reversal in order.
-  return moveElement(layout, itemToMove, undefined, itemToMove.y + 1, preventCollision);
+
+  const movingCordsData = {
+    $default: {
+      x: itemToMove.x,
+      y: itemToMove.y + 1,
+    },
+    [EMovingDirections.LEFT]: [itemToMove.x + collidesWith.w, collidesWith.y],
+    [EMovingDirections.RIGHT]: [itemToMove.x - collidesWith.w, collidesWith.y],
+    [EMovingDirections.UP]: [itemToMove.x, itemToMove.y + collidesWith.h],
+    [EMovingDirections.DOWN]: [itemToMove.x, itemToMove.y - collidesWith.h],
+  };
+
+  if(horizontalShift) {
+    const horizontalDirection = movingDirection === EMovingDirections.LEFT || movingDirection === EMovingDirections.RIGHT;
+
+    if(movingDirection in movingCordsData && !(horizontalDirection && collidesWith.w < itemToMove.w && collidesWith.x !== itemToMove.x)) {
+      const [x, y] = movingCordsData[movingDirection];
+
+      movingCordsData.$default.x = x;
+      movingCordsData.$default.y = y;
+    }
+  }
+
+  return moveElement(layout, itemToMove, movingCordsData.$default.x, movingCordsData.$default.y, horizontalShift, preventCollision);
 }
 
 export interface ITransformStyle {
@@ -482,26 +519,22 @@ export function validateLayout(layout: TLayout, contextName?: string): void {
     for(let j = 0; j < subProps.length; j++) {
       if(typeof item[subProps[j]] !== `number`) {
         throw new Error(
-          `VueGridLayout: ${contextName}[${i}].${subProps[j]} must be a number!`,
+          `VueResponsiveGridLayout: ${contextName}[${i}].${subProps[j]} must be a number!`,
         );
       }
     }
 
     if(item.i === undefined || item.i === null) {
-      throw new Error(`VueGridLayout: ${contextName}[${i}].i cannot be null!`);
-    }
-
-    if(typeof item.i !== `number` && typeof item.i !== `string`) {
-      throw new Error(`VueGridLayout: ${contextName}[${i}].i must be a string or number!`);
+      throw new Error(`VueResponsiveGridLayout: ${contextName}[${i}].i cannot be null!`);
     }
 
     if(keyArr.indexOf(item.i) >= 0) {
-      throw new Error(`VueGridLayout: ${contextName}[${i}].i must be unique!`);
+      throw new Error(`VueResponsiveGridLayout: ${contextName}[${i}].i must be unique!`);
     }
     keyArr.push(item.i);
 
-    if(item.isStatic !== undefined && typeof item.isStatic !== `boolean`) {
-      throw new Error(`VueGridLayout: ${contextName}[${i}].static must be a boolean!`);
+    if(item.isStatic !== undefined) {
+      throw new Error(`VueResponsiveGridLayout: ${contextName}[${i}].static must be a boolean!`);
     }
   }
 }
@@ -533,6 +566,7 @@ export const IS_UNITLESS = {
   zoom: true,
 
   // SVG-related properties
+  // eslint-disable-next-line sort-keys
   fillOpacity: true,
   stopOpacity: true,
   strokeDashoffset: true,
