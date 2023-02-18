@@ -90,6 +90,7 @@
               :is-draggable="isDraggable"
               :is-mirrored="isMirrored"
               :is-resizable="isResizable"
+              :margin="margin"
               :max-rows="maxRows"
               :prevent-collision="preventCollision"
               :responsive="isResponsive"
@@ -138,7 +139,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue';
+  import { ref, onMounted, nextTick, onBeforeUnmount, computed } from 'vue';
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem  from '../src/components/Grid/GridItem.vue';
@@ -169,6 +170,11 @@
   const testLayout = ref(testData);
   const refLayout = ref();
   const mapCache: Map<string, any> = new Map();
+
+  const margin = computed(() => {
+    return [marginTopBottom.value, marginLeftRight.value];
+  });
+
   let orgColNum = colNum.value;
   const colNumChanged = (value: number): void => {
     if(orgColNum !== value) {
@@ -404,6 +410,15 @@ form {
   border: 1px solid black;
   border-radius: 8px;
   padding: 10px;
+}
+
+.eventsJSON {
+  background: #ddd;
+  border: 1px solid black;
+  margin-top: 10px;
+  padding: 10px;
+  height: 100px;
+  overflow-y: scroll;
 }
 
 .columns {
