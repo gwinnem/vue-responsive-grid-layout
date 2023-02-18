@@ -144,19 +144,51 @@ function getExamplesSidebar() {
       text: 'Examples',
       items: [
         {
-          text: 'Example 1',
+          text: 'Basic drag and resize',
           link: '/examples/01-example'
         },
         {
-          text: 'Example 2',
+          text: 'Bounded drag to container',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Events',
           link: '/examples/02-example'
         },
         {
-          text: 'Example 3',
+          text: 'Multiple Grids',
           link: '/examples/03-example'
         },
         {
-          text: 'Example 4',
+          text: 'Allow Ignore',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Mirrored (rtl)',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Responsive',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Prevent Collision',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Responsive predefined layouts',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Add or Remove items',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Drag, drop from outside',
+          link: '/examples/04-example'
+        },
+        {
+          text: 'Drag, drop from grid to grid',
           link: '/examples/04-example'
         },
       ],
