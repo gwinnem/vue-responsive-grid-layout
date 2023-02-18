@@ -59,7 +59,7 @@ If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridI
 Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
 
 
-## horizontalShift(Not implemented)
+## horizontalShift
 * default: `true`
 * required: `false`
 * type: `Boolean`
