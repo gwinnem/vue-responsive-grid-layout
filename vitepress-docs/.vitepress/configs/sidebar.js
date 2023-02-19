@@ -149,47 +149,47 @@ function getExamplesSidebar() {
         },
         {
           text: 'Bounded drag to container',
-          link: '/examples/04-example'
-        },
-        {
-          text: 'Events',
           link: '/examples/02-example'
         },
         {
-          text: 'Multiple Grids',
+          text: 'Events',
           link: '/examples/03-example'
         },
         {
-          text: 'Allow Ignore',
+          text: 'Multiple Grids',
           link: '/examples/04-example'
+        },
+        {
+          text: 'Allow Ignore',
+          link: '/examples/05-example'
         },
         {
           text: 'Mirrored (rtl)',
-          link: '/examples/04-example'
+          link: '/examples/06-example'
         },
         {
           text: 'Responsive',
-          link: '/examples/04-example'
+          link: '/examples/07-example'
         },
         {
           text: 'Prevent Collision',
-          link: '/examples/04-example'
+          link: '/examples/08-example'
         },
         {
           text: 'Responsive predefined layouts',
-          link: '/examples/04-example'
+          link: '/examples/09-example'
         },
         {
           text: 'Add or Remove items',
-          link: '/examples/04-example'
+          link: '/examples/10-example'
         },
         {
           text: 'Drag, drop from outside',
-          link: '/examples/04-example'
+          link: '/examples/11-example'
         },
         {
           text: 'Drag, drop from grid to grid',
-          link: '/examples/04-example'
+          link: '/examples/12-example'
         },
       ],
     },

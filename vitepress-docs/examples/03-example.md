@@ -1,1 +1,1 @@
-# Example 3
+# Move and resize events
