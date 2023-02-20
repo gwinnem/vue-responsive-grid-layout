@@ -24,8 +24,9 @@
     "noUnusedParameters": false,
     "paths": {
       "@/*": [
-        "src/*"
-      ]
+        "src/*",
+      ],
+      "@theme/*": ["vitepress-docs/.vitepress/theme/*"],
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
