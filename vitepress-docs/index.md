@@ -1,12 +1,12 @@
 ---
 layout: home
 
-title: Vue 3 Fluid Grid Layout.
+title: Vue 3 Responsive Grid Layout.
 titleTemplate: Main
 
 hero:
-  name: vue-fluid-grid-layout
-  text: Fluid Grid Layout.
+  name: vue-responsive-grid-layout
+  text: Responsive Grid Layout.
   tagline: Draggable, Resizeable widgets.
   image:
     src: /logo.svg

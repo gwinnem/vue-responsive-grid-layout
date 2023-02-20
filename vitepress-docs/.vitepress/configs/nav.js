@@ -5,6 +5,11 @@ export default [
     activeMatch: '^/guide/',
   },
   {
+    text: 'Features',
+    link: '/features/',
+    activeMatch: '^/features/'
+  },
+  {
     text: 'Components',
     link: '/components/',
     activeMatch: '^/components/',
