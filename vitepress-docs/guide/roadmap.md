@@ -1,3 +1,10 @@
+---
+aside: false
+footer: true
+page: true
+title: Roadmap
+---
+
 # ROADMAP
 
 ## Upcoming features

@@ -17,6 +17,10 @@ function getApiSidebar() {
           collapsed: false,
           items: [
             {
+              text: 'Eventbus (Mitt)',
+              link: '/api/interfaces-eventBus'
+            },
+            {
               text: 'Layout',
               link: '/api/interfaces-layout',
             }

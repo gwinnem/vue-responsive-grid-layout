@@ -1,4 +1,5 @@
 ---
+aside: false
 page: true
 title: Features
 ---

@@ -1,3 +1,7 @@
+---
+aside: false
+---
+
 # Layout interfaces
 
 ## ILayoutItemRequired

@@ -1,5 +1,8 @@
 ---
-footer: false
+aside: false
+footer: true
+page: true
+title: Introduction
 ---
 
 # Introduction

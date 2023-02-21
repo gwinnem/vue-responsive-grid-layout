@@ -1,3 +1,8 @@
+---
+page: true
+title: Installation
+---
+
 # Installation
 
 ## NPM
@@ -34,5 +39,5 @@ Add to other Vue components
 Include the browser-ready bundle (download from [releases](https://github.com/gwinnem/vue-fluid-grid-layout/releases)) in your page. The components will be automatically available.
 
 ```html
-    <script src="vue-responsive-grid-layout.umd.min.js"></script>
+    <script src="../../dist/vue-responsive-grid-layout.umd.js"></script>
 ```

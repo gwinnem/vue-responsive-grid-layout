@@ -1,6 +1,12 @@
+---
+aside: false
+page: true
+title: Features
+---
+
 # Changelog
 
-### 2023-xx-xx(v: 1.0.0)
+## v: 1.0.0 (2023-xx-xx)
 
 * Complete refactoring of old codebase.
 * Strongly typed typescript code.

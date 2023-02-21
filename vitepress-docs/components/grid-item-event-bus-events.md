@@ -7,6 +7,7 @@
 
 
 ## dragEvent
+* Emitted in `handleDrag`, the event handler for drag events.
 
 
 ## resizeEvent
