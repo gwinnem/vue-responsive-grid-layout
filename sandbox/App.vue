@@ -100,7 +100,7 @@
               :use-border-radius="useBorderRadius"
               :use-css-transforms="true"
               :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged">
+              @columns-changed="colNumChanged" >
               <GridItem
                 v-for="item in testLayout"
                 :key="item.i"
@@ -207,6 +207,7 @@
     x: 0,
     y: 0,
   };
+
   let DragPos = {
     x: 0,
     y: 0,
