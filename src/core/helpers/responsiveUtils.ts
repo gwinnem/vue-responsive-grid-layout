@@ -1,26 +1,10 @@
 import { cloneLayout, compact, correctBounds } from './utils';
-import type { TLayout } from './utils';
-
-export type TResponsiveLayout = {
-  xxl?: TLayout;
-  xl?: TLayout;
-  lg?: TLayout;
-  md?: TLayout;
-  sm?: TLayout;
-  xs?: TLayout;
-  xxs?: TLayout;
-};
-
-export type TBreakpoint = string;
-export type TBreakpoints = {
-  xxl?: number;
-  xl?: number;
-  lg?: number;
-  md?: number;
-  sm?: number;
-  xs?: number;
-  xxs?: number;
-};
+import {
+  TBreakpoint,
+  TBreakpoints,
+  TLayout,
+  TResponsiveLayout,
+} from '@/components/Grid/layout-definition';
 
 /**
  * Given breakpoints, return an array of breakpoints sorted by width. This is usually
@@ -32,6 +16,8 @@ export type TBreakpoints = {
 export function sortBreakpoints(breakpoints: TBreakpoints): TBreakpoint[] {
   const keys: string[] = Object.keys(breakpoints);
   return keys.sort((a, b) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return breakpoints[a] - breakpoints[b];
   });
 }
@@ -48,6 +34,8 @@ export function getBreakpointFromWidth(breakpoints: TBreakpoints, width: number)
   let matching = sorted[0];
   for(let i = 1, len = sorted.length; i < len; i++) {
     const breakpointName = sorted[i];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if(width > breakpoints[breakpointName]) matching = breakpointName;
   }
   return matching;
@@ -60,11 +48,15 @@ export function getBreakpointFromWidth(breakpoints: TBreakpoints, width: number)
  * @return {Number}            Number of cols.
  */
 export function getColsFromBreakpoint(breakpoint: TBreakpoint, cols: TBreakpoints): number {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   if(!cols[breakpoint]) {
     throw new Error(
       `ResponsiveGridLayout: \`cols\` entry for breakpoint ${breakpoint} is missing!`,
     );
   }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return cols[breakpoint];
 }
 
@@ -92,7 +84,13 @@ export function findOrGenerateResponsiveLayout(
   verticalCompact: boolean,
 ): TLayout {
   // If it already exists, just return it.
-  if(layouts[breakpoint]) return cloneLayout(layouts[breakpoint]);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if(layouts[breakpoint]) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return cloneLayout(layouts[breakpoint]);
+  }
   // Find or generate the next layout
   let layout = orgLayout;
 
@@ -100,7 +98,11 @@ export function findOrGenerateResponsiveLayout(
   const breakpointsAbove = breakpointsSorted.slice(breakpointsSorted.indexOf(breakpoint));
   for(let i = 0, len = breakpointsAbove.length; i < len; i++) {
     const b = breakpointsAbove[i];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if(layouts[b]) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       layout = layouts[b];
       break;
     }

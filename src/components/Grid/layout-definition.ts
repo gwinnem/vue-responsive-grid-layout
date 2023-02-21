@@ -1,20 +1,42 @@
 export interface ILayoutItemRequired {
-  w: number;
+  i: string | number;
   h: number;
+  w: number;
   x: number;
   y: number;
-  i: string | number;
 }
 
 export type TLayoutItem = ILayoutItemRequired & {
-  minW?: number;
-  minH?: number;
-  maxW?: number;
-  maxH?: number;
-  moved?: boolean;
-  isStatic?: boolean;
   isDraggable?: boolean;
   isResizable?: boolean;
+  isStatic?: boolean;
+  maxH?: number;
+  maxW?: number;
+  minH?: number;
+  minW?: number;
+  moved?: boolean;
 }
 
 export type TLayout = TLayoutItem[];
+
+export type TResponsiveLayout = {
+  xxl?: TLayout;
+  xl?: TLayout;
+  lg?: TLayout;
+  md?: TLayout;
+  sm?: TLayout;
+  xs?: TLayout;
+  xxs?: TLayout;
+};
+
+export type TBreakpoint = string;
+
+export type TBreakpoints = {
+  xxl?: number;
+  xl?: number;
+  lg?: number;
+  md?: number;
+  sm?: number;
+  xs?: number;
+  xxs?: number;
+};

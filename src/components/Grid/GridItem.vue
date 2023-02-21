@@ -29,7 +29,7 @@
   } from '@/core/helpers/utils';
   import { getControlPosition, createCoreData } from '@/core/helpers/draggableUtils';
   import { getColsFromBreakpoint, TBreakpoints } from '@/core/helpers/responsiveUtils';
-  import { getDocumentDir, IEventsData } from '@/core/helpers/DOM';
+  import { getDocumentDir } from '@/core/helpers/DOM';
 
   import '@interactjs/auto-start';
   import '@interactjs/auto-scroll';
@@ -47,6 +47,7 @@
     IGridItemPosition,
     IGridItemWidthHeight,
   } from './grid-item.interfaces';
+  import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
 
   const { proxy } = useCurrentInstance();
 
@@ -202,11 +203,11 @@
       "no-touch": isAndroid.value && draggableOrResizableAndNotStatic.value,
       "render-rtl": renderRtl.value,
       resizing: isResizing.value,
-      "vue-use-radius": props.useBorderRadius,
-      "vue-static": props.isStatic,
       "vue-draggable": draggableAndNotStatic.value,
       "vue-draggable-dragging": isDragging.value,
       "vue-resizable": resizableAndNotStatic.value,
+      "vue-static": props.isStatic,
+      "vue-use-radius": props.useBorderRadius,
     };
   });
 
@@ -216,6 +217,528 @@
     }
     return `vue-resizable-handle`;
   });
+
+  // This can either be called:
+  // calcGridItemWHPx(w, colWidth, margin[0])
+  // or
+  // calcGridItemWHPx(h, rowHeight, margin[1])
+  function calcGridItemWHPx(gridUnits: number, colOrRowSize: number, marginPx: number): number {
+    if(!Number.isFinite(gridUnits)) return gridUnits;
+    return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
+  }
+
+  // Similar to _.clamp
+  function clamp(num: number, lowerBound: number, upperBound: number): number {
+    return Math.max(Math.min(num, upperBound), lowerBound);
+  }
+
+  // Helper for generating column width
+  function calcColWidth(): number {
+    return (containerWidth.value - margin.value[0] * (cols.value + 1)) / cols.value;
+  }
+
+  /**
+   * Translate x and y coordinates from pixels to grid units.
+   * @param  {Number} top  Top position (relative to parent) in pixels.
+   * @param  {Number} left Left position (relative to parent) in pixels.
+   * @return {Object} x and y in grid units.
+   */
+  // TODO check if this function needs change in order to support rtl.
+  function calcXY(top: number, left: number): ICalcXy {
+    const colWidth = calcColWidth();
+
+    // left = colWidth * x + margin * (x + 1)
+    // l = cx + m(x+1)
+    // l = cx + mx + m
+    // l - m = cx + mx
+    // l - m = x(c + m)
+    // (l - m) / (c + m) = x
+    // x = (left - margin) / (coldWidth + margin)
+    let x = Math.round((left - margin.value[0]) / (colWidth + margin.value[0]));
+    let y = Math.round((top - margin.value[1]) / (rowHeight.value + margin.value[1]));
+
+    // Capping
+    x = Math.max(Math.min(x, cols.value - innerW.value), 0);
+    y = Math.max(Math.min(y, maxRows.value - innerH.value), 0);
+
+    return {
+      x,
+      y,
+    };
+  }
+
+  function handleDrag(event: MouseEvent): void {
+    if(props.isStatic) {
+      return;
+    }
+    if(isResizing.value) {
+      return;
+    }
+
+    const position = getControlPosition(event);
+
+    // Get the current drag point from the event. This is used as the offset.
+    if(position === null) {
+      return; // not possible but satisfies flow
+    }
+
+    const {
+      x,
+      y,
+    } = position;
+
+    // let shouldUpdate = false;
+    const newPosition = {
+      left: 0,
+      top: 0,
+    };
+
+    switch(event.type) {
+      case `dragstart`: {
+        previousX.value = innerX.value;
+        previousY.value = innerY.value;
+
+        const tg = event.target as HTMLElement;
+        const parentTg = tg.offsetParent as HTMLElement;
+        const parentRect = parentTg.getBoundingClientRect();
+        const clientRect = tg.getBoundingClientRect();
+
+        const cLeft = clientRect.left / transformScale.value;
+        const pLeft = parentRect.left / transformScale.value;
+        const cRight = clientRect.right / transformScale.value;
+        const pRight = parentRect.right / transformScale.value;
+        const cTop = clientRect.top / transformScale.value;
+        const pTop = parentRect.top / transformScale.value;
+
+        if(renderRtl.value) {
+          newPosition.left = (cRight - pRight) * -1;
+        } else {
+          newPosition.left = cLeft - pLeft;
+        }
+        newPosition.top = cTop - pTop;
+        dragging.value = newPosition as IGridItemPosition;
+        isDragging.value = true;
+        break;
+      }
+      case `dragend`: {
+        if(!isDragging.value) return;
+        const tg = event.target as HTMLElement;
+        const parentTg = tg.offsetParent as HTMLElement;
+        const parentRect = parentTg.getBoundingClientRect();
+        const clientRect = tg.getBoundingClientRect();
+
+        const cLeft = clientRect.left / transformScale.value;
+        const pLeft = parentRect.left / transformScale.value;
+        const cRight = clientRect.right / transformScale.value;
+        const pRight = parentRect.right / transformScale.value;
+        const cTop = clientRect.top / transformScale.value;
+        const pTop = parentRect.top / transformScale.value;
+
+        //                        Add rtl support
+        if(renderRtl.value) {
+          newPosition.left = (cRight - pRight) * -1;
+        } else {
+          newPosition.left = cLeft - pLeft;
+        }
+        newPosition.top = cTop - pTop;
+        //                        console.log("### drag end => " + JSON.stringify(newPosition));
+        //                        console.log("### DROP: " + JSON.stringify(newPosition));
+        dragging.value = null;
+        isDragging.value = false;
+        // shouldUpdate = true;
+        break;
+      }
+      case `dragmove`: {
+        const coreEvent = createCoreData(lastX.value, lastY.value, x, y);
+        //                        Add rtl support
+        if(renderRtl.value) {
+          newPosition.left = Number(dragging.value?.left) - coreEvent.deltaX / transformScale.value;
+        } else {
+          newPosition.left = Number(dragging.value?.left) + coreEvent.deltaX / transformScale.value;
+        }
+        newPosition.top = Number(dragging.value?.top) + coreEvent.deltaY / transformScale.value;
+        if(bounded.value) {
+          const tg = event.target as HTMLElement;
+          const parentTg = tg.offsetParent as HTMLElement;
+          const bottomBoundary = parentTg.clientHeight - calcGridItemWHPx(props.h, rowHeight.value, margin.value[1]);
+          newPosition.top = clamp(newPosition.top, 0, bottomBoundary);
+          const colWidth = calcColWidth();
+          const rightBoundary = containerWidth.value - calcGridItemWHPx(props.w, colWidth, margin.value[0]);
+          newPosition.left = clamp(newPosition.left, 0, rightBoundary);
+        }
+        //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);
+        //                        console.log("### drag => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+        //                        console.log("### drag end => " + JSON.stringify(newPosition));
+        dragging.value = newPosition as IGridItemPosition;
+        break;
+      }
+      default: {
+        // Do nothing just to avoid linting complaints
+      }
+    }
+
+    // Get new XY
+    let pos: ICalcXy;
+    if(renderRtl.value) {
+      pos = calcXY(newPosition.top, newPosition.left);
+    } else {
+      pos = calcXY(newPosition.top, newPosition.left);
+    }
+
+    lastX.value = x;
+    lastY.value = y;
+
+    if(innerX.value !== pos.x || innerY.value !== pos.y) {
+      emit(EGridItemEvent.MOVE, props.i, pos.x, pos.y);
+    }
+    if(
+      event.type === `dragend`
+      && (previousX.value !== innerX.value || previousY.value !== innerY.value)
+    ) {
+      emit(EGridItemEvent.MOVED, props.i, pos.x, pos.y);
+    }
+    const data: IEventsData = {
+      eventType: event.type,
+      h: innerH.value,
+      i: props.i,
+      w: innerW.value,
+      x: pos.x,
+      y: pos.y,
+    };
+    eventBus.emit(`dragEvent`, data);
+  }
+
+  function calcPosition(x: number, y: number, w: number, h: number): IGridItemPosition {
+    const colWidth = calcColWidth();
+    // add rtl support
+    let out;
+    if(renderRtl.value) {
+      out = {
+        height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
+        right: Math.round(colWidth * x + (x + 1) * margin.value[0]),
+        top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
+        // 0 * Infinity === NaN, which causes problems with resize constriants;
+        // Fix this if it occurs.
+        // Note we do it here rather than later because Math.round(Infinity) causes deopt
+        width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
+      };
+    } else {
+      out = {
+        height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
+        left: Math.round(colWidth * x + (x + 1) * margin.value[0]),
+        top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
+        // 0 * Infinity === NaN, which causes problems with resize constriants;
+        // Fix this if it occurs.
+        // Note we do it here rather than later because Math.round(Infinity) causes deopt
+        width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
+      };
+    }
+
+    return out;
+  }
+
+  function tryMakeDraggable(): void {
+    if(interactObj.value === null || interactObj.value === undefined) {
+      interactObj.value = interact(gridItem.value);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      interactObj.value.styleCursor(false);
+    }
+    if(draggable.value && !props.isStatic) {
+      const opts = {
+        allowFrom: props.dragAllowFrom,
+        ignoreFrom: props.dragIgnoreFrom,
+        ...props.dragOption,
+      };
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      interactObj.value.draggable(opts);
+
+      /* this.interactObj.draggable({allowFrom: '.vue-draggable-handle'}); */
+      if(!dragEventSet.value) {
+        dragEventSet.value = true;
+        interactObj.value.on(`dragstart dragmove dragend`, event => {
+          handleDrag(event);
+        });
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      interactObj.value.draggable({
+        enabled: false,
+      });
+    }
+  }
+
+  /**
+   * Given a height and width in pixel values, calculate grid units.
+   * @param  {Number} height Height in pixels.
+   * @param  {Number} width  Width in pixels.
+   * @param  {Boolean} autoSizeFlag  function autoSize identifier.
+   * @return {ICalcWh} w, h as grid units.
+   */
+  function calcWH(height: number, width: number, autoSizeFlag = false): ICalcWh {
+    const colWidth = calcColWidth();
+
+    // width = colWidth * w - (margin * (w - 1))
+    // ...
+    // w = (width + margin) / (colWidth + margin)
+    let w = Math.round((width + margin.value[0]) / (colWidth + margin.value[0]));
+    let h;
+    if(!autoSizeFlag) {
+      h = Math.round((height + margin.value[1]) / (rowHeight.value + margin.value[1]));
+    } else {
+      h = Math.ceil((height + margin.value[1]) / (rowHeight.value + margin.value[1]));
+    }
+
+    // Capping
+    w = Math.max(Math.min(w, cols.value - innerX.value), 0);
+    h = Math.max(Math.min(h, maxRows.value - innerY.value), 0);
+    return {
+      h,
+      w,
+    };
+  }
+
+  function tryMakeResizable(): void {
+    if(interactObj.value === null || interactObj.value === undefined) {
+      interactObj.value = interact(gridItem.value);
+    }
+
+    if(resizable.value && !props.isStatic) {
+      const maximum = calcPosition(0, 0, props.maxW, props.maxH);
+      const minimum = calcPosition(0, 0, props.minW, props.minH);
+      // console.log(`### MAX ${JSON.stringify(maximum)}`);
+      // console.log(`### MIN ${JSON.stringify(minimum)}`);
+
+      const opts = {
+        edges: {
+          bottom: `.${resizableHandleClass.value.trim()
+            .replace(` `, `.`)}`,
+          left: false,
+          right: `.${resizableHandleClass.value.trim()
+            .replace(` `, `.`)}`,
+          top: false,
+        },
+        ignoreFrom: props.resizeIgnoreFrom,
+        restrictSize: {
+          max: {
+            height: maximum.height * transformScale.value,
+            width: maximum.width * transformScale.value,
+          },
+          min: {
+            height: minimum.height * transformScale.value,
+            width: minimum.width * transformScale.value,
+          },
+        },
+        ...props.resizeOption,
+      };
+
+      if(props.preserveAspectRatio) {
+        opts.modifiers = [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          interact.modifiers.aspectRatio({
+            ratio: `preserve`,
+          }),
+        ];
+      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      interactObj.value.resizable(opts);
+      if(!resizeEventSet.value) {
+        resizeEventSet.value = true;
+        interactObj.value.on(`resizestart resizemove resizeend`, event => {
+          // eslint-disable-next-line no-use-before-define
+          handleResize(event);
+        });
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      interactObj.value.resizable({
+        enabled: false,
+      });
+    }
+  }
+
+  function handleResize(event: MouseEvent): void {
+    if(props.isStatic) {
+      return;
+    }
+
+    // Get the current drag point from the event. This is used as the offset.
+    const position = getControlPosition(event);
+
+    const {
+      x,
+      y,
+    } = position;
+
+    const newSize = {
+      height: 0,
+      width: 0,
+    };
+    let pos;
+    switch(event.type) {
+      case `resizestart`: {
+        tryMakeResizable();
+        previousW.value = innerW.value;
+        previousH.value = innerH.value;
+        pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+        newSize.width = pos.width;
+        newSize.height = pos.height;
+        resizing.value = newSize;
+        isResizing.value = true;
+        break;
+      }
+      case `resizemove`: {
+        //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
+        const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
+        if(renderRtl.value) {
+          newSize.width = Number(resizing.value?.width) - coreEvent.deltaX / transformScale.value;
+        } else {
+          newSize.width = Number(resizing.value?.width) + coreEvent.deltaX / transformScale.value;
+        }
+        newSize.height = Number(resizing.value?.height) + coreEvent.deltaY / transformScale.value;
+
+        /// console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+        resizing.value = newSize;
+        break;
+      }
+      case `resizeend`: {
+        // console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
+        pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+        newSize.width = pos.width;
+        newSize.height = pos.height;
+        //                        console.log("### resize end => " + JSON.stringify(newSize));
+        resizing.value = null;
+        isResizing.value = false;
+        break;
+      }
+      default: {
+        // Do nothing just to avoid linting complaints
+      }
+    }
+
+    // Get new WH
+    pos = calcWH(newSize.height, newSize.width);
+    if(pos.w < props.minW) {
+      pos.w = props.minW;
+    }
+    if(pos.w > props.maxW) {
+      pos.w = props.maxW;
+    }
+    if(pos.h < props.minH) {
+      pos.h = props.minH;
+    }
+    if(pos.h > props.maxH) {
+      pos.h = props.maxH;
+    }
+
+    if(pos.h < 1) {
+      pos.h = 1;
+    }
+    if(pos.w < 1) {
+      pos.w = 1;
+    }
+
+    lastW.value = x;
+    lastH.value = y;
+
+    if(innerW.value !== pos.w || innerH.value !== pos.h) {
+      emit(EGridItemEvent.RESIZE, props.i, pos.h, pos.w, newSize.height, newSize.width);
+    }
+    if(
+      event.type === `resizeend`
+      && (previousW.value !== innerW.value || previousH.value !== innerH.value)
+    ) {
+      emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
+    }
+    const data = {
+      eventType: event.type,
+      h: pos.h,
+      i: props.i,
+      w: pos.w,
+      x: innerX.value,
+      y: innerY.value,
+    };
+    eventBus.emit(`resizeEvent`, data);
+  }
+
+  function createStyle(): void {
+    if(props.x + props.w > cols.value) {
+      innerX.value = 0;
+      innerW.value = props.w > cols.value ? cols.value : props.w;
+    } else {
+      innerX.value = props.x;
+      innerW.value = props.w;
+    }
+    const pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+
+    if(isDragging.value) {
+      pos.top = dragging.value?.top as number;
+      //                    Add rtl support
+      if(renderRtl.value) {
+        pos.right = dragging.value?.left as number;
+      } else {
+        pos.left = dragging.value?.left as number;
+      }
+    }
+    if(isResizing.value) {
+      pos.width = resizing.value?.width as number;
+      pos.height = resizing.value?.height as number;
+    }
+
+    let sty;
+    // CSS Transforms support (default)
+    if(useCssTransforms.value) {
+      // Add rtl support
+      if(renderRtl.value) {
+        sty = setTransformRtl(pos.top, pos.right as number, pos.width, pos.height);
+      } else {
+        sty = setTransform(pos.top, pos.left as number, pos.width, pos.height);
+      }
+    }
+
+    if(!useCssTransforms.value) {
+      // top,left (slow)
+      // Add rtl support
+      if(renderRtl.value) {
+        sty = setTopRight(pos.top, pos.right as number, pos.width, pos.height);
+      } else {
+        sty = setTopLeft(pos.top, pos.left as number, pos.width, pos.height);
+      }
+    }
+    styleObj.value = sty;
+  }
+
+  function emitContainerResized(): void {
+    // this.style has width and height with trailing 'px'. The
+    // resized event is without them
+    const styleProps = {} as IGridItemWidthHeight;
+    for(const prop of [`width`, `height`]) {
+      const val = styleObj.value[prop];
+      const matches = val.match(/^(\d+)px$/);
+      if(!matches) return;
+      // eslint-disable-next-line prefer-destructuring
+      styleProps[prop] = matches[1];
+    }
+    emit(EGridItemEvent.CONTAINER_RESIZED, props.i, props.h, props.w, styleProps.height, styleProps.width);
+  }
+
+  function updateWidth(width: number, colNum?: number): void {
+    containerWidth.value = width;
+    if(colNum !== undefined && colNum !== null) {
+      cols.value = colNum;
+    }
+  }
+
+  function selfCompact(): void {
+    createStyle();
+  }
 
   // watch
   watch(
@@ -409,6 +932,8 @@
     eventBus.off(`directionchange`, directionchangeHandler);
     eventBus.off(`setColNum`, setColNum);
     if(interactObj.value) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       interactObj.value.unset(); // destroy interact instance
     }
   });
@@ -444,532 +969,16 @@
     createStyle();
   });
 
-  // methods
-  function createStyle(): void {
-    if(props.x + props.w > cols.value) {
-      innerX.value = 0;
-      innerW.value = props.w > cols.value ? cols.value : props.w;
-    } else {
-      innerX.value = props.x;
-      innerW.value = props.w;
-    }
-    const pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
-
-    if(isDragging.value) {
-      pos.top = dragging.value?.top as number;
-      //                    Add rtl support
-      if(renderRtl.value) {
-        pos.right = dragging.value?.left as number;
-      } else {
-        pos.left = dragging.value?.left as number;
-      }
-    }
-    if(isResizing.value) {
-      pos.width = resizing.value?.width as number;
-      pos.height = resizing.value?.height as number;
-    }
-
-    let sty;
-    // CSS Transforms support (default)
-    if(useCssTransforms.value) {
-      // Add rtl support
-      if(renderRtl.value) {
-        sty = setTransformRtl(pos.top, pos.right as number, pos.width, pos.height);
-      } else {
-        sty = setTransform(pos.top, pos.left as number, pos.width, pos.height);
-      }
-    }
-
-    if(!useCssTransforms.value) {
-      // top,left (slow)
-      // Add rtl support
-      if(renderRtl.value) {
-        sty = setTopRight(pos.top, pos.right as number, pos.width, pos.height);
-      } else {
-        sty = setTopLeft(pos.top, pos.left as number, pos.width, pos.height);
-      }
-    }
-    styleObj.value = sty;
-  }
-
-  function emitContainerResized(): void {
-    // this.style has width and height with trailing 'px'. The
-    // resized event is without them
-    const styleProps = {} as IGridItemWidthHeight;
-    for(const prop of [`width`, `height`]) {
-      const val = styleObj.value[prop];
-      const matches = val.match(/^(\d+)px$/);
-      if(!matches) return;
-      // eslint-disable-next-line prefer-destructuring
-      styleProps[prop] = matches[1];
-    }
-    emit(EGridItemEvent.CONTAINER_RESIZED, props.i, props.h, props.w, styleProps.height, styleProps.width);
-  }
-
-  function handleResize(event: MouseEvent): void {
-    if(props.isStatic) {
-      return;
-    }
-
-    // Get the current drag point from the event. This is used as the offset.
-    const position = getControlPosition(event);
-
-    const {
-      x,
-      y,
-    } = position;
-
-    const newSize = {
-      height: 0,
-      width: 0,
-    };
-    let pos;
-    switch(event.type) {
-      case `resizestart`: {
-        tryMakeResizable();
-        previousW.value = innerW.value;
-        previousH.value = innerH.value;
-        pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
-        newSize.width = pos.width;
-        newSize.height = pos.height;
-        resizing.value = newSize;
-        isResizing.value = true;
-        break;
-      }
-      case `resizemove`: {
-        //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
-        const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
-        if(renderRtl.value) {
-          newSize.width = Number(resizing.value?.width) - coreEvent.deltaX / transformScale.value;
-        } else {
-          newSize.width = Number(resizing.value?.width) + coreEvent.deltaX / transformScale.value;
-        }
-        newSize.height = Number(resizing.value?.height) + coreEvent.deltaY / transformScale.value;
-
-        /// console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-        resizing.value = newSize;
-        break;
-      }
-      case `resizeend`: {
-        // console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
-        pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
-        newSize.width = pos.width;
-        newSize.height = pos.height;
-        //                        console.log("### resize end => " + JSON.stringify(newSize));
-        resizing.value = null;
-        isResizing.value = false;
-        break;
-      }
-      default: {
-        // Do nothing just to avoid linting complaints
-      }
-    }
-
-    // Get new WH
-    pos = calcWH(newSize.height, newSize.width);
-    if(pos.w < props.minW) {
-      pos.w = props.minW;
-    }
-    if(pos.w > props.maxW) {
-      pos.w = props.maxW;
-    }
-    if(pos.h < props.minH) {
-      pos.h = props.minH;
-    }
-    if(pos.h > props.maxH) {
-      pos.h = props.maxH;
-    }
-
-    if(pos.h < 1) {
-      pos.h = 1;
-    }
-    if(pos.w < 1) {
-      pos.w = 1;
-    }
-
-    lastW.value = x;
-    lastH.value = y;
-
-    if(innerW.value !== pos.w || innerH.value !== pos.h) {
-      emit(EGridItemEvent.RESIZE, props.i, pos.h, pos.w, newSize.height, newSize.width);
-    }
-    if(
-      event.type === `resizeend`
-      && (previousW.value !== innerW.value || previousH.value !== innerH.value)
-    ) {
-      emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
-    }
-    const data = {
-      eventType: event.type,
-      h: pos.h,
-      i: props.i,
-      w: pos.w,
-      x: innerX.value,
-      y: innerY.value,
-    };
-    eventBus.emit(`resizeEvent`, data);
-  }
-
-  function handleDrag(event: MouseEvent): void {
-    if(props.isStatic) {
-      return;
-    }
-    if(isResizing.value) {
-      return;
-    }
-
-    const position = getControlPosition(event);
-
-    // Get the current drag point from the event. This is used as the offset.
-    if(position === null) {
-      return; // not possible but satisfies flow
-    }
-
-    const {
-      x,
-      y,
-    } = position;
-
-    // let shouldUpdate = false;
-    const newPosition = {
-      left: 0,
-      top: 0,
-    };
-
-    switch(event.type) {
-      case `dragstart`: {
-        previousX.value = innerX.value;
-        previousY.value = innerY.value;
-
-        const tg = event.target as HTMLElement;
-        const parentTg = tg.offsetParent as HTMLElement;
-        const parentRect = parentTg.getBoundingClientRect();
-        const clientRect = tg.getBoundingClientRect();
-
-        const cLeft = clientRect.left / transformScale.value;
-        const pLeft = parentRect.left / transformScale.value;
-        const cRight = clientRect.right / transformScale.value;
-        const pRight = parentRect.right / transformScale.value;
-        const cTop = clientRect.top / transformScale.value;
-        const pTop = parentRect.top / transformScale.value;
-
-        if(renderRtl.value) {
-          newPosition.left = (cRight - pRight) * -1;
-        } else {
-          newPosition.left = cLeft - pLeft;
-        }
-        newPosition.top = cTop - pTop;
-        dragging.value = newPosition as IGridItemPosition;
-        isDragging.value = true;
-        break;
-      }
-      case `dragend`: {
-        if(!isDragging.value) return;
-        const tg = event.target as HTMLElement;
-        const parentTg = tg.offsetParent as HTMLElement;
-        const parentRect = parentTg.getBoundingClientRect();
-        const clientRect = tg.getBoundingClientRect();
-
-        const cLeft = clientRect.left / transformScale.value;
-        const pLeft = parentRect.left / transformScale.value;
-        const cRight = clientRect.right / transformScale.value;
-        const pRight = parentRect.right / transformScale.value;
-        const cTop = clientRect.top / transformScale.value;
-        const pTop = parentRect.top / transformScale.value;
-
-        //                        Add rtl support
-        if(renderRtl.value) {
-          newPosition.left = (cRight - pRight) * -1;
-        } else {
-          newPosition.left = cLeft - pLeft;
-        }
-        newPosition.top = cTop - pTop;
-        //                        console.log("### drag end => " + JSON.stringify(newPosition));
-        //                        console.log("### DROP: " + JSON.stringify(newPosition));
-        dragging.value = null;
-        isDragging.value = false;
-        // shouldUpdate = true;
-        break;
-      }
-      case `dragmove`: {
-        const coreEvent = createCoreData(lastX.value, lastY.value, x, y);
-        //                        Add rtl support
-        if(renderRtl.value) {
-          newPosition.left = Number(dragging.value?.left) - coreEvent.deltaX / transformScale.value;
-        } else {
-          newPosition.left = Number(dragging.value?.left) + coreEvent.deltaX / transformScale.value;
-        }
-        newPosition.top = Number(dragging.value?.top) + coreEvent.deltaY / transformScale.value;
-        if(bounded.value) {
-          const tg = event.target as HTMLElement;
-          const parentTg = tg.offsetParent as HTMLElement;
-          const bottomBoundary = parentTg.clientHeight - calcGridItemWHPx(props.h, rowHeight.value, margin.value[1]);
-          newPosition.top = clamp(newPosition.top, 0, bottomBoundary);
-          const colWidth = calcColWidth();
-          const rightBoundary = containerWidth.value - calcGridItemWHPx(props.w, colWidth, margin.value[0]);
-          newPosition.left = clamp(newPosition.left, 0, rightBoundary);
-        }
-        //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);
-        //                        console.log("### drag => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-        //                        console.log("### drag end => " + JSON.stringify(newPosition));
-        dragging.value = newPosition as IGridItemPosition;
-        break;
-      }
-      default: {
-        // Do nothing just to avoid linting complaints
-      }
-    }
-
-    // Get new XY
-    let pos: ICalcXy;
-    if(renderRtl.value) {
-      pos = calcXY(newPosition.top, newPosition.left);
-    } else {
-      pos = calcXY(newPosition.top, newPosition.left);
-    }
-
-    lastX.value = x;
-    lastY.value = y;
-
-    if(innerX.value !== pos.x || innerY.value !== pos.y) {
-      emit(EGridItemEvent.MOVE, props.i, pos.x, pos.y);
-    }
-    if(
-      event.type === `dragend`
-      && (previousX.value !== innerX.value || previousY.value !== innerY.value)
-    ) {
-      emit(EGridItemEvent.MOVED, props.i, pos.x, pos.y);
-    }
-    const data = {
-      eventType: event.type,
-      h: innerH.value,
-      i: props.i,
-      w: innerW.value,
-      x: pos.x,
-      y: pos.y,
-    };
-    eventBus.emit(`dragEvent`, data);
-  }
-
-  function calcPosition(x: number, y: number, w: number, h: number): IGridItemPosition {
-    const colWidth = calcColWidth();
-    // add rtl support
-    let out;
-    if(renderRtl.value) {
-      out = {
-        height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
-        right: Math.round(colWidth * x + (x + 1) * margin.value[0]),
-        top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
-        // 0 * Infinity === NaN, which causes problems with resize constriants;
-        // Fix this if it occurs.
-        // Note we do it here rather than later because Math.round(Infinity) causes deopt
-        width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
-      };
-    } else {
-      out = {
-        height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
-        left: Math.round(colWidth * x + (x + 1) * margin.value[0]),
-        top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
-        // 0 * Infinity === NaN, which causes problems with resize constriants;
-        // Fix this if it occurs.
-        // Note we do it here rather than later because Math.round(Infinity) causes deopt
-        width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
-      };
-    }
-
-    return out;
-  }
-
-  /**
-   * Translate x and y coordinates from pixels to grid units.
-   * @param  {Number} top  Top position (relative to parent) in pixels.
-   * @param  {Number} left Left position (relative to parent) in pixels.
-   * @return {Object} x and y in grid units.
-   */
-  // TODO check if this function needs change in order to support rtl.
-  function calcXY(top: number, left: number): ICalcXy {
-    const colWidth = calcColWidth();
-
-    // left = colWidth * x + margin * (x + 1)
-    // l = cx + m(x+1)
-    // l = cx + mx + m
-    // l - m = cx + mx
-    // l - m = x(c + m)
-    // (l - m) / (c + m) = x
-    // x = (left - margin) / (coldWidth + margin)
-    let x = Math.round((left - margin.value[0]) / (colWidth + margin.value[0]));
-    let y = Math.round((top - margin.value[1]) / (rowHeight.value + margin.value[1]));
-
-    // Capping
-    x = Math.max(Math.min(x, cols.value - innerW.value), 0);
-    y = Math.max(Math.min(y, maxRows.value - innerH.value), 0);
-
-    return {
-      x,
-      y,
-    };
-  }
-
-  // Helper for generating column width
-  function calcColWidth(): number {
-    return (containerWidth.value - margin.value[0] * (cols.value + 1)) / cols.value;
-  }
-
-  // This can either be called:
-  // calcGridItemWHPx(w, colWidth, margin[0])
-  // or
-  // calcGridItemWHPx(h, rowHeight, margin[1])
-  function calcGridItemWHPx(gridUnits: number, colOrRowSize: number, marginPx: number): number {
-    if(!Number.isFinite(gridUnits)) return gridUnits;
-    return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
-  }
-
-  // Similar to _.clamp
-  function clamp(num: number, lowerBound: number, upperBound: number): number {
-    return Math.max(Math.min(num, upperBound), lowerBound);
-  }
-
-  /**
-   * Given a height and width in pixel values, calculate grid units.
-   * @param  {Number} height Height in pixels.
-   * @param  {Number} width  Width in pixels.
-   * @param  {Boolean} autoSizeFlag  function autoSize identifier.
-   * @return {ICalcWh} w, h as grid units.
-   */
-  function calcWH(height: number, width: number, autoSizeFlag = false): ICalcWh {
-    const colWidth = calcColWidth();
-
-    // width = colWidth * w - (margin * (w - 1))
-    // ...
-    // w = (width + margin) / (colWidth + margin)
-    let w = Math.round((width + margin.value[0]) / (colWidth + margin.value[0]));
-    let h;
-    if(!autoSizeFlag) {
-      h = Math.round((height + margin.value[1]) / (rowHeight.value + margin.value[1]));
-    } else {
-      h = Math.ceil((height + margin.value[1]) / (rowHeight.value + margin.value[1]));
-    }
-
-    // Capping
-    w = Math.max(Math.min(w, cols.value - innerX.value), 0);
-    h = Math.max(Math.min(h, maxRows.value - innerY.value), 0);
-    return {
-      h,
-      w,
-    };
-  }
-
-  function updateWidth(width: number, colNum?: number): void {
-    containerWidth.value = width;
-    if(colNum !== undefined && colNum !== null) {
-      cols.value = colNum;
-    }
-  }
-
-  function selfCompact(): void {
-    createStyle();
-  }
-
-  function tryMakeDraggable(): void {
-    if(interactObj.value === null || interactObj.value === undefined) {
-      interactObj.value = interact(gridItem.value);
-      // @ts-ignore
-      interactObj.value.styleCursor(false);
-    }
-    if(draggable.value && !props.isStatic) {
-      const opts = {
-        allowFrom: props.dragAllowFrom,
-        ignoreFrom: props.dragIgnoreFrom,
-        ...props.dragOption,
-      };
-
-      // @ts-ignore
-      interactObj.value.draggable(opts);
-
-      /* this.interactObj.draggable({allowFrom: '.vue-draggable-handle'}); */
-      if(!dragEventSet.value) {
-        dragEventSet.value = true;
-        interactObj.value.on(`dragstart dragmove dragend`, event => {
-          handleDrag(event);
-        });
-      }
-    } else {
-      // @ts-ignore
-      interactObj.value.draggable({
-        enabled: false,
-      });
-    }
-  }
-
-  function tryMakeResizable(): void {
-    if(interactObj.value === null || interactObj.value === undefined) {
-      interactObj.value = interact(gridItem.value);
-    }
-
-    if(resizable.value && !props.isStatic) {
-      const maximum = calcPosition(0, 0, props.maxW, props.maxH);
-      const minimum = calcPosition(0, 0, props.minW, props.minH);
-      // console.log(`### MAX ${JSON.stringify(maximum)}`);
-      // console.log(`### MIN ${JSON.stringify(minimum)}`);
-
-      const opts = {
-        edges: {
-          bottom: `.${resizableHandleClass.value.trim()
-            .replace(` `, `.`)}`,
-          left: false,
-          right: `.${resizableHandleClass.value.trim()
-            .replace(` `, `.`)}`,
-          top: false,
-        },
-        ignoreFrom: props.resizeIgnoreFrom,
-        restrictSize: {
-          max: {
-            height: maximum.height * transformScale.value,
-            width: maximum.width * transformScale.value,
-          },
-          min: {
-            height: minimum.height * transformScale.value,
-            width: minimum.width * transformScale.value,
-          },
-        },
-        ...props.resizeOption,
-      };
-
-      if(props.preserveAspectRatio) {
-        // @ts-ignore
-        opts.modifiers = [
-          // @ts-ignore
-          interact.modifiers.aspectRatio({
-            ratio: `preserve`,
-          }),
-        ];
-      }
-
-      // @ts-ignore
-      interactObj.value.resizable(opts);
-      if(!resizeEventSet.value) {
-        resizeEventSet.value = true;
-        interactObj.value.on(`resizestart resizemove resizeend`, event => {
-          handleResize(event);
-        });
-      }
-    } else {
-      // @ts-ignore
-      interactObj.value.resizable({
-        enabled: false,
-      });
-    }
-  }
-
-  const $slots = useSlots();
+  const slots = useSlots();
 
   function autoSize(): void {
     // ok here we want to calculate if a resize is needed
     previousW.value = innerW.value;
     previousH.value = innerH.value;
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const newSize = $slots?.default[0].elm.getBoundingClientRect();
+    const newSize = slots?.default[0].elm.getBoundingClientRect();
     const pos = calcWH(newSize.height, newSize.width, true);
     if(pos.w < props.minW) {
       pos.w = props.minW;

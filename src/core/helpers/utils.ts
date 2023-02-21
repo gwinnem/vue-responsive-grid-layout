@@ -8,7 +8,6 @@ import { TLayout, TLayoutItem } from '@/components/Grid/layout-definition';
  */
 // eslint-disable-next-line no-undef
 export function getStatics(layout: TLayout): TLayoutItem[] {
-  // return [];
   return layout.filter(l => l.isStatic);
 }
 
@@ -498,6 +497,8 @@ export function validateLayout(layout: TLayout, contextName?: string): void {
   for(let i = 0, len = layout.length; i < len; i++) {
     const item = layout[i];
     for(let j = 0; j < subProps.length; j++) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       if(typeof item[subProps[j]] !== `number`) {
         throw new Error(
           `VueResponsiveGridLayout: ${contextName}[${i}].${subProps[j]} must be a number!`,
@@ -521,39 +522,39 @@ export function validateLayout(layout: TLayout, contextName?: string): void {
 }
 
 /* The following list is defined in React's core */
-export const IS_UNITLESS = {
-  animationIterationCount: true,
-  boxFlex: true,
-  boxFlexGroup: true,
-  boxOrdinalGroup: true,
-  columnCount: true,
-  flex: true,
-  flexGrow: true,
-  flexNegative: true,
-  flexOrder: true,
-  flexPositive: true,
-  flexShrink: true,
-  fontWeight: true,
-  gridColumn: true,
-  gridRow: true,
-  lineClamp: true,
-  lineHeight: true,
-  opacity: true,
-  order: true,
-  orphans: true,
-  tabSize: true,
-  widows: true,
-  zIndex: true,
-  zoom: true,
-
-  // SVG-related properties
-  // eslint-disable-next-line sort-keys
-  fillOpacity: true,
-  stopOpacity: true,
-  strokeDashoffset: true,
-  strokeOpacity: true,
-  strokeWidth: true,
-};
+// export const IS_UNITLESS = {
+//   animationIterationCount: true,
+//   boxFlex: true,
+//   boxFlexGroup: true,
+//   boxOrdinalGroup: true,
+//   columnCount: true,
+//   flex: true,
+//   flexGrow: true,
+//   flexNegative: true,
+//   flexOrder: true,
+//   flexPositive: true,
+//   flexShrink: true,
+//   fontWeight: true,
+//   gridColumn: true,
+//   gridRow: true,
+//   lineClamp: true,
+//   lineHeight: true,
+//   opacity: true,
+//   order: true,
+//   orphans: true,
+//   tabSize: true,
+//   widows: true,
+//   zIndex: true,
+//   zoom: true,
+//
+//   // SVG-related properties
+//   // eslint-disable-next-line sort-keys
+//   fillOpacity: true,
+//   stopOpacity: true,
+//   strokeDashoffset: true,
+//   strokeOpacity: true,
+//   strokeWidth: true,
+// };
 
 /**
  * Hyphenate a camelCase string.
@@ -562,9 +563,9 @@ export const IS_UNITLESS = {
  * @return {String}
  */
 
-export const hyphenateRE = /([a-z\d])([A-Z])/g;
-
-export function hyphenate(str: string): string {
-  return str.replace(hyphenateRE, `$1-$2`)
-    .toLowerCase();
-}
+// export const hyphenateRE = /([a-z\d])([A-Z])/g;
+//
+// export function hyphenate(str: string): string {
+//   return str.replace(hyphenateRE, `$1-$2`)
+//     .toLowerCase();
+// }

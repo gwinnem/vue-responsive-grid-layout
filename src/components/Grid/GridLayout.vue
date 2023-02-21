@@ -45,10 +45,11 @@
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
   } from '@/core/helpers/responsiveUtils';
-  import { addWindowEventListener, removeWindowEventListener, IEventsData } from '@/core/helpers/DOM';
+  import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
   import { TLayout, TLayoutItem } from './layout-definition';
+  import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
 
   interface IGridLayoutProps {
     autoSize?: boolean;
@@ -436,15 +437,18 @@
   }
 
   function layoutUpdate(): void {
-    const testLayout = originalLayout as TLayout;
-    if(originalLayout.value !== undefined && testLayout.length > 0) {
-      if(props.layout.length !== testLayout.length) {
-        const diff = findDifference(props.layout, testLayout);
+    if(originalLayout.value !== undefined && props.layout.length > 0) {
+      if(!originalLayout.value) {
+        return;
+      }
+      const tmpLayout = originalLayout.value as TLayout;
+      if(props.layout.length !== originalLayout.value?.length) {
+        const diff = findDifference(props.layout, tmpLayout);
         if(diff.length > 0) {
-          if(props.layout.length > testLayout.length) {
-            originalLayout.value = testLayout.concat(diff);
+          if(props.layout.length > tmpLayout.length) {
+            originalLayout.value = tmpLayout.concat(diff);
           } else {
-            originalLayout.value = testLayout.filter(obj => {
+            originalLayout.value = tmpLayout.filter(obj => {
               return !diff.some(obj2 => {
                 return obj.i === obj2.i;
               });
@@ -546,6 +550,7 @@
       updateHeight();
     });
   });
+
   watch(
     () => props.layout,
     () => {
