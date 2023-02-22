@@ -8,13 +8,13 @@
 Set's border-radius css value used for the GridItem.
 
 ## enableEditMode
-* default: `true`
+* default: `false`
 * required: `false`
 * type: `Boolean`
-
-If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridItem`'s will be static.
 <br/>
-Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
+When set to `false`, it overrides the props: `isDraggable`, `isResizable` and `showCloseButton`.
+<br/>
+Setting it to true will not change these props, but will not override them.
 
 
 ## isBounded
