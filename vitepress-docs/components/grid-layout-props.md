@@ -48,12 +48,6 @@ The value should be a _natural number_.
 
 Defines number of columns for each breakpoint.
 
-
-## enableEditMode(Not implemented)
-* default: `true`
-* required: `false`
-* type: `Boolean`
-
 If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridItem`'s will be static.
 <br/>
 Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
