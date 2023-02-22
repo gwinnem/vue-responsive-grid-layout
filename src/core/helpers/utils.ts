@@ -75,8 +75,8 @@ export function getFirstCollision(layout: TLayout, layoutItem: TLayoutItem): TLa
 /**
  * Get layout items sorted from top left to right and down.
  *
- * @return {Array} Array of layout objects.
- * @return {Array}        Layout, sorted static items first.
+ * @param  {TLayout} layout  Array of layout objects.
+ * @return {TLayout}        Layout, sorted static items first.
  */
 export function sortLayoutItemsByRowCol(layout: TLayout): TLayout {
   const a: TLayoutItem[] = [];
