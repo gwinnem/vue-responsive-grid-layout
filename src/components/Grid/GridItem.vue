@@ -5,7 +5,7 @@
     :class="classObj"
     :style="styleObj">
     <img
-      v-if="showCloseButton && !props.isStatic"
+      v-if="showCloseButton && enableEditMode && !isStatic"
       alt="Close Button"
       class="vue-close-button"
       src="../../assets/close.svg"
@@ -177,15 +177,15 @@
   };
   // computed
   const resizableAndNotStatic = computed(() => {
-    return resizable.value && !props.isStatic;
+    return resizable.value && !props.isStatic && props.enableEditMode;
   });
 
   const draggableAndNotStatic = computed(() => {
-    return draggable.value && !props.isStatic;
+    return draggable.value && !props.isStatic && props.enableEditMode;
   });
 
   const draggableOrResizableAndNotStatic = computed(() => {
-    return (draggable.value || resizable.value) && !props.isStatic;
+    return (draggable.value || resizable.value) && !props.isStatic && props.enableEditMode;
   });
 
   const isAndroid = computed(() => {

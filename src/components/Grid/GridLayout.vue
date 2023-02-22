@@ -57,7 +57,6 @@
     breakpoints?: IBreakpoints;
     colNum?: number;
     cols?: IColumns;
-    enableEditMode?: boolean;
     horizontalShift?: boolean;
     isBounded?: boolean;
     isDraggable?: boolean;
@@ -105,6 +104,7 @@
       xs: 4,
       xxs: 2,
     }),
+    horizontalShift: false,
     isBounded: false,
     isDraggable: true,
     isMirrored: false,

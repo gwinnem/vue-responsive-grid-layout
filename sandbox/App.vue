@@ -20,6 +20,8 @@
             <br/>
             <label for="autosize">autosize</label>
             <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
+            <label for="editMode">editMode</label>
+            <input id="editMode" v-model="enableEditMode" type="checkbox">
             <label for="horizontalShift">horizontalShift</label>
             <input id="horizontalShift" v-model="horizontalShift" type="checkbox">
             <label for="isBounded">isBounded</label>
@@ -105,6 +107,7 @@
                 v-for="item in testLayout"
                 :key="item.i"
                 :ref="el => setChildRef(el)"
+                :enable-edit-mode="enableEditMode"
                 :h="item.h"
                 :i="item.i"
                 :isStatic="item.isStatic"
@@ -148,6 +151,7 @@
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
   const colNum = ref(12);
+  const enableEditMode = ref(false);
   const horizontalShift = ref(false);
   const isBounded = ref(false);
   const isDraggable = ref(true);
@@ -219,6 +223,9 @@
   function drag(e: DragEvent) {
     e.stopPropagation();
     e.preventDefault();
+    if(!enableEditMode && !isDraggable) {
+      return;
+    }
     const t = document.getElementById("content") as HTMLElement;
     let parentRect = t.getBoundingClientRect();
     let mouseInGrid = false;
