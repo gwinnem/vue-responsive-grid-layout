@@ -28,7 +28,7 @@
     setTopLeft, setTopRight, setTransformRtl, setTransform,
   } from '@/core/helpers/utils';
   import { getControlPosition, createCoreData } from '@/core/helpers/draggableUtils';
-  import { getColsFromBreakpoint, TBreakpoints } from '@/core/helpers/responsiveUtils';
+  import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
   import { getDocumentDir } from '@/core/helpers/DOM';
 
   import '@interactjs/auto-start';
@@ -48,6 +48,7 @@
     IGridItemWidthHeight,
   } from './grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
+  import { TBreakpoints } from '@/components/Grid/layout-definition';
 
   const { proxy } = useCurrentInstance();
 
