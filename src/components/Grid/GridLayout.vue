@@ -551,78 +551,53 @@
     });
   });
 
-  watch(
-    () => props.layout,
-    () => {
-      layoutUpdate();
-    },
-  );
-  watch(
-    () => props.layout.length,
-    () => {
-      layoutUpdate();
-    },
-  );
+  watch(() => props.layout, () => {
+    layoutUpdate();
+  });
 
-  watch(
-    () => props.colNum,
-    val => {
-      eventBus.emit(`setColNum`, val);
-    },
-  );
-  watch(
-    () => props.rowHeight,
-    val => {
-      eventBus.emit(`setRowHeight`, val);
-    },
-  );
-  watch(
-    () => props.isDraggable,
-    val => {
-      eventBus.emit(`setDraggable`, val);
-    },
-  );
-  watch(
-    () => props.isResizable,
-    val => {
-      eventBus.emit(`setResizable`, val);
-    },
-  );
-  watch(
-    () => props.isBounded,
-    val => {
-      eventBus.emit(`setBounded`, val);
-    },
-  );
+  watch(() => props.layout.length, () => {
+    layoutUpdate();
+  });
 
-  watch(
-    () => props.transformScale,
-    val => {
-      eventBus.emit(`setTransformScale`, val);
-    },
-  );
-  watch(
-    () => props.responsive,
-    val => {
-      if(!val) {
-        emit(EGridLayoutEvent.UPDATE_LAYOUT, originalLayout.value || []);
-        eventBus.emit(`setColNum`, props.colNum);
-      }
-      onWindowResize();
-    },
-  );
-  watch(
-    () => props.maxRows,
-    val => {
-      eventBus.emit(`setMaxRows`, val);
-    },
-  );
-  watch(
-    () => props.margin,
-    () => {
-      updateHeight();
-    },
-  );
+  watch(() => props.colNum, val => {
+    eventBus.emit(`setColNum`, val);
+  });
+
+  watch(() => props.rowHeight, val => {
+    eventBus.emit(`setRowHeight`, val);
+  });
+
+  watch(() => props.isDraggable, val => {
+    eventBus.emit(`setDraggable`, val);
+  });
+
+  watch(() => props.isResizable, val => {
+    eventBus.emit(`setResizable`, val);
+  });
+
+  watch(() => props.isBounded, val => {
+    eventBus.emit(`setBounded`, val);
+  });
+
+  watch(() => props.transformScale, val => {
+    eventBus.emit(`setTransformScale`, val);
+  });
+
+  watch(() => props.responsive, val => {
+    if(!val) {
+      emit(EGridLayoutEvent.UPDATE_LAYOUT, originalLayout.value || []);
+      eventBus.emit(`setColNum`, props.colNum);
+    }
+    onWindowResize();
+  });
+
+  watch(() => props.maxRows, val => {
+    eventBus.emit(`setMaxRows`, val);
+  });
+
+  watch(() => props.margin, () => {
+    updateHeight();
+  });
 
   // Expose some property for this
   // TODO Refactor this away

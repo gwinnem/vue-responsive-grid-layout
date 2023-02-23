@@ -117,9 +117,9 @@
     enableEditMode: true,
     i: ``,
     isBounded: null,
-    isDraggable: null,
+    isDraggable: false,
     isMirrored: true,
-    isResizable: null,
+    isResizable: false,
     isStatic: false,
     maxH: Infinity,
     maxW: Infinity,
@@ -141,8 +141,8 @@
   const rowHeight = ref<number>(30);
   const margin = ref<number[]>([10, 10]);
   const maxRows = ref<number>(Infinity);
-  const draggable = ref<boolean | null>(null);
-  const resizable = ref<boolean | null>(null);
+  const draggable = ref<boolean | null>(props.isDraggable);
+  const resizable = ref<boolean | null>(props.isResizable);
   const transformScale = ref<number>(1);
   const useCssTransforms = ref<boolean>(true);
 
@@ -175,6 +175,7 @@
   const closeClicked = (id: string | number): void => {
     emit(EGridItemEvent.REMOVE_ITEM, id);
   };
+
   // computed
   const resizableAndNotStatic = computed(() => {
     return resizable.value && !props.isStatic && props.enableEditMode;
@@ -742,121 +743,100 @@
   }
 
   // watch
-  watch(
-    () => props.isDraggable,
-    val => {
-      draggable.value = val;
-    },
-  );
-  watch(
-    () => props.isStatic,
-    () => {
-      tryMakeDraggable();
-      tryMakeResizable();
-    },
-  );
+  watch(() => props.isDraggable, val => {
+    draggable.value = val;
+  });
+
+  watch(() => props.isStatic, () => {
+    tryMakeDraggable();
+    tryMakeResizable();
+  });
+
   watch(draggable, () => {
     tryMakeDraggable();
   });
-  watch(
-    () => props.isResizable,
-    val => {
-      resizable.value = val;
-    },
-  );
-  watch(
-    () => props.isBounded,
-    val => {
-      bounded.value = val;
-    },
-  );
+
+  watch(() => props.isResizable, val => {
+    resizable.value = val;
+  });
+
+  watch(() => props.isBounded, val => {
+    bounded.value = val;
+  });
+
   watch(resizable, () => {
     tryMakeResizable();
   });
+
   watch(rowHeight, () => {
     createStyle();
     emitContainerResized();
   });
+
   watch(cols, () => {
     tryMakeResizable();
     createStyle();
     emitContainerResized();
   });
+
   watch(containerWidth, () => {
     tryMakeResizable();
     createStyle();
     emitContainerResized();
   });
-  watch(
-    () => props.x,
-    newVal => {
-      innerX.value = newVal;
-      createStyle();
-    },
-  );
-  watch(
-    () => props.y,
-    newVal => {
-      innerY.value = newVal;
-      createStyle();
-    },
-  );
-  watch(
-    () => props.h,
-    newVal => {
-      innerH.value = newVal;
-      createStyle();
-      // this.emitContainerResized();
-    },
-  );
-  watch(
-    () => props.w,
-    newVal => {
-      innerW.value = newVal;
-      createStyle();
-      // wthis.emitContainerResized();
-    },
-  );
+
+  watch(() => props.x, newVal => {
+    innerX.value = newVal;
+    createStyle();
+  });
+
+  watch(() => props.y, newVal => {
+    innerY.value = newVal;
+    createStyle();
+  });
+
+  watch(() => props.h, newVal => {
+    innerH.value = newVal;
+    createStyle();
+    // this.emitContainerResized();
+  });
+
+  watch(() => props.w, newVal => {
+    innerW.value = newVal;
+    createStyle();
+    // wthis.emitContainerResized();
+  });
+
   watch(renderRtl, () => {
     // console.log("### renderRtl");
     tryMakeResizable();
     createStyle();
   });
-  watch(
-    () => props.minH,
-    () => {
-      tryMakeResizable();
-    },
-  );
-  watch(
-    () => props.maxH,
-    () => {
-      tryMakeResizable();
-    },
-  );
-  watch(
-    () => props.minW,
-    () => {
-      tryMakeResizable();
-    },
-  );
-  watch(
-    () => props.maxW,
-    () => {
-      tryMakeResizable();
-    },
-  );
-  watch(
-    () => thisLayout?.margin,
-    newMargin => {
-      if(!newMargin || (newMargin[0] === margin.value[0] && newMargin[1] === margin.value[1])) {
-        return;
-      }
-      margin.value = newMargin.map(m => Number(m));
-      createStyle();
-      emitContainerResized();
-    },
-  );
+
+  watch(() => props.minH, () => {
+    tryMakeResizable();
+  });
+
+  watch(() => props.maxH, () => {
+    tryMakeResizable();
+  });
+
+  watch(() => props.minW, () => {
+    tryMakeResizable();
+  });
+
+  watch(() => props.maxW, () => {
+    tryMakeResizable();
+  });
+
+  watch(() => thisLayout?.margin, newMargin => {
+    if(!newMargin || (newMargin[0] === margin.value[0] && newMargin[1] === margin.value[1])) {
+      return;
+    }
+    margin.value = newMargin.map(m => Number(m));
+    createStyle();
+    emitContainerResized();
+  });
 
   //
   function updateWidthHandler(width: number): void {
@@ -897,7 +877,7 @@
     maxRows.value = mRows;
   }
 
-  function directionchangeHandler(): void {
+  function directionChangeHandler(): void {
     rtl.value = getDocumentDir() === `rtl`;
     selfCompact();
   }
@@ -915,7 +895,7 @@
   eventBus.on(`setTransformScale`, setTransformScaleHandler);
   eventBus.on(`setRowHeight`, setRowHeightHandler);
   eventBus.on(`setMaxRows`, setMaxRowsHandler);
-  eventBus.on(`directionchange`, directionchangeHandler);
+  eventBus.on(`directionchange`, directionChangeHandler);
   eventBus.on(`setColNum`, setColNum);
 
   rtl.value = getDocumentDir() === `rtl`;
@@ -930,7 +910,7 @@
     eventBus.off(`setTransformScale`, setTransformScaleHandler);
     eventBus.off(`setRowHeight`, setRowHeightHandler);
     eventBus.off(`setMaxRows`, setMaxRowsHandler);
-    eventBus.off(`directionchange`, directionchangeHandler);
+    eventBus.off(`directionchange`, directionChangeHandler);
     eventBus.off(`setColNum`, setColNum);
     if(interactObj.value) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
