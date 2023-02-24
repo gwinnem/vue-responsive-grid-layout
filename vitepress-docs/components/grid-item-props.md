@@ -182,15 +182,6 @@ For more info please refer to `ignoreFrom` in [interact.js docs](http://interact
 Pass through object for the grid item [interact.js resizable configuration](https://interactjs.io/docs/resizable/)
 
 
-## restrictToParent
-
-* type: `Boolean`
-* required: `false`
-* default: `false`
-
-If 'true', restricts resizing the items outside the parent.
-
-
 ## showCloseButton
 * default: `true`
 * required: `false`

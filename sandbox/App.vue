@@ -40,8 +40,6 @@
             <input id="preventCollision" v-model="preventCollision" type="checkbox">
             <label for="restoreOnDrag">restoreOnDrag</label>
             <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">
-            <label for="restrictToParent">restrictToParent</label>
-            <input id="restrictToParent" v-model="restrictToParent" type="checkbox">
             <label for="showCloseButton">showCloseButton</label>
             <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
             <label for="showGridLines">showGridLines</label>
@@ -167,7 +165,6 @@
   const maxRows = ref(40);
   const preserveAspectRatio = ref(false);
   const preventCollision = ref(false);
-  const restrictToParent = ref(false);
   const rowHeight = ref(50);
   const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
   const restoreOnDrag = ref(true);
