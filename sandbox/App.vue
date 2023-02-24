@@ -40,6 +40,8 @@
             <input id="preventCollision" v-model="preventCollision" type="checkbox">
             <label for="restoreOnDrag">restoreOnDrag</label>
             <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">
+            <label for="restrictToParent">restrictToParent</label>
+            <input id="restrictToParent" v-model="restrictToParent" type="checkbox">
             <label for="showCloseButton">showCloseButton</label>
             <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
             <label for="showGridLines">showGridLines</label>
@@ -110,6 +112,8 @@
                 :enable-edit-mode="enableEditMode"
                 :h="item.h"
                 :i="item.i"
+                :is-draggable="item.isDraggable"
+                :is-resizable="item.isResizable"
                 :isStatic="item.isStatic"
                 :min-h="item.minH"
                 :min-w="item.minW"
@@ -151,7 +155,7 @@
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
   const colNum = ref(12);
-  const enableEditMode = ref(false);
+  const enableEditMode = ref(true);
   const horizontalShift = ref(false);
   const isBounded = ref(false);
   const isDraggable = ref(true);
@@ -163,6 +167,7 @@
   const maxRows = ref(40);
   const preserveAspectRatio = ref(false);
   const preventCollision = ref(false);
+  const restrictToParent = ref(false);
   const rowHeight = ref(50);
   const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
   const restoreOnDrag = ref(true);
