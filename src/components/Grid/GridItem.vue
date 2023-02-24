@@ -117,9 +117,9 @@
     enableEditMode: true,
     i: ``,
     isBounded: null,
-    isDraggable: false,
+    isDraggable: null,
     isMirrored: true,
-    isResizable: false,
+    isResizable: null,
     isStatic: false,
     maxH: Infinity,
     maxW: Infinity,
@@ -141,8 +141,8 @@
   const rowHeight = ref<number>(30);
   const margin = ref<number[]>([10, 10]);
   const maxRows = ref<number>(Infinity);
-  const draggable = ref<boolean | null>(props.isDraggable);
-  const resizable = ref<boolean | null>(props.isResizable);
+  const draggable = ref<boolean | null>(null);
+  const resizable = ref<boolean | null>(null);
   const transformScale = ref<number>(1);
   const useCssTransforms = ref<boolean>(true);
 
