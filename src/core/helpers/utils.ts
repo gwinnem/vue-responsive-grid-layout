@@ -388,7 +388,7 @@ export function setTransform(
   width: number,
   height: number,
 ): ITransformStyle {
-  // Replace unitless items with px
+  // Replace unit less items with px
   const translate = `translate3d(${left}px,${top}px, 0)`;
   return {
     MozTransform: translate,
@@ -417,7 +417,7 @@ export function setTransformRtl(
   width: number,
   height: number,
 ): ITransformStyle {
-  // Replace unitless items with px
+  // Replace unit less items with px
   const translate = `translate3d(${right * -1}px,${top}px, 0)`;
   return {
     MozTransform: translate,
@@ -515,8 +515,9 @@ export function validateLayout(layout: TLayout, contextName?: string): void {
     }
     keyArr.push(item.i);
 
-    if(item.isStatic !== undefined) {
-      throw new Error(`VueResponsiveGridLayout: ${contextName}[${i}].static must be a boolean!`);
+    // TODO this a wrong assumption since it can be undefined
+    if(item.isStatic === null) {
+      throw new Error(`VueResponsiveGridLayout: ${contextName}[${i}].isStatic must be a boolean!, actual value is: ${item.isStatic}`);
     }
   }
 }
