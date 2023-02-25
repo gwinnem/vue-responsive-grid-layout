@@ -1,7 +1,7 @@
 export default [
   {
     text: 'Guide',
-    link: '/guide/installation',
+    link: '/guide/introduction',
     activeMatch: '^/guide/',
   },
   {

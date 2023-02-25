@@ -1,25 +1,22 @@
 ---
 aside: false
 page: true
-title: Features
+title: Changelog
 ---
 
 # Changelog
 
-## v: 1.0.0 (2023-xx-xx)
+## v: 1.0.0b (2023-xx-xx)
 
-* Complete refactoring of old codebase.
-* Strongly typed typescript code.
-* Component updated to VUE 3.
-* Changed Components to use vue setup syntax.
-* New feature Horizontal shift.
-* New feature Border radius for GridItem component.
-* New feature Edit mode for GridItems.
+* __Codebase:__ Complete refactoring of old codebase.
+* __Codebase:__ Strongly typed typescript code.
+* __Components:__ Updated to VUE 3.
+* __Components:__ using vue setup syntax.
+* __Codebase:__ Validators for property values (Not implemented).
+* __Feature:__ Horizontal shift.
+* __Feature:__ Border radius for GridItem component.
+* __Feature:__ Edit mode for GridItems.
+* __Feature:__ Close button in GridItem's.
 * Added proper Test application.
-* Added Vitepress documentation.
-* Converted old examples to VitePress.
-* Added Validators for property values.
-* Added unit test's for Validators.
-* New example Drag & Drop new GriItem onto GridLayout.
-* New example Drag & Drop between two GridLayout's.
-* New example Horizontal shift.
+* __Doc:__ Added Vitepress for documentation.
+* __Test:__ Unit test's for Validators.

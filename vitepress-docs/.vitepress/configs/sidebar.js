@@ -126,20 +126,12 @@ function getGuideSidebar() {
           link: '/guide/installation',
         },
         {
-          text: 'Code examples',
-          link: '/guide/code-examples',
-        },
-        {
           text: 'Changelog',
           link: '/guide/changelog',
         },
         {
           text: 'Roadmap',
           link: '/guide/roadmap',
-        },
-        {
-          text: 'Button vue example',
-          link: '/guide/button',
         },
       ],
     },

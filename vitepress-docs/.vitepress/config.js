@@ -39,9 +39,9 @@ export default defineConfig({
     logo: '/logo.svg',
     lastUpdatedText: 'Updated',
     // algolia: {
-    //   appId: 'X51HWTCQJJ',
-    //   apiKey: 'ca20f15eb8a667898b65d13f4213ae3d',
-    //   indexName: 'vitepress-demo',
+    //   appId: '',
+    //   apiKey: '',
+    //   indexName: 'vue-responsive-grid-layout',
     // },
 
     // nav
@@ -55,27 +55,10 @@ export default defineConfig({
     //   text: 'Edit this page on GitHub',
     // },
 
-    localeLinks: [
-      {
-        link: 'https://cn.vuejs.org',
-        text: '简体中文',
-        repo: 'https://github.com/vuejs-translations/docs-zh-cn'
-      },
-      {
-        link: 'https://ja.vuejs.org',
-        text: '日本語',
-        repo: 'https://github.com/vuejs-translations/docs-ja'
-      },
-      {
-        link: '/translations/',
-        text: 'Help Us Translate!',
-        isTranslationsDesc: true
-      }
-    ],
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/gwinnem/admin-dashboard'
+        link: 'https://github.com/gwinnem'
       },
       {
         icon: 'twitter',

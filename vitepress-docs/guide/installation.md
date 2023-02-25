@@ -7,23 +7,23 @@ title: Installation
 
 ## NPM
 ```
-	npm install vue-fluid-grid-layout --save
+	npm install vue-responsive-grid-layout --save
 ```
 
 ## Yarn
 ```
-    yarn add vue-fluid-grid-layout
+    yarn add vue-responsive-grid-layout
 ```
 
-## Import the library
+## Import the package
 
 ```typescript
-    import VueFluidGridLayout from 'vue-fluid-grid-layout';
+    import VueResponsiveGridLayout from 'vue-responsive-grid-layout';
 ```
 
-Add to other Vue components
+Add to other Vue components using Options api.
 
- ```typescript
+```typescript
     export default {
         components: {
             GridLayout: VueResponsiveGridLayout.GridLayout,
@@ -31,13 +31,12 @@ Add to other Vue components
         },
     // ... data, methods, mounted (), etc.
     }
-    
-```    
+```
 
-## Browser
-
-Include the browser-ready bundle (download from [releases](https://github.com/gwinnem/vue-fluid-grid-layout/releases)) in your page. The components will be automatically available.
+Add to other Vue components using Composition api.
 
 ```html
-    <script src="../../dist/vue-responsive-grid-layout.umd.js"></script>
+<script setup>
+  import { GridItem, GridLayout } from 'vue-responsive-grid-layout';
+</script>
 ```

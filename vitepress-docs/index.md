@@ -5,8 +5,7 @@ title: Vue 3 Responsive Grid Layout.
 titleTemplate: Main
 
 hero:
-  name: vue-responsive-grid-layout
-  text: Responsive Grid Layout.
+  name: Vue 3 Responsive Grid Layout.
   tagline: Draggable, Resizeable widgets.
   image:
     src: /logo.svg
@@ -14,19 +13,19 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/installation
+      link: /guide/introduction
 
 features:
   - icon: ⚡️
-    title: Responsiveness
+    title: VITE
     details: Feel the speed of Vite. Instant server start and lightning fast HMR that stays fast regardless of the app size.
-  - icon: 💡
+  - icon: 💥
+    title: Responsiveness.
+    details: With predefined layout's or automatically with predefined breakpoints.
+  - icon: 🔱
     title: Drag and Drop
-    details: With Markdown-centered content, it's built to help you focus on writing and deployed with minimum configuration.
-  - icon: 🛠️
-    title: Dynamic loading of dashboard items
-    details: Enhance your content with all the features of Vue in Markdown, while being able to customize your site with Vue.
-  - icon: 🔑
-    title: Fully documented with examples
-    details: Go wild with true SSG + SPA architecture. Static on page load, but engage users with 100% interactivity from there.
+    details: Example showing howto Drag and Drop a GridItem.
+  - icon: 📖
+    title: Fully documented with examples.
+    details: Work in progress.
 ---
