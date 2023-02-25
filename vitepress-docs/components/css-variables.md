@@ -1,13 +1,13 @@
 # Variables
 
 ## GridLayout grid-lines
-```sass
+```scss
 $grid-line-color: #000;
 ```
 
 
 ## GridItem `background-color`
-```sass
+```scss
 $grid-item-bg-color: #720c0c;
 ```
 
@@ -18,30 +18,30 @@ $grid-item-border-radius: 8px;
 ```
 
 ## TBD
-```sass
+```scss
 $grid-item-text-color: white;
 ```
 
 
 ## TBD
-```sass
+```scss
 $grid-item-font-size: 1rem;
 ```
 
 
 ## GridItem `background-color` used when a GridItem has the `isStatic` prop set to `true`. 
-```sass
+```scss
 $grid-item-static-bg-color: #393d42;
 ```
 
 
 ## GridItem `background-color` used for the displayed dragging GridItem.
-```sass
+```scss
 $grid-item-placeholder-bg-color: red;
 ```
 
 
 ## GridItem `opacity` used for the displayed dragging GridItem.
-```sass
+```scss
 $grid-item-placeholder-opacity: .5;
 ```
