@@ -1,10 +1,30 @@
-# vue-responsive-grid-layout
+<p align="center">
+<img src="./docs/Data Grid.svg" height="200" alt="logo">
+</p>
+
+<h1 align="center">vue-responsive-grid-layout</h1>
+
+<h2 align="center">
+<a href="https://vue-responsive-grid-layout.winnem.tech" target="_blank">Documentation Website</a>
+</h2>
+
+## What is vue-responsive-grid-layout
 VUE 3 responsive grid layout is based on the original work by [JBaysolution's vue-grid-layout](https://github.com/jbaysolutions/vue-grid-layout).
 <br/>
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
 
+### **Current version:** 1.0.0beta (Supports Vue 3.0+)
 
-[FREE ICONS](https://icones.js.org/)
+### New Features:
+* GridLayout now has slot for GridItem.
+* Prop for displaying grid lines in GridLayout.
+* Prop for setting edit mode in GridLayout. Shortcuts the isDraggable and isResizable props.
+* Prop for adding border radius in GridLayout. Adds a 8px radius to each GridItem.
+* Prop in GridLayout for shifting GridItems horizontally when dragging instead of vertical.
+* Separated out style variables, so it is easier to restyle the component.
+* Added tab navigation support.
+* Close button in GridItem for removing the GridItem from the GridLayout.
+* Added more events to GridLayout and GridItem.
 
 
 ### Original Features:
@@ -18,16 +38,6 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Responsive using predefined layout's for different breakpoints.
 * GridItem automatically resizes when content change(Useful when displaying charts).
 
-### New Features:
-* GridLayout now has slot for GridItem.
-* Prop for displaying grid lines in GridLayout.
-* Prop for setting edit mode in GridLayout. Shortcuts the isDraggable and isResizable props.
-* Prop for adding border radius in GridLayout. Adds a 8px radius to each GridItem.
-* Prop in GridLayout for shifting GridItems horizontally when dragging instead of vertical.
-* Separated out style variables, so it is easier to restyle the component.
-* Added tab navigation support.
-* Close button in GridItem for removing the GridItem from the GridLayout.
-* Added more events to GridLayout and GridItem.
 
 ### Major refactorings
 * Converted code base to typescript.
