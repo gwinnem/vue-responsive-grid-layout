@@ -17,6 +17,6 @@ title: Changelog
 * __Feature:__ Border radius for GridItem component.
 * __Feature:__ Edit mode for GridItems.
 * __Feature:__ Close button in GridItem's.
-* Added proper Test application.
 * __Doc:__ Added Vitepress for documentation.
 * __Test:__ Unit test's for Validators.
+* __Sandbox__ Added new Test application.

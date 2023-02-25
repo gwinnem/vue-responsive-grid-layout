@@ -8,7 +8,7 @@ hero:
   name: Vue 3 Responsive Grid Layout.
   tagline: Draggable, Resizeable widgets.
   image:
-    src: /logo.svg
+    src: /Data Grid.svg
     alt: vitepress-theme-demoblock
   actions:
     - theme: brand

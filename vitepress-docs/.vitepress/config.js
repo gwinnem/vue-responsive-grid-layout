@@ -14,7 +14,7 @@ export default defineConfig({
   head: [['link', {
     rel: 'icon',
     type: 'image/svg+xml',
-    href: '/logo.svg'
+    href: '/Data Grid.svg'
   }]],
 
   markdown: {
@@ -36,7 +36,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/Data Grid.svg',
     lastUpdatedText: 'Updated',
     // algolia: {
     //   appId: '',
