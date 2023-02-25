@@ -39,14 +39,14 @@
   import '@interactjs/dev-tools';
   import useCurrentInstance from '@/hooks/useInstance';
   import { IGridLayoutProps } from './grid-layout-props.interface';
-  import { ILayoutData } from './layout-data.interface';
+  import { ILayoutData } from '@/core/interfaces/layout-data.interface';
   import { EGridItemEvent } from '@/core/enums/EGridItemEvents';
   import {
     ICalcWh,
     ICalcXy,
     IGridItemPosition,
     IGridItemWidthHeight,
-  } from './grid-item.interfaces';
+  } from '@/core/interfaces/grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
 

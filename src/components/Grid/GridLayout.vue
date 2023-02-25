@@ -29,7 +29,7 @@
   } from 'vue';
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
-  import { IPlaceholder } from './layout-data.interface';
+  import { IPlaceholder } from '../../core/interfaces/layout-data.interface';
   import GridItem from './GridItem.vue';
   import {
     bottom,
@@ -468,7 +468,12 @@
   }
 
   function onWindowResize(): void {
-    width.value = refsLayout.value.offsetWidth;
+    // width.value = refsLayout.value.offsetWidth;
+    // fix: when item ref or his parent is hidden, offsetWidth = 0
+    const widthT = refsLayout.value.offsetWidth;
+    if(widthT > 0) {
+      width.value = widthT;
+    }
     eventBus.emit(`resizeEvent`);
   }
 
