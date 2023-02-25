@@ -1,5 +1,5 @@
 import elementResizeDetectorMaker from 'element-resize-detector';
-import { TLayout } from './layout-definition';
+import { TLayout } from '../../components/Grid/layout-definition';
 
 export interface IPlaceholder {
   x: number;
