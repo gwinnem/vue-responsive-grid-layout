@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-  import { GridLayout, GridItem } from '../../../../dist/vue-responsive-grid-layout.umd';
+  import { GridLayout, GridItem } from '../../../../src/components';
   import { layout } from './example-layout';
   import './examples.css';
 
