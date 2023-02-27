@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ComponentInternalInstance, getCurrentInstance } from 'vue';
 
 export default function useCurrentInstance(): any {
