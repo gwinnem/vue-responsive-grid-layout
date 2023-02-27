@@ -246,7 +246,7 @@
     if(eventName === `dragstart` && !props.verticalCompact) {
       // noinspection TypeScriptValidateTypes
       positionsBeforeDrag.value = props.layout.reduce(
-        (result, { i, tmpX, tmpY }) => ({
+        (result, { i, x: tmpX, y: tmpY }) => ({
           ...result,
           [i]: {
             tmpX,

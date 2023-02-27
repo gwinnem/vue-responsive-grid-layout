@@ -17,6 +17,7 @@
       :class="resizableHandleClass"></span>
   </div>
 </template>
+<!--suppress JSIncompatibleTypesComparison -->
 <script lang="ts" setup>
   import {
     ref, inject, computed, watch, onBeforeUnmount, onMounted, useSlots,
@@ -929,6 +930,7 @@
     containerWidth.value = thisLayout?.width !== null ? (thisLayout?.width as number) : 100;
     margin.value = thisLayout?.margin !== undefined ? thisLayout.margin : [10, 10];
     maxRows.value = thisLayout?.maxRows as number;
+
     if(props.isDraggable === null) {
       draggable.value = thisLayout?.isDraggable as boolean;
     } else {
@@ -940,11 +942,13 @@
     } else {
       resizable.value = props.isResizable;
     }
+
     if(props.isBounded === null) {
       bounded.value = thisLayout?.isBounded as boolean;
     } else {
       bounded.value = props.isBounded;
     }
+
     transformScale.value = thisLayout?.transformScale as number;
     useCssTransforms.value = thisLayout?.useCssTransforms as boolean;
     createStyle();
@@ -988,7 +992,7 @@
     if(previousW.value !== pos.w || previousH.value !== pos.h) {
       emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
 
-      const data = {
+      const data: IEventsData = {
         eventType: `resizeend`,
         h: pos.h,
         i: props.i,
