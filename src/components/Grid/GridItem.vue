@@ -82,7 +82,7 @@
     (e: EGridItemEvent.RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
   }>();
 
-  interface IGridItemProps {
+  export interface IGridItemProps {
     borderRadiusPx?: number;
     dragAllowFrom?: string;
     dragIgnoreFrom?: string;
