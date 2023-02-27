@@ -1,6 +1,6 @@
 {
-  "name": "vue-responsive-grid-layout",
-  "version": "1.0.0b",
+  "name": "vue-ts-responsive-grid-layout",
+  "version": "1.0.1b",
   "type": "module",
   "description": "Vue 3 Responsive & Dynamic Grid / Dashboard layout with drag, drop and resizable actions.",
   "author": "Geirr Winnem <geirr@winnem.tech>",
@@ -28,8 +28,8 @@
     "composition api",
     "vue component library"
   ],
-  "main": "dist/vue-responsive-grid-layout.umd.js",
-  "module": "vue-responsive-grid-layout.es.js",
+  "main": "dist/vue-ts-responsive-grid-layout.umd.js",
+  "module": "vue-ts-responsive-grid-layout.es.js",
   "typings": "src/index",
   "types": "dist/index.d.ts",
   "files": [
@@ -38,17 +38,17 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/vue-responsive-grid-layout.es.js",
-      "require": "./dist/vue-responsive-grid-layout.umd.js"
+      "import": "./dist/vue-ts-responsive-grid-layout.es.js",
+      "require": "./dist/vue-ts-responsive-grid-layout.umd.js"
     }
   },
   "homepage": "https://www.winnem.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gwinnem/vue-responsive-grid-layout.git"
+    "url": "https://github.com/gwinnem/vue-ts-responsive-grid-layout.git"
   },
   "bugs": {
-    "url": "https://github.com/gwinnem/vue-responsive-grid-layout/issues"
+    "url": "https://github.com/gwinnem/vue-ts-responsive-grid-layout/issues"
   },
   "scripts": {
     "dev": "vite --host",
@@ -81,8 +81,7 @@
     "@interactjs/interactjs": "^1.10.17",
     "@interactjs/modifiers": "^1.10.17",
     "element-resize-detector": "^1.2.4",
-    "mitt": "^3.0.0",
-    "vue-responsive-grid-layout": "file:vue-responsive-grid-layout-1.0.0b.tgz"
+    "mitt": "^3.0.0"
   },
   "devDependencies": {
     "@babel/types": "^7.20.5",
