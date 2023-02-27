@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "isolatedModules": true,
+    "jsx": "preserve",
     "lib": [
       "es6",
       "dom",
@@ -19,18 +20,18 @@
     "module": "es6",
     "moduleResolution": "node",
     "newLine": "lf",
-    "noEmit": true,
+    // "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "paths": {
       "@/*": [
-        "src/*",
+        "./src/*",
       ],
       "@theme/*": ["vitepress-docs/.vitepress/theme/*"],
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": true,
     "target": "es6",
     "types": [
@@ -45,8 +46,9 @@
     "src/**/*.cy.ts",
     "**/*.spec.ts",
     "/dist",
-    "node_modules/*",
+    "node_modules",
+    "*.tgz"
   ],
-  "include": ["src/**/*.ts"],
+  "include": ["./src/**/*.ts"],
   "references": [],
 }

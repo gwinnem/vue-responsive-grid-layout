@@ -8,12 +8,13 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, `src/components/index.ts`),
       // Name of the library.
-      fileName: `vue-responsive-grid-layout`,
+      // fileName: `vue-responsive-grid-layout`,
+      fileName: format => `vue-responsive-grid-layout.${format}.js`,
       formats: [
         `es`,
         `umd`,
       ],
-      name: `vue-responsive-grid-component`,
+      name: `vue-responsive-grid-layout`,
     },
     outDir: `./dist`,
     rollupOptions: {

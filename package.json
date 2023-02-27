@@ -1,6 +1,5 @@
 {
   "name": "vue-responsive-grid-layout",
-  "private": false,
   "version": "1.0.0b",
   "type": "module",
   "description": "Vue 3 Responsive & Dynamic Grid / Dashboard layout with drag, drop and resizable actions.",
@@ -31,6 +30,7 @@
   ],
   "main": "dist/vue-responsive-grid-layout.umd.js",
   "module": "vue-responsive-grid-layout.es.js",
+  "typings": "src/index",
   "types": "dist/index.d.ts",
   "files": [
     "dist/*"
@@ -52,10 +52,10 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && npm run build:types",
-    "build:only": "vue-tsc && vite build",
-    "build:types": "vue-tsc --project tsconfig.build-types.json --declaration --emitDeclarationOnly --outDir dist/types ",
-    "typecheck": "vue-tsc --project tsconfig.build-types.json --noEmit",
+    "build": "vite build && npm run build:types && npm pack",
+    "build:only": "vite build",
+    "build:types": "vue-tsc --project tsconfig.json --declaration --emitDeclarationOnly --outDir dist/types ",
+    "typecheck": "vue-tsc --project tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.{js,ts,vue}\" --color",
     "lint:fix": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
     "lint:style": "npx stylelint src/**/*.{scss,vue} --no-fix --color",
@@ -81,7 +81,8 @@
     "@interactjs/interactjs": "^1.10.17",
     "@interactjs/modifiers": "^1.10.17",
     "element-resize-detector": "^1.2.4",
-    "mitt": "^3.0.0"
+    "mitt": "^3.0.0",
+    "vue-responsive-grid-layout": "file:vue-responsive-grid-layout-1.0.0b.tgz"
   },
   "devDependencies": {
     "@babel/types": "^7.20.5",
