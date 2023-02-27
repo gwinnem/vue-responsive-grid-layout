@@ -14,7 +14,7 @@ npm run dev
 
 <br/>
 
-#### Uses Vite to build our component library (compiles .vue files to .js) and call build:types script.
+#### Uses Vite to build our component library (compiles .vue files to .js) and call build:types script & npm pack. 
 ```
 npm run build
 ```

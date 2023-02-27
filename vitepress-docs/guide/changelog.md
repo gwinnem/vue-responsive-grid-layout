@@ -6,13 +6,12 @@ title: Changelog
 
 # Changelog
 
-## v: 1.0.0b (2023-xx-xx)
+## v: 1.0.0b (2023-02-27)
 
 * __Codebase:__ Complete refactoring of old codebase.
 * __Codebase:__ Strongly typed typescript code.
 * __Components:__ Updated to VUE 3.
 * __Components:__ using vue setup syntax.
-* __Codebase:__ Validators for property values (Not implemented).
 * __Feature:__ Horizontal shift.
 * __Feature:__ Border radius for GridItem component.
 * __Feature:__ Edit mode for GridItems.
