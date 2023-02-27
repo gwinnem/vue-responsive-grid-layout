@@ -10,8 +10,8 @@ The <span style="color: green">dist/</span> folder is structured like this:
 ```
 // From package.json
 {
-  "main": "dist/vite-vue-package-skeleton.umd.js",
-  "module": "dist/vite-vue-package-skeleton.es.js",
+  "main": "dist/vue-responsive-grid-layout.umd.js",
+  "module": "dist/vue-responsive-grid-layout.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist/*",
@@ -25,7 +25,6 @@ The <span style="color: green">dist/</span> folder is structured like this:
 * <span style="color: green">module</span>: ECMAScript module file entry point.
 * <span style="color: green">types</span>: the types property to point to your bundled declaration file.
 
-Remember to rename <span style="color: red">vite-vue-package-skeleton</span> to the name of your package in <span style="color: green">package.json</span>.
 
 ## Publishing the library
 In order to publish the package, you need to follow these steps
