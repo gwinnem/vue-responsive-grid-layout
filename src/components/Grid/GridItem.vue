@@ -82,28 +82,28 @@
     (e: EGridItemEvent.RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
   }>();
 
-  export interface IGridItemProps {
+  interface IGridItemProps {
     borderRadiusPx?: number;
-    dragAllowFrom?: string;
+    dragAllowFrom?: string | null;
     dragIgnoreFrom?: string;
     dragOption?: { [key: string]: any };
     enableEditMode?: boolean;
     h: number;
     i: string | number;
-    isBounded?: boolean;
-    isDraggable?: boolean;
-    isMirrored?: boolean;
-    isResizable?: boolean;
-    isStatic?: boolean;
+    isBounded?: boolean | null;
+    isDraggable?: boolean | null;
+    isMirrored?: boolean | null;
+    isResizable?: boolean | null;
+    isStatic?: boolean | null;
     maxW?: number;
     maxH?: number;
     minH?: number;
     minW?: number;
     preserveAspectRatio?: boolean;
-    resizeIgnoreFrom?: string;
+    resizeIgnoreFrom?: string | null;
     resizeOption?: { [key: string]: any };
-    showCloseButton?: boolean;
-    useBorderRadius?: boolean;
+    showCloseButton?: boolean | null;
+    useBorderRadius?: boolean | null;
     w: number;
     x: number;
     y: number;
@@ -725,7 +725,10 @@
     for(const prop of [`width`, `height`]) {
       const val = styleObj.value[prop];
       const matches = val.match(/^(\d+)px$/);
-      if(!matches) return;
+      if(!matches) {
+        return;
+      }
+
       // eslint-disable-next-line prefer-destructuring
       styleProps[prop] = matches[1];
     }
@@ -965,17 +968,28 @@
     // @ts-ignore
     const newSize = slots?.default[0].elm.getBoundingClientRect();
     const pos = calcWH(newSize.height, newSize.width, true);
-    if(pos.w < props.minW) {
-      pos.w = props.minW;
+    if(props.minW) {
+      if(pos.w < props.minW) {
+        pos.w = props.minW;
+      }
     }
-    if(pos.w > props.maxW) {
-      pos.w = props.maxW;
+
+    if(props.maxW) {
+      if(pos.w > props.maxW) {
+        pos.w = props.maxW;
+      }
     }
-    if(pos.h < props.minH) {
-      pos.h = props.minH;
+
+    if(props.minH) {
+      if(pos.h < props.minH) {
+        pos.h = props.minH;
+      }
     }
-    if(pos.h > props.maxH) {
-      pos.h = props.maxH;
+
+    if(props.maxH) {
+      if(pos.h > props.maxH) {
+        pos.h = props.maxH;
+      }
     }
 
     if(pos.h < 1) {
