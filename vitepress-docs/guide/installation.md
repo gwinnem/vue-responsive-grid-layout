@@ -7,18 +7,18 @@ title: Installation
 
 ## NPM
 ```
-	npm install vue-responsive-grid-layout --save
+	npm install vue-ts-responsive-grid-layout --save
 ```
 
 ## Yarn
 ```
-    yarn add vue-responsive-grid-layout
+    yarn add vue-ts-responsive-grid-layout
 ```
 
 ## Import the package
 
 ```typescript
-    import VueResponsiveGridLayout from 'vue-responsive-grid-layout';
+    import VueResponsiveGridLayout from 'vue-ts-responsive-grid-layout';
 ```
 
 Add to other Vue components using Options api.
@@ -37,6 +37,6 @@ Add to other Vue components using Composition api.
 
 ```html
 <script setup>
-  import { GridItem, GridLayout } from 'vue-responsive-grid-layout';
+  import { GridItem, GridLayout } from 'vue-ts-responsive-grid-layout';
 </script>
 ```

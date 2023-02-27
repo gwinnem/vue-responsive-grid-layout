@@ -41,7 +41,7 @@ export default defineConfig({
     // algolia: {
     //   appId: '',
     //   apiKey: '',
-    //   indexName: 'vue-responsive-grid-layout',
+    //   indexName: 'vue-ts-responsive-grid-layout',
     // },
 
     // nav

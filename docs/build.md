@@ -10,8 +10,8 @@ The <span style="color: green">dist/</span> folder is structured like this:
 ```json
 // From package.json
 {
-  "main": "dist/vue-responsive-grid-layout.umd.js",
-  "module": "dist/vue-responsive-grid-layout.es.js",
+  "main": "dist/vue-ts-responsive-grid-layout.umd.js",
+  "module": "dist/vue-ts-responsive-grid-layout.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist/*",

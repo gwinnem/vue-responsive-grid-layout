@@ -13,7 +13,7 @@ npm pack
 <br/>
 
 ```
-npm install vue-responsive-grid-layout.tgz
+npm install vue-ts-responsive-grid-layout.tgz
 ```
 
-Where <span style="color: green">vue-responsive-grid-layout</span> is the name of your package.
+Where <span style="color: green">vue-ts-responsive-grid-layout</span> is the name of your package.

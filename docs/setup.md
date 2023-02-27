@@ -1,4 +1,4 @@
-## Setting up vue-responsive-grid-layout in your project
+## Setting up vue-ts-responsive-grid-layout in your project
 
 #### Installing external dependencies
 ```
