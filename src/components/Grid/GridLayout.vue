@@ -124,7 +124,6 @@
     verticalCompact: true,
   });
 
-  // self data
   const width = ref<number | null>(null);
   const mergeStyle = ref<{ [key: string]: string }>({});
 
@@ -142,9 +141,9 @@
   const originalLayout = ref<TLayout>();
   const erd = ref<elementResizeDetectorMaker.Erd | null>(null);
   const positionsBeforeDrag = ref<{ [key: string]: string }>();
-  // layout dom
+
   const refsLayout = ref<HTMLElement>({} as HTMLElement);
-  // default grid item
+
   const defaultGridItem = ref();
   const colNum = ref(props.colNum);
   const eventBus: Emitter<{
@@ -194,7 +193,7 @@
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
     colNum.value = newCols;
     emit(EGridLayoutEvent.COLUMNS_CHANGED, newCols);
-    // save actual layout in layouts
+
     if(lastBreakpoint.value != null && !layouts.value[lastBreakpoint.value]) {
       layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
     }
@@ -210,7 +209,6 @@
       props.verticalCompact,
     );
 
-    // Store the new layout.
     layouts.value[newBreakpoint] = layout;
 
     if(lastBreakpoint.value !== newBreakpoint) {
