@@ -6,6 +6,7 @@ module.exports = {
     extraFileExtensions: [`.vue`],
     parser: `@typescript-eslint/parser`,
     // project: resolve(__dirname, `./tsconfig.json`),
+    tsconfigRootDir: __dirname,
   },
   extends: [
     `eslint:recommended`,
