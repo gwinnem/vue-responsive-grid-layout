@@ -29,7 +29,7 @@
   } from 'vue';
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
-  import { IPlaceholder } from '../../core/interfaces/layout-data.interface';
+  import { IPlaceholder } from '@/core/interfaces/layout-data.interface';
   import GridItem from './GridItem.vue';
   import {
     bottom,
@@ -50,8 +50,9 @@
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
   import { TLayout, TLayoutItem } from './layout-definition';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
+  import { EDragEvent } from '@/core/enums/EDragEvents';
 
-  interface IGridLayoutProps {
+  export interface IGridLayoutProps {
     autoSize?: boolean;
     borderRadiusPx?: number;
     breakpoints?: IBreakpoints;
@@ -243,7 +244,7 @@
       } as TLayoutItem;
     }
 
-    if(eventName === `dragstart` && !props.verticalCompact) {
+    if(eventName === EDragEvent.DRAG_START && !props.verticalCompact) {
       // noinspection TypeScriptValidateTypes
       positionsBeforeDrag.value = props.layout.reduce(
         (result, { i, x: tmpX, y: tmpY }) => ({
@@ -257,7 +258,7 @@
       );
     }
 
-    if(eventName === `dragmove` || eventName === `dragstart`) {
+    if(eventName === EDragEvent.DRAG_MOVE || eventName === EDragEvent.DRAG_START) {
       placeholder.value.i = id as string | number;
       placeholder.value.x = l.x as number;
       placeholder.value.y = l.y as number;
@@ -290,7 +291,7 @@
     // needed because vue can't detect changes on array element properties
     eventBus.emit(`compact`);
     updateHeight();
-    if(eventName === `dragend`) {
+    if(eventName === EDragEvent.DRAG_END) {
       positionsBeforeDrag.value = undefined;
       emit(EGridLayoutEvent.LAYOUT_UPDATED, layout);
     }
