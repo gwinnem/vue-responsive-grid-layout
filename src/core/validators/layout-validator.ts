@@ -1,5 +1,5 @@
 import { TLayout } from '@/components/Grid/layout-definition';
-import { keysValidator } from '@/core/validators/keys-validator';
+import { keysValidator } from './keys-validator';
 
 export const layoutValidatorPayload = {
   invalidOptionalLayout: {

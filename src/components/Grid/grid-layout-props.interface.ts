@@ -1,4 +1,4 @@
-import { TLayout } from '../../core/helpers/utils';
+import { TLayout } from '@/components/Grid/layout-definition';
 
 export interface IBreakpoints {
   xxl: number;

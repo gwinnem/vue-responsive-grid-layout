@@ -1,5 +1,5 @@
-import { keysValidator } from '@/core/validators/keys-validator';
-import { TBreakpoints } from '@/core/helpers/responsiveUtils';
+import { keysValidator } from './keys-validator';
+import { TBreakpoints } from '@/components/Grid/layout-definition';
 
 export const keysValidatorPayload = {
   invalidKeys1: [`lg`, `md`, `sm`, `xs`, `xxs`],
