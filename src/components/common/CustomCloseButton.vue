@@ -33,29 +33,28 @@
 
 <style lang="scss" scoped>
 // Display a cross with CSS only.
-//
 // $size  : px or em
 // $color : color
 // $thickness : px
 @mixin cross($size: 20px, $color: currentColor, $thickness: 1px) {
+  background: none;
+  border: 0;
+  height: $size;
   margin: 0;
   padding: 0;
-  border: 0;
-  background: none;
   position: relative;
   width: $size;
-  height: $size;
 
   &:before,
   &:after {
-    content: '';
-    position: absolute;
-    top: calc(($size - $thickness) / 2);
-    left: 0;
-    right: 0;
-    height: $thickness;
     background: $color;
     border-radius: $thickness;
+    content: '';
+    height: $thickness;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: calc(($size - $thickness) / 2);
   }
 
   &:before {
@@ -69,7 +68,6 @@
   span {
     display: block;
   }
-
 }
 
 .btn-close {
@@ -94,19 +92,19 @@
   &:hover,
   &:focus {
     transform: rotateZ(90deg);
-    background: hsl(216, 100, 40);
-  }
 
+    // background: hsl(216, 100, 40%);
+  }
 }
 
 // For screen readers.
 .visually-hidden {
-  position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0 !important;
   border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px);
   height: 1px !important;
-  width: 1px !important;
   overflow: hidden;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
 }
 </style>
