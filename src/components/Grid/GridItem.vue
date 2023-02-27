@@ -51,6 +51,33 @@
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
 
+  export interface IGridItemProps {
+    borderRadiusPx?: number;
+    dragAllowFrom?: string | null;
+    dragIgnoreFrom?: string;
+    dragOption?: { [key: string]: any };
+    enableEditMode?: boolean;
+    h: number;
+    i: string | number;
+    isBounded?: boolean | null;
+    isDraggable?: boolean | null;
+    isMirrored?: boolean | null;
+    isResizable?: boolean | null;
+    isStatic?: boolean | null;
+    maxW?: number;
+    maxH?: number;
+    minH?: number;
+    minW?: number;
+    preserveAspectRatio?: boolean;
+    resizeIgnoreFrom?: string | null;
+    resizeOption?: { [key: string]: any };
+    showCloseButton?: boolean | null;
+    useBorderRadius?: boolean | null;
+    w: number;
+    x: number;
+    y: number;
+  }
+
   const { proxy } = useCurrentInstance();
 
   // for parent's instance
@@ -81,33 +108,6 @@
     (e: EGridItemEvent.RESIZE, i: number | string, h: number, w: number, height: number, width: number): void;
     (e: EGridItemEvent.RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
   }>();
-
-  interface IGridItemProps {
-    borderRadiusPx?: number;
-    dragAllowFrom?: string | null;
-    dragIgnoreFrom?: string;
-    dragOption?: { [key: string]: any };
-    enableEditMode?: boolean;
-    h: number;
-    i: string | number;
-    isBounded?: boolean | null;
-    isDraggable?: boolean | null;
-    isMirrored?: boolean | null;
-    isResizable?: boolean | null;
-    isStatic?: boolean | null;
-    maxW?: number;
-    maxH?: number;
-    minH?: number;
-    minW?: number;
-    preserveAspectRatio?: boolean;
-    resizeIgnoreFrom?: string | null;
-    resizeOption?: { [key: string]: any };
-    showCloseButton?: boolean | null;
-    useBorderRadius?: boolean | null;
-    w: number;
-    x: number;
-    y: number;
-  }
 
   // Props Data
   const props = withDefaults(defineProps<IGridItemProps>(), {
@@ -525,6 +525,7 @@
           top: false,
         },
         ignoreFrom: props.resizeIgnoreFrom,
+        modifiers: [],
         restrictSize: {
           max: {
             height: maximum.height * transformScale.value,
@@ -721,16 +722,15 @@
   function emitContainerResized(): void {
     // this.style has width and height with trailing 'px'. The
     // resized event is without them
-    const styleProps = {} as IGridItemWidthHeight;
+    let styleProps: IGridItemWidthHeight = { height: 0, width: 0 };
     for(const prop of [`width`, `height`]) {
       const val = styleObj.value[prop];
       const matches = val.match(/^(\d+)px$/);
       if(!matches) {
         return;
       }
-
       // eslint-disable-next-line prefer-destructuring
-      styleProps[prop] = matches[1];
+      styleProps = matches[1];
     }
     emit(EGridItemEvent.CONTAINER_RESIZED, props.i, props.h, props.w, styleProps.height, styleProps.width);
   }

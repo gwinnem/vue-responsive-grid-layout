@@ -11,7 +11,7 @@
 <script lang="ts" setup>
   import { EGridItemEvent } from '@/core/enums/EGridItemEvents';
 
-  interface IProps {
+  export interface IProps {
     i: string | number;
   }
 

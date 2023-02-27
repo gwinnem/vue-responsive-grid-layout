@@ -7,13 +7,14 @@
 
 <script lang="ts" setup>
 
-  interface IProps {
+  export interface IProps {
     text: string;
   }
 
   const props = withDefaults(defineProps<IProps>(), {
     text: `x`,
   });
+
 </script>
 
 <style lang="scss" scoped>
