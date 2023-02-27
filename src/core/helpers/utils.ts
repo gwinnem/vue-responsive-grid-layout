@@ -128,11 +128,10 @@ export function compactItem(
  * Given a layout, compact it. This involves going down each y coordinate and removing gaps
  * between items.
  *
- * @param  {Array} layout Layout.
- * @param  {Boolean} verticalCompact Whether or not to compact the layout
- *   vertically.
- * @param {Object} minPositions
- * @return {Array}       Compacted Layout.
+ * @param   {TLayout} layout          Layout.
+ * @param   {Boolean} verticalCompact Whether or not to compact the layout vertically.
+ * @param   {Object}  minPositions
+ * @return  {TLayout}                 Compacted Layout.
  */
 export function compact(layout: TLayout, verticalCompact: boolean, minPositions?: any): TLayout {
   // Statics go in the compareWith array right away so items flow around them.
