@@ -148,9 +148,9 @@
   const useCssTransforms = ref<boolean>(true);
 
   const isDragging = ref(false);
-  const dragging = ref<IGridItemPosition | null>(null);
+  const dragging = ref<IGridItemPosition | undefined>(undefined);
   const isResizing = ref(false);
-  const resizing = ref<IGridItemWidthHeight | null>(null);
+  const resizing = ref<IGridItemWidthHeight | undefined>(undefined);
   const lastX = ref(NaN);
   const lastY = ref(NaN);
   const lastW = ref(NaN);
@@ -160,10 +160,10 @@
   const dragEventSet = ref(false);
   const resizeEventSet = ref(false);
 
-  const previousW = ref<number | null>(null);
-  const previousH = ref<number | null>(null);
-  const previousX = ref<number | null>(null);
-  const previousY = ref<number | null>(null);
+  const previousW = ref<number | undefined>(undefined);
+  const previousH = ref<number | undefined>(undefined);
+  const previousX = ref<number | undefined>(undefined);
+  const previousY = ref<number | undefined>(undefined);
   const innerX = ref<number>(props.x);
   const innerY = ref<number>(props.y);
   const innerW = ref<number>(props.w);
@@ -171,7 +171,7 @@
 
   const bounded = ref<boolean | null>(null);
 
-  const interactObj = ref<Interactable | null>(null);
+  const interactObj = ref<Interactable | undefined>(undefined);
 
   const closeClicked = (id: string | number): void => {
     emit(EGridItemEvent.REMOVE_ITEM, id);
@@ -346,7 +346,7 @@
         newPosition.top = cTop - pTop;
         //                        console.log("### drag end => " + JSON.stringify(newPosition));
         //                        console.log("### DROP: " + JSON.stringify(newPosition));
-        dragging.value = null;
+        dragging.value = undefined;
         isDragging.value = false;
         // shouldUpdate = true;
         break;
@@ -618,7 +618,7 @@
         newSize.width = pos.width;
         newSize.height = pos.height;
         //                        console.log("### resize end => " + JSON.stringify(newSize));
-        resizing.value = null;
+        resizing.value = undefined;
         isResizing.value = false;
         break;
       }
@@ -1025,15 +1025,12 @@
     ...props,
   });
 
-  const borderRadius = computed(() => {
-    return `${props.borderRadiusPx}px`;
-  });
 </script>
 
 <style lang="scss" scoped>
 @import '../../styles/variables';
 
-$grid-item-border-radius: v-bind(borderRadius);
+$grid-item-border-radius: 8px;
 
 .vue-close-button {
   height: 24px;
