@@ -1,4 +1,4 @@
-## Setting up vue-dashboard-layout-component in your project
+## Setting up vue-responsive-grid-layout in your project
 
 #### Installing external dependencies
 ```

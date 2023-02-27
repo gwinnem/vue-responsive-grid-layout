@@ -13,8 +13,7 @@ npm pack
 <br/>
 
 ```
-npm install vite-vue-package-skeleton-version.tgz
+npm install vue-responsive-grid-layout.tgz
 ```
 
-Where <span style="color: green">vite-vue-package-skeleton</span> is the name of your package and
-<span style="color: green">version</span> is the version number of the package.
+Where <span style="color: green">vue-responsive-grid-layout</span> is the name of your package.
