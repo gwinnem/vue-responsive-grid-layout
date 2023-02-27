@@ -1,5 +1,4 @@
-// Don't remove this file, because it registers the demo components.
-import { GridLayout, GridItem } from '../../../dist/vue-responsive-grid-layout.mjs';
+import { GridLayout, GridItem } from '/vue-ts-responsive-grid-layout.';
 
 export function useComponents(app) {
   app.component('grid-layout', GridLayout);
