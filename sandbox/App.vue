@@ -329,7 +329,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
+// @import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 @import '../src/styles/variables';
 form {
   margin-left: 0 !important;
