@@ -3,7 +3,7 @@
 ```scss
 @import '../../styles/variables';
 
-$grid-item-border-radius: v-bind(borderRadius);
+$grid-item-border-radius: 10px;
 
 .vue-close-button {
   height: 24px;

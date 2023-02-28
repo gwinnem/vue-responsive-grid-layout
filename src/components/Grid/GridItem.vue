@@ -244,7 +244,7 @@
    * Translate x and y coordinates from pixels to grid units.
    * @param  {Number} top  Top position (relative to parent) in pixels.
    * @param  {Number} left Left position (relative to parent) in pixels.
-   * @return {Object} x and y in grid units.
+   * @return {ICalcXy}     x and y in grid units.
    */
   // TODO check if this function needs change in order to support rtl.
   function calcXY(top: number, left: number): ICalcXy {
@@ -1030,7 +1030,7 @@
 <style lang="scss" scoped>
 @import '../../styles/variables';
 
-$grid-item-border-radius: 8px;
+$grid-item-border-radius: 10px;
 
 .vue-close-button {
   height: 24px;
