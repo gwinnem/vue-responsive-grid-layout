@@ -1,6 +1,6 @@
 {
   "name": "vue-ts-responsive-grid-layout",
-  "version": "1.0.0b",
+  "version": "1.0.0-b",
   "type": "module",
   "description": "Vue 3 Responsive & Dynamic Grid / Dashboard layout with drag, drop and resizable actions.",
   "author": "Geirr Winnem <geirr@winnem.tech>",
