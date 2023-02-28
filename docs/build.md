@@ -5,7 +5,7 @@ The <span style="color: green">dist/</span> folder is structured like this:
 
 * <span style="color: green">dist/vite-vue-package-skeleton.{es|umd}.js</span>: the actual JavaScript file that will be used in a parent project when importing the components.
 * <span style="color: green">dist/style.css</span>: scoped styling of the components.
-* <span style="color: green">dist/types/{index|Input.vue}.d.ts</span>: those files are generated with <span style="color: green">npm run build:types</span> and are used to provide TypeScript types for the components (typed props, slots, imports, etc). Those files are very important for TypeScript projects, without them you <span style="font-weight: 800">won't get any types</span>.
+* <span style="color: green">dist/types/</span>: those files are generated with <span style="color: green">npm run build:types</span> and are used to provide TypeScript types for the components (typed props, slots, imports, etc). Those files are very important for TypeScript projects, without them you <span style="font-weight: 800">won't get any types</span>.
 
 ```json
 // From package.json
