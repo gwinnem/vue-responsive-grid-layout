@@ -18,4 +18,4 @@ title: Roadmap
 * __Test Application:__ Fix Droppable element offset.
 * __Test:__ Add more unit tests.
 * __Test:__ Refactor layout validator so test is passing.
-* __Test:__ Ad e2e tests.
+* __Test:__ Add e2e tests.
