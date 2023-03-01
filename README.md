@@ -48,7 +48,7 @@ This new and refactored component has more features, typesafe Emits, Props and a
 
 ## Donate
 <a href="https://paypal.me/gwinnem/">
-    <img src="./docs/paypal-images/blue.svg" height="40" alt="paypal">
+    <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/dev/docs/paypal-images/blue.svg" height="40" alt="paypal">
 </a>
 
 If you enjoyed this project — or just feeling generous, consider buying me a beer. Cheers! :beers:
