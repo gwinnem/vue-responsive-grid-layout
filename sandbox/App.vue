@@ -153,7 +153,7 @@
   // import { TLayoutItem } from 'vue-ts-responsive-grid-layout';
   // import type { TLayout } from 'vue-ts-responsive-grid-layout';
 
-  const autoResizeGridLayout = ref(true);
+  const autoResizeGridLayout = ref(false);
   const borderRadiusPx = ref(8);
   const colNum = ref(12);
   const enableEditMode = ref(true);
@@ -170,8 +170,8 @@
   const preventCollision = ref(false);
   const rowHeight = ref(50);
   const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
-  const restoreOnDrag = ref(true);
-  const showCloseButton = ref(true);
+  const restoreOnDrag = ref(false);
+  const showCloseButton = ref(false);
   const showGridLines = ref(false);
   const useBorderRadius = ref(false);
   const verticalCompact = ref(true);
@@ -331,6 +331,10 @@
 <style lang="scss" scoped>
 // @import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 @import '../src/styles/variables';
+hide {
+  display: none;
+}
+
 form {
   margin-left: 0 !important;
   margin-right: 0 !important;
