@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/Data Grid.svg" height="200" alt="logo">
+  <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/main/docs/Data%20Grid.svg" height="200" alt="logo">
 </p>
 
 <h1 align="center">vue-ts-responsive-grid-layout</h1>
