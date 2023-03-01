@@ -2,6 +2,7 @@
 node_modules
 /dist
 /coverage
+/examples
 
 # vitepress
 /vitepress-docs/.vitepress/cache
@@ -24,3 +25,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# npm package
+/vue-ts-responsive-grid-layout*.tgz
+vue-ts-responsive-grid-layout*.tgz
