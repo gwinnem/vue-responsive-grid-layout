@@ -1,3 +1,10 @@
+---
+aside: false
+---
+
+# EGridItemEvent
+
+```typescript
 /**
  * Events emitted by the GridItem component
  */
@@ -11,3 +18,4 @@ export enum EGridItemEvent {
   RESIZE = `resize`,
   RESIZED = `resized`,
 }
+```

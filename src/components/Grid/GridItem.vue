@@ -102,6 +102,8 @@
 
   const emit = defineEmits<{
     (e: EGridItemEvent.CONTAINER_RESIZED, i: number | string, h: number, w: number, height: number, width: number): void;
+    (e: EGridItemEvent.DRAG, i: number | string, h: number, w: number, height: number, width: number): void;
+    (e: EGridItemEvent.DRAGGED, i: number | string, h: number, w: number, height: number, width: number): void;
     (e: EGridItemEvent.MOVE, i: number | string, x: number, y: number): void;
     (e: EGridItemEvent.MOVED, i: number | string, x: number, y: number): void;
     (e: EGridItemEvent.REMOVE_ITEM, i: string | number): void;
@@ -214,6 +216,7 @@
     };
   });
 
+  // Helper for generating the correct css class for resizing a GridItem
   const resizableHandleClass = computed(() => {
     if(renderRtl.value) {
       return `vue-resizable-handle vue-rtl-resizable-handle`;
@@ -221,11 +224,7 @@
     return `vue-resizable-handle`;
   });
 
-  // This can either be called:
-  // calcGridItemWHPx(w, colWidth, margin[0])
-  // or
-  // calcGridItemWHPx(h, rowHeight, margin[1])
-  function calcGridItemWHPx(gridUnits: number, colOrRowSize: number, marginPx: number): number {
+  function calcGridItemWH(gridUnits: number, colOrRowSize: number, marginPx: number): number {
     if(!Number.isFinite(gridUnits)) return gridUnits;
     return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
   }
@@ -363,10 +362,10 @@
         if(bounded.value) {
           const tg = event.target as HTMLElement;
           const parentTg = tg.offsetParent as HTMLElement;
-          const bottomBoundary = parentTg.clientHeight - calcGridItemWHPx(props.h, rowHeight.value, margin.value[1]);
+          const bottomBoundary = parentTg.clientHeight - calcGridItemWH(props.h, rowHeight.value, margin.value[1]);
           newPosition.top = clamp(newPosition.top, 0, bottomBoundary);
           const colWidth = calcColWidth();
-          const rightBoundary = containerWidth.value - calcGridItemWHPx(props.w, colWidth, margin.value[0]);
+          const rightBoundary = containerWidth.value - calcGridItemWH(props.w, colWidth, margin.value[0]);
           newPosition.left = clamp(newPosition.left, 0, rightBoundary);
         }
         //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);

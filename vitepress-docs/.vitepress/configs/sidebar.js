@@ -36,6 +36,17 @@ function getApiSidebar() {
               link: '/api/types-layout',
             },
           ],
+        },
+        {
+          text: 'Enums',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              text: 'EGridItemEvent',
+              link: '/api/enums',
+            },
+          ],
         }
       ],
     },
