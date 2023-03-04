@@ -5,8 +5,8 @@ import sidebar from './configs/sidebar';
 export default defineConfig({
   lang: 'en-US',
   title: 'Home',
-  description: 'Documentation for vue-fluid-grid-layout component',
-
+  description: 'Documentation for vue-responsive-grid-layout component',
+  appearance: true,
   lastUpdated: true,
   cleanUrls: 'without-subfolders',
 
@@ -16,6 +16,21 @@ export default defineConfig({
     type: 'image/svg+xml',
     href: '/Data Grid.svg'
   }]],
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+      selectText: 'Languages',
+    },
+    fr: {
+      label: 'French',
+      lang: 'fr',
+      link: '/fr/index',
+      selectText: 'Languages',
+
+      // other locale specific properties...
+    }
+  },
 
   markdown: {
     headers: {
@@ -32,12 +47,14 @@ export default defineConfig({
     //   light: 'github-light',
     //   dark: 'github-dark'
     // },
-    lineNumbers: false,
+    lineNumbers: true,
   },
 
   themeConfig: {
+    i18nRouting: true,
     logo: '/Data Grid.svg',
     lastUpdatedText: 'Updated',
+
     // algolia: {
     //   appId: '',
     //   apiKey: '',
