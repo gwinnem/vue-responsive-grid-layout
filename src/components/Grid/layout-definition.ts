@@ -6,6 +6,17 @@ export interface ILayoutItemRequired {
   y: number;
 }
 
+export interface ILayoutItem extends ILayoutItemRequired {
+  isDraggable?: boolean;
+  isResizable?: boolean;
+  isStatic?: boolean;
+  maxH?: number;
+  maxW?: number;
+  minH?: number;
+  minW?: number;
+  moved?: boolean;
+}
+
 export type TLayoutItem = ILayoutItemRequired & {
   isDraggable?: boolean;
   isResizable?: boolean;
