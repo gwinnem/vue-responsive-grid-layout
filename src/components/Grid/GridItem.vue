@@ -17,7 +17,6 @@
       :class="resizableHandleClass"></span>
   </div>
 </template>
-<!--suppress JSIncompatibleTypesComparison -->
 <script lang="ts" setup>
   import {
     ref, inject, computed, watch, onBeforeUnmount, onMounted, useSlots,
