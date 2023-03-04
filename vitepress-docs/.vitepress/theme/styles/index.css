@@ -5,6 +5,13 @@
   --vp-c-brand-lightest: #bcc0ff;
   --vp-c-brand-dark: #535bf2;
   --vp-c-brand-darker: #454ce1;
+
+  /*--vp-c-brand: rgb(255, 115, 64);*/
+  /*--vp-c-brand-light: rgb(255, 87, 25);*/
+  /*--vp-c-brand-lighter: rgb(255, 115, 64);*/
+  /*--vp-c-brand-dark: #FF622D;*/
+  /*--vp-c-brand-darker: rgb(226, 60, 0);*/
+
   --vp-code-block-bg: #f9fafb;
 }
 
@@ -14,8 +21,4 @@
 
 html.dark {
   --vp-code-block-bg: var(--vp-c-bg-alt);
-}
-
-.demo-block .xl-button {
-  margin: 0 10px 10px 0;
 }
