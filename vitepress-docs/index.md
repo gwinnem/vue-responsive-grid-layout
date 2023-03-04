@@ -9,7 +9,7 @@ hero:
   tagline: Draggable, Resizeable widgets.
   image:
     src: /Data Grid.svg
-    alt: vitepress-theme-demoblock
+    alt: logo
   actions:
     - theme: brand
       text: Get Started
