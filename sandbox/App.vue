@@ -17,6 +17,8 @@
             <input id="mlr" v-model="marginLeftRight" class="hide" type="number"/>
             <label class="hide" for="borderRadius">Border Radius</label>
             <input id="borderRadius" v-model="borderRadiusPx" class="hide" type="number"/>
+            <label for="hideEventLog">Hide Event Log</label>
+            <input id="hideEventLog" v-model="hideEventLog" type="checkbox">
             <br/>
             <label for="autosize">autosize</label>
             <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
@@ -32,6 +34,7 @@
             <input id="isMirrored" v-model="isMirrored" type="checkbox">
             <label for="isResizable">isResizable</label>
             <input id="isResizable" v-model="isResizable" type="checkbox">
+            <br/>
             <label for="isResponsive">isResponsive</label>
             <input id="isResponsive" v-model="isResponsive" type="checkbox">
             <label for="preserveAspectRatio">preserveAspectRatio</label>
@@ -72,7 +75,9 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div
+        v-if="!hideEventLog"
+        class="col-sm-4">
         <div
           ref="eventsDiv"
           class="eventsJSON">
@@ -168,6 +173,7 @@
   // Used for testing the package before publishing to npm.
   // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
   // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
+  const hideEventLog = ref(false);
 
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
