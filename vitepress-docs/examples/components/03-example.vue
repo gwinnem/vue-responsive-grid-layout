@@ -188,8 +188,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm">
-        <div class="layoutJSON hide">
+      <div class="col-sm hide">
+        <div class="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div class="columns">
             <div
@@ -207,7 +207,9 @@
         <div
           ref="eventsDiv"
           class="eventsJSON">
-          <div v-for="event in eventsLog">
+          <div
+            v-for="event in eventsLog"
+            :key="event">
             {{ event }}
           </div>
         </div>
@@ -246,25 +248,19 @@
               :responsive="isResponsive"
               :restore-on-drag="restoreOnDrag"
               :row-height="rowHeight"
-              :show-close-button="showCloseButton"
               :use-border-radius="useBorderRadius"
               :use-css-transforms="true"
               :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged"
-              @layout-before-mount="layoutBeforeMountEvent"
-              @layout-created="layoutCreatedEvent"
-              @layout-mounted="layoutMountedEvent"
-              @layout-ready="layoutReadyEvent"
-              @layout-updated="layoutUpdatedEvent">
+              @columns-changed="colNumChanged">
               <GridItem
                 v-for="item in testLayout"
                 :key="item.i"
                 :ref="el => setChildRef(el)"
+                class="test"
                 :enable-edit-mode="enableEditMode"
                 :h="item.h"
                 :i="item.i"
                 :is-draggable="item.isDraggable"
-                class="gridItemText"
                 :is-resizable="item.isResizable"
                 :is-static="item.isStatic"
                 :min-h="item.minH"
@@ -299,6 +295,7 @@
   import {
     ref, onMounted, nextTick, onBeforeUnmount,
   } from 'vue';
+  import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
   import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
   import { testData } from './test';
 
@@ -336,53 +333,39 @@
   const eventsDiv = ref<HTMLDivElement>();
   const eventsLog = ref<string[]>([]);
 
-  const containerResizedEvent = (): void => {
-    // TBD
-  };
-
-  const dragEvent = (): void => {
-    // TBD
-  };
-
-  const draggedEvent = (): void => {
-    // TBD
-  };
-
-  const moveEvent = (i, newX, newY): void => {
-    eventsLog.value.push(`MOVE i=${i}, X=${newX}, Y=${newY}`);
+  const containerResizedEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`containerResizedEvent i=${i}, X=${newX}, Y=${newY}`);
     eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
-  const movedEvent = (): void => {
-    // TBD
+  const dragEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`dragEvent i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
-  const resizeEvent = (): void => {
-    // TBD
+  const draggedEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`moveEvent i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
-  const resizedEvent = (): void => {
-    // TBD
+  const moveEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`draggedEvent i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
-  const layoutCreatedEvent = (): void => {
-    // TBD
+  const movedEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`movedEvent i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
-  const layoutBeforeMountEvent = (): void => {
-    // TBD
+  const resizeEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`resizeEvent i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
-  const layoutMountedEvent = (): void => {
-    // TBD
-  };
-
-  const layoutReadyEvent = (): void => {
-    // TBD
-  };
-
-  const layoutUpdatedEvent = (): void => {
-    // TBD
+  const resizedEvent = (i, newX, newY): void => {
+    eventsLog.value.push(`resizedEvent i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   };
 
   const removeGridItem = (id: string | number): void => {
@@ -523,8 +506,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
-@import '../../../src/styles/variables';
+// @import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 
 .hide {
   display: none;
@@ -533,8 +515,6 @@
 form {
   background-color: #7f8497;
   border-radius: 12px;
-  margin-top: 10px;
-  padding: 10px;
 }
 
 fieldset {
@@ -572,7 +552,6 @@ legend {
 
 .container {
   background: #646cff;
-  border-radius: 12px;
   min-width: 330px;
   padding: 10px;
 }
@@ -582,12 +561,12 @@ legend {
   background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
   background-image: linear-gradient(
       to right,
-      $grid-line-color 1px,
+      black 1px,
       transparent 1px
   ),
   linear-gradient(
       to bottom,
-      $grid-line-color 1px,
+      black 1px,
       transparent 1px);
   height: calc(100% - 5px);
   width: calc(100% - 5px);
@@ -610,25 +589,21 @@ legend {
 }
 
 .layout {
-  background-color: #424446;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  padding: 1px;
+  background-color: #58749f;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
-.gridItemText {
+.test {
+  background-color: #a86666;
 }
 
 .droppable-element {
-  background: #a22121;
+  background: #fdd;
   border: 1px solid black;
-  border-radius: 12px;
-  color: #000;
+  border-radius: 8px;
   cursor: grab;
-  font-size: 24px;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin: 0;
   height: 100px;
   padding: 10px;
   text-align: center;

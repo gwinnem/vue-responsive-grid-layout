@@ -133,10 +133,13 @@
               v-model="restoreOnDrag"
               class="hide"
               type="checkbox" />
-            <label for="showCloseButton">
+            <label
+              class="hide"
+              for="showCloseButton">
               showCloseButton
             </label>
             <input
+              class="hide"
               id="showCloseButton"
               v-model="showCloseButton"
               type="checkbox" />
@@ -271,9 +274,10 @@
   import {
     ref, onMounted, nextTick, onBeforeUnmount,
   } from 'vue';
+  import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
   import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
-  import { testData } from './test';
   // import { EGridItemEvent } from "../../../src/core/enums/EGridItemEvents";
+  import { testData } from './test';
 
   const autoResizeGridLayout = ref(true);
   const colNum = ref(12);
@@ -289,7 +293,7 @@
   const preventCollision = ref(false);
   const rowHeight = ref(50);
   const restoreOnDrag = ref(false);
-  const showCloseButton = ref(true);
+  const showCloseButton = ref(false);
   const showGridLines = ref(false);
   const useBorderRadius = ref(true);
   const verticalCompact = ref(true);
@@ -471,7 +475,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
+// @import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 
 .hide {
   display: none;
