@@ -7,8 +7,6 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: path.resolve(__dirname, `src/components/index.ts`),
-      // Name of the library.
-      // fileName: `vue-ts-responsive-grid-layout`,
       fileName: format => `vue-ts-responsive-grid-layout.${format}.js`,
       formats: [
         `es`,
