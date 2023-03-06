@@ -13,7 +13,7 @@ VUE 3 responsive grid layout is based on the original work by [JBaysolution's vu
 <br/>
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
 
-### **Current version:** 1.0.0beta (Supports Vue 3.0+)
+### **Current version:** 1.0.4beta (Supports Vue 3.+)
 
 ### New Features:
 * GridLayout now has slot for GridItem.
