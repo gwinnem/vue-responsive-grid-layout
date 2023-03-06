@@ -149,9 +149,7 @@
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem  from '../src/components/Grid/GridItem.vue';
   import { TLayoutItem } from '../src/components/Grid/layout-definition';
-  // import { GridLayout, GridItem } from 'vue-ts-responsive-grid-layout';
-  // import { TLayoutItem } from 'vue-ts-responsive-grid-layout';
-  // import type { TLayout } from 'vue-ts-responsive-grid-layout';
+  // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
 
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
@@ -329,8 +327,9 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
+// @import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 @import '../src/styles/variables';
+
 hide {
   display: none;
 }
