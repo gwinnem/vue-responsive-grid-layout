@@ -4,17 +4,21 @@
     class="vue-grid-item"
     :class="classObj"
     :style="styleObj">
-    <img
+    <button
       v-if="showCloseButton && enableEditMode && !isStatic"
-      alt="Close Button"
-      class="vue-close-button"
-      src="../../assets/close.svg"
-      @click="closeClicked(props.i)" />
-    <slot :style="styleObj"></slot>
+      class="btn-close"
+      type="button"
+      @click="closeClicked(props.i)">
+      <span class="icon-cross"></span>
+      <span class="visually-hidden">Close</span>
+    </button>
     <span
       v-if="resizableAndNotStatic"
       ref="handle"
-      :class="resizableHandleClass"></span>
+      :class="resizableHandleClass">
+      <i class="icon icon-resize-se"></i>
+    </span>
+    <slot :style="styleObj"></slot>
   </div>
 </template>
 <script lang="ts" setup>
@@ -720,7 +724,10 @@
   function emitContainerResized(): void {
     // this.style has width and height with trailing 'px'. The
     // resized event is without them
-    let styleProps: IGridItemWidthHeight = { height: 0, width: 0 };
+    let styleProps: IGridItemWidthHeight = {
+      height: 0,
+      width: 0,
+    };
     for(const prop of [`width`, `height`]) {
       const val = styleObj.value[prop];
       const matches = val.match(/^(\d+)px$/);
@@ -1026,27 +1033,50 @@
 </script>
 
 <style lang="scss" scoped>
+@use "sass:math";
 @import '../../styles/variables';
 
-$grid-item-border-radius: 10px;
+// Display a cross with CSS only.
+//
+// $size  : px or em
+// $color : color
+// $thickness : px
+@mixin cross($size: 20px, $color: currentColor, $thickness: 1px) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: relative;
+  width: $size;
+  height: $size;
 
-.vue-close-button {
-  height: 24px;
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  width: 24px;
-  z-index: 20;
-}
+  &:after,
+  &:before {
+    content: '';
+    position: absolute;
+    top: math.div(($size - $thickness), 2);
+    left: 0;
+    right: 0;
+    height: $thickness;
+    background: $color;
+    border-radius: $thickness;
+  }
 
-.vue-close-button:hover {
-  cursor: pointer;
-  filter: brightness(0) invert(1);
-  opacity: .8;
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+
+  span {
+    display: block;
+  }
+
 }
 
 .vue-grid-item {
-  background-color: $grid-item-bg-color;
   box-sizing: border-box;
   color: $grid-item-text-color;
   cursor: default !important;
@@ -1096,24 +1126,92 @@ $grid-item-border-radius: 10px;
     z-index: 2;
   }
 
-  & > .vue-resizable-handle {
-    background-image: url('../../assets/resize.svg');
-    background-origin: content-box;
-    background-position: bottom right;
-    background-repeat: no-repeat;
-    bottom: 1px;
-    box-sizing: border-box;
-    cursor: se-resize;
-    height: 20px;
-    padding: 0 3px 3px 0;
-    position: absolute;
-    right: 1px;
-    width: 20px;
-    z-index: 20;
-  }
-
   &.disable-user-select {
     user-select: none;
   }
 }
+
+.vue-resizable-handle {
+  background-origin: content-box;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  bottom: 5px;
+  box-sizing: border-box;
+  cursor: se-resize;
+  height: 20px;
+  padding: 0 3px 3px 0;
+  position: absolute;
+  right: -3px;
+  width: 20px;
+  z-index: 20;
+
+  & > .icon {
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: inherit;
+    font-style: normal;
+    height: 1em;
+    position: relative;
+    text-indent: -9999px;
+    vertical-align: middle;
+    width: 1em;
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &.icon-resize-se {
+      &::before {
+        border: 3px solid black;
+        border-bottom: 0;
+        border-right: 0;
+        height: .65em;
+        width: .65em;
+      }
+    }
+
+    &.icon-resize-se {
+      &::before {
+        transform: translate(-75%, -50%) rotate(180deg);
+      }
+    }
+  }
+}
+
+.btn-close {
+  align-items: center;
+  background: red;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-flow: column nowrap;
+  height: 24px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  transition: all 150ms;
+  width: 24px;
+  z-index: 20;
+
+  & > .icon-cross {
+    @include cross(16px, #fff, 4px);
+  }
+
+  &:hover,
+  &:focus {
+    background: #1481b4;
+    transform: rotateZ(90deg);
+  }
+}
+
 </style>
