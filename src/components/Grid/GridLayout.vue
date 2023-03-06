@@ -10,7 +10,7 @@
       class="vue-grid-placeholder"
       :h="placeholder.h"
       :i="placeholder.i"
-      :show-close-button="false"
+      :show-close-button="showCloseButton"
       :use-border-radius="useBorderRadius"
       :w="placeholder.w"
       :x="placeholder.x"
