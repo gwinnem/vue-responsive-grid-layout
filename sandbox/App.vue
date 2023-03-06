@@ -149,6 +149,9 @@
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem  from '../src/components/Grid/GridItem.vue';
   import { TLayoutItem } from '../src/components/Grid/layout-definition';
+
+  // Used for testing the package before publishing to npm.
+  // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
   // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
 
   const autoResizeGridLayout = ref(true);
@@ -327,7 +330,6 @@
 </script>
 
 <style lang="scss" scoped>
-// @import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 @import '../src/styles/variables';
 
 hide {
