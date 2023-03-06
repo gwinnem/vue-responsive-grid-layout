@@ -6,11 +6,12 @@ title: Changelog
 
 # Changelog
 
-## v: 1.0.0b (2023-03-xx)
+## v: 1.0.4b (2023-03-06)
 * __Codebase:__ Added new enum values for drag and dragged to EGridItemEvent.
 * __Codebase__ Changed Type: TLayoutItem to Interface: ILayoutItem.
 * __Codebase__ Refactored close button and resize icon to pure css.
 * __Doc__ Added example: Basic Drag & Resize.
+* __Doc__ Added example: Bounded drag to container.
 * __Doc__ Added example: Drag, Drop and resize events.
 
 ## v: 1.0.3b (2023-02-27)

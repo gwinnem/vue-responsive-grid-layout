@@ -166,42 +166,42 @@ function getExamplesSidebar() {
           text: 'Events',
           link: '/examples/03-example'
         },
-        {
-          text: 'Multiple Grids',
-          link: '/examples/04-example'
-        },
-        {
-          text: 'Allow Ignore',
-          link: '/examples/05-example'
-        },
-        {
-          text: 'Mirrored (rtl)',
-          link: '/examples/06-example'
-        },
-        {
-          text: 'Responsive',
-          link: '/examples/07-example'
-        },
-        {
-          text: 'Prevent Collision',
-          link: '/examples/08-example'
-        },
-        {
-          text: 'Responsive predefined layouts',
-          link: '/examples/09-example'
-        },
-        {
-          text: 'Add or Remove items',
-          link: '/examples/10-example'
-        },
-        {
-          text: 'Drag, drop from outside',
-          link: '/examples/11-example'
-        },
-        {
-          text: 'Drag, drop from grid to grid',
-          link: '/examples/12-example'
-        },
+        // {
+        //   text: 'Multiple Grids',
+        //   link: '/examples/04-example'
+        // },
+        // {
+        //   text: 'Allow Ignore',
+        //   link: '/examples/05-example'
+        // },
+        // {
+        //   text: 'Mirrored (rtl)',
+        //   link: '/examples/06-example'
+        // },
+        // {
+        //   text: 'Responsive',
+        //   link: '/examples/07-example'
+        // },
+        // {
+        //   text: 'Prevent Collision',
+        //   link: '/examples/08-example'
+        // },
+        // {
+        //   text: 'Responsive predefined layouts',
+        //   link: '/examples/09-example'
+        // },
+        // {
+        //   text: 'Add or Remove items',
+        //   link: '/examples/10-example'
+        // },
+        // {
+        //   text: 'Drag, drop from outside',
+        //   link: '/examples/11-example'
+        // },
+        // {
+        //   text: 'Drag, drop from grid to grid',
+        //   link: '/examples/12-example'
+        // },
       ],
     },
   ];
