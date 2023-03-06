@@ -9,7 +9,7 @@
       class="btn-close"
       type="button"
       @click="closeClicked(props.i)">
-      <span class="icon-cross"></span>
+      <i class="icon icon-cross"></i>
       <span class="visually-hidden">Close</span>
     </button>
     <span
