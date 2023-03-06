@@ -182,10 +182,10 @@ function getExamplesSidebar() {
         //   text: 'Responsive',
         //   link: '/examples/07-example'
         // },
-        // {
-        //   text: 'Prevent Collision',
-        //   link: '/examples/08-example'
-        // },
+        {
+          text: 'Prevent Collision',
+          link: '/examples/08-example'
+        },
         // {
         //   text: 'Responsive predefined layouts',
         //   link: '/examples/09-example'
