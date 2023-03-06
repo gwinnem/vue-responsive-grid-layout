@@ -1,1 +1,0 @@
-import{_ as s,c as a,o as n,b as p}from"./app.8a65c22e.js";const A=JSON.parse('{"title":"Layout types","description":"","frontmatter":{},"headers":[],"relativePath":"api/types-layout.md","lastUpdated":1676633793000}'),l={name:"api/types-layout.md"},o=p("",5),e=[o];function t(c,r,y,F,D,i){return n(),a("div",null,e)}const d=s(l,[["render",t]]);export{A as __pageData,d as default};
