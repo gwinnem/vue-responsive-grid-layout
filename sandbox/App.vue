@@ -11,12 +11,12 @@
             <input id="colNum" v-model="colNum" type="number"/>
             <label for="maxRows">Max Rows</label>
             <input id="maxRows" v-model="maxRows" type="number"/>
-            <label for="mtb">Margin Top / Bottom</label>
-            <input id="mtb" v-model="marginTopBottom" type="number"/>
-            <label for="mlr">Margin Left / Right</label>
-            <input id="mlr" v-model="marginLeftRight" type="number"/>
-            <label for="borderRadius">Border Radius</label>
-            <input id="borderRadius" v-model="borderRadiusPx" type="number"/>
+            <label class="hide" for="mtb">Margin Top / Bottom</label>
+            <input id="mtb" v-model="marginTopBottom" class="hide" type="number"/>
+            <label class="hide" for="mlr">Margin Left / Right</label>
+            <input id="mlr" v-model="marginLeftRight" class="hide" type="number"/>
+            <label class="hide" for="borderRadius">Border Radius</label>
+            <input id="borderRadius" v-model="borderRadiusPx" class="hide" type="number"/>
             <br/>
             <label for="autosize">autosize</label>
             <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
@@ -62,18 +62,26 @@
           Droppable Element (Drag me!)
         </div>
       </div>
-      <div class="col-sm-7">
+      <div class="col-sm-6">
         <div class="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div class="columns">
             <div v-for="item in testLayout">
-              <b>{{item.i}}</b>: [{{item.x}}, {{item.y}}, {{item.w}}, {{item.h}}]
+              <b>{{ item.i }}</b>: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
             </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-3">
-        <textarea style="width: 100%"/>
+      <div class="col-sm-4">
+        <div
+          ref="eventsDiv"
+          class="eventsJSON">
+          <div
+            v-for="event in eventsLog"
+            :key="event">
+            {{ event }}
+          </div>
+        </div>
       </div>
     </div>
     <div style="font-size: 0; height: 5px; margin:0; padding: 0;"></div>
@@ -102,7 +110,7 @@
               :use-border-radius="useBorderRadius"
               :use-css-transforms="true"
               :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged" >
+              @columns-changed="colNumChanged">
               <GridItem
                 v-for="item in testLayout"
                 :key="item.i"
@@ -122,7 +130,14 @@
                 :x="item.x"
                 :y="item.y"
                 class="test"
-                @remove-grid-item="removeGridItem">
+                @container-resized="containerResizedEvent"
+                @drag="dragEvent"
+                @dragged="draggedEvent"
+                @move="moveEvent"
+                @moved="movedEvent"
+                @remove-grid-item="removeGridItem"
+                @resize="resizeEvent"
+                @resized="resizedEvent">
                 <span class="text">
                   {{ itemTitle(item) }}
                 </span>
@@ -147,7 +162,7 @@
   import { ref, onMounted, nextTick, onBeforeUnmount, computed } from 'vue';
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
-  import GridItem  from '../src/components/Grid/GridItem.vue';
+  import GridItem from '../src/components/Grid/GridItem.vue';
   import { TLayoutItem } from '../src/components/Grid/layout-definition';
 
   // Used for testing the package before publishing to npm.
@@ -199,13 +214,48 @@
     });
   };
 
+  const eventsDiv = ref<HTMLDivElement>();
+  const eventsLog = ref<string[]>([]);
+
+  const publishToEventLog = (i, msg, newX, newY): void => {
+    eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+  }
+  const containerResizedEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'containerResizedEvent', newX, newY);
+  };
+
+  const dragEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'dragEvent', newX, newY);
+  };
+
+  const draggedEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'draggedEvent', newX, newY);
+  };
+
+  const moveEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'moveEvent', newX, newY);
+  };
+
+  const movedEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'movedEvent', newX, newY);
+  };
+
+  const resizeEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'resizeEvent', newX, newY);
+  };
+
+  const resizedEvent = (i, newX, newY): void => {
+    publishToEventLog(i, 'resizedEvent', newX, newY);
+  };
+
   const itemTitle = (item: TLayoutItem): string => {
-      let result = item.i;
-      if(item.isStatic) {
-        result += " - Static";
-      }
-      return <string>result;
-    };
+    let result = item.i;
+    if(item.isStatic) {
+      result += " - Static";
+    }
+    return <string>result;
+  };
 
   function setChildRef(vm: any) {
     if(vm && vm.i) {
@@ -306,8 +356,8 @@
           y: DragPos.y,
           w: 1,
           h: 1,
-          minH:1,
-          minW:1,
+          minH: 1,
+          minW: 1,
           i: DragPos.i
         });
         refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 2, 2);
@@ -332,7 +382,7 @@
 <style lang="scss" scoped>
 @import '../src/styles/variables';
 
-hide {
+.hide {
   display: none;
 }
 
@@ -417,27 +467,30 @@ form {
   border: 1px solid black;
   border-radius: 8px;
   cursor: grab;
-  margin: 0;
   height: 100px;
+  margin: 0;
+  max-width: 250px;
   padding: 10px;
   text-align: center;
-  max-width: 250px;
 }
 
 .layoutJSON {
   background: #ddd;
   border: 1px solid black;
   border-radius: 8px;
+  height: 100px;
+  overflow-y: scroll;
   padding: 10px;
 }
 
 .eventsJSON {
   background: #ddd;
   border: 1px solid black;
-  margin-top: 10px;
-  padding: 10px;
+  border-radius: 8px;
   height: 100px;
+  margin-top: 0;
   overflow-y: scroll;
+  padding: 10px;
 }
 
 .columns {
