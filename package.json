@@ -114,6 +114,7 @@
     "prettier": "^2.8.3",
     "sass": "^1.58.3",
     "sass-loader": "^13.2.0",
+    "scss": "^0.2.4",
     "stylelint": "^14.8.5",
     "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-recommended-scss": "^6.0.0",
