@@ -190,10 +190,10 @@ function getExamplesSidebar() {
         //   text: 'Responsive predefined layouts',
         //   link: '/examples/09-example'
         // },
-        // {
-        //   text: 'Add or Remove items',
-        //   link: '/examples/10-example'
-        // },
+        {
+          text: 'Add or Remove items',
+          link: '/examples/10-example'
+        },
         // {
         //   text: 'Drag, drop from outside',
         //   link: '/examples/11-example'
@@ -202,6 +202,10 @@ function getExamplesSidebar() {
         //   text: 'Drag, drop from grid to grid',
         //   link: '/examples/12-example'
         // },
+        {
+          text: 'Show Close Button',
+          link: '/examples/13-example'
+        },
       ],
     },
   ];
