@@ -45,10 +45,10 @@
   "homepage": "https://vue-ts-responsive-grid-layout.winnem.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gwinnem/vue-ts-responsive-grid-layout.git"
+    "url": "https://github.com/gwinnem/vue-responsive-grid-layout.git"
   },
   "bugs": {
-    "url": "https://github.com/gwinnem/vue-ts-responsive-grid-layout/issues"
+    "url": "https://github.com/gwinnem/vue-responsive-grid-layout/issues"
   },
   "scripts": {
     "dev": "vite --host",
