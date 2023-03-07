@@ -2,18 +2,26 @@
   <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/main/docs/Data%20Grid.svg" height="200" alt="logo">
 </p>
 
-<h1 align="center">vue-responsive-grid-layout</h1>
+<h1 align="center">vue-ts-responsive-grid-layout</h1>
 
 <h2 align="center">
 <a href="https://vue-ts-responsive-grid-layout.winnem.tech" target="_blank">Documentation Website</a>
 </h2>
 
-## What is vue-responsive-grid-layout
+## What is vue-ts-responsive-grid-layout
 VUE 3 responsive grid layout is based on the original work by [JBaysolution's vue-grid-layout](https://github.com/jbaysolutions/vue-grid-layout).
 <br/>
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
 
-### **Current version:** 1.0.4beta (Supports Vue 3.+)
+### **Current version:** 1.0.5beta (2023/03/xx)
+#### **Changes in this version:**
+* More examples added to the documentation.
+
+<br/>
+
+[Complete changelog](https://vue-ts-responsive-grid-layout.winnem.tech/guide/changelog)
+
+<br/>
 
 ### New Features:
 * GridLayout now has slot for GridItem.
@@ -55,7 +63,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 
 
 ## Setting up vue-ts-responsive-grid-layout in your project
-[Howto](./docs/setup.md)
+[Howto](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/setup.md)
 
 <br/>
 
@@ -67,11 +75,11 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 <br/>
 
 ### Testing the npm package before publishing
-[Howto](./docs/testing-package.md)
+[Howto](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/testing-package.md)
 
 
 ### Publishing the library
-[Howto](./docs/build.md)
+[Howto](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/build.md)
 
 
 ### References
