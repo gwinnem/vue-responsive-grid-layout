@@ -6,6 +6,11 @@ title: Changelog
 
 # Changelog
 
+## v: 1.0.5b (2023-03-xx)
+* __Doc__ Added example Prevent Collision.
+* __Doc__ Added example Show Close Button.
+* __Doc__ Added example Add and Remove items.
+
 ## v: 1.0.4b (2023-03-06)
 * __Codebase:__ Added new enum values for drag and dragged to EGridItemEvent.
 * __Codebase__ Changed Type: TLayoutItem to Interface: ILayoutItem.
