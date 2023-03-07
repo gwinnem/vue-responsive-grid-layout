@@ -7,17 +7,18 @@ title: Changelog
 # Changelog
 
 ## v: 1.0.5b (2023-03-xx)
-* __Doc__ Added example Prevent Collision.
-* __Doc__ Added example Show Close Button.
-* __Doc__ Added example Add and Remove items.
+* __Doc__ Added example ***Prevent Collision.***
+* __Doc__ Added example ***Add and Remove items.***
+* __Doc__ Added example ***Show Close Button.***
+* __Doc__ Added example ***Add default border-radius.***
 
 ## v: 1.0.4b (2023-03-06)
 * __Codebase:__ Added new enum values for drag and dragged to EGridItemEvent.
 * __Codebase__ Changed Type: TLayoutItem to Interface: ILayoutItem.
 * __Codebase__ Refactored close button and resize icon to pure css.
-* __Doc__ Added example: Basic Drag & Resize.
-* __Doc__ Added example: Bounded drag to container.
-* __Doc__ Added example: Drag, Drop and resize events.
+* __Doc__ Added example: ***Basic Drag & Resize.***
+* __Doc__ Added example: ***Bounded drag to container.***
+* __Doc__ Added example: ***Drag, Drop and resize events.***
 
 ## v: 1.0.3b (2023-02-27)
 
@@ -29,6 +30,6 @@ title: Changelog
 * __Feature:__ Border radius for GridItem component.
 * __Feature:__ Edit mode for GridItems.
 * __Feature:__ Close button in GridItem's.
-* __Doc:__ Added Vitepress for documentation.
+* __Doc:__ Added ***Vitepress*** for documentation.
 * __Test:__ Unit test's for Validators.
 * __Sandbox__ Added new Test application.
