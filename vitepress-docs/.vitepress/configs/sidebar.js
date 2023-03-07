@@ -206,6 +206,10 @@ function getExamplesSidebar() {
           text: 'Show Close Button',
           link: '/examples/13-example'
         },
+        {
+          text: 'Add default border-radius',
+          link: '/examples/14-example'
+        },
       ],
     },
   ];
