@@ -74,13 +74,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 
 <br/>
 
-### Testing the npm package before publishing
-[Howto](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/testing-package.md)
-
-
-### Publishing the library
-[Howto](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/build.md)
-
 
 ### References
 * [Vue Grid Layout](https://jbaysolutions.github.io/vue-grid-layout/guide/)
