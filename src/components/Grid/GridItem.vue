@@ -1076,6 +1076,10 @@
 
 }
 
+.vue-grid-item .resizing {
+  opacity: 0.9;
+}
+
 .vue-grid-item {
   box-sizing: border-box;
   color: $grid-item-text-color;
