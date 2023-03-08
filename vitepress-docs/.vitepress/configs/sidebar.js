@@ -170,10 +170,10 @@ function getExamplesSidebar() {
         //   text: 'Multiple Grids',
         //   link: '/examples/04-example'
         // },
-        // {
-        //   text: 'Allow Ignore',
-        //   link: '/examples/05-example'
-        // },
+        {
+          text: 'Drag allow/ignore elements',
+          link: '/examples/05-example'
+        },
         // {
         //   text: 'Mirrored (rtl)',
         //   link: '/examples/06-example'
