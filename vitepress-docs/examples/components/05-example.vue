@@ -278,7 +278,9 @@
                   <div class="no-drag">
                     <span>{{ itemTitle(item.i) }}</span>
                     <br />
-                    <button>click</button>
+                    <button class="button">
+                      Click
+                    </button>
                   </div>
                 </div>
               </GridItem>
@@ -496,13 +498,42 @@
 
 <style lang="scss" scoped>
 
+.button {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  margin-left: 20px;
+  outline: none;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: #3e8e41
+}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+button:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
 .vue-draggable-handle {
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 0;
-  right: 0;
-  padding: 0 8px 8px 0;
+  top: -5px;
+  left: 5px;
   background-origin: content-box;
   background-color: black;
   box-sizing: border-box;
