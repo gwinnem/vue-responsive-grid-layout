@@ -9,7 +9,6 @@ title: Roadmap
 ## Upcoming updates and fixes
 * __Examples:__ Add example app to CodeSandbox, so user's can test layouts.
 * __Examples:__ Add Multiple Grids.
-* __Examples:__ Add Allow Ignore.
 * __Examples:__ Add Mirrored (rtl).
 * __Examples:__ Add Responsive.
 * __Examples:__ Add Responsive predefined layouts.
