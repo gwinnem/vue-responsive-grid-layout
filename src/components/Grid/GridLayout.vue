@@ -48,7 +48,7 @@
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
-  import { TLayout, TLayoutItem } from './layout-definition';
+  import { ILayoutItem, TLayout } from './layout-definition';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { EDragEvent } from '@/core/enums/EDragEvents';
 
@@ -239,7 +239,7 @@
       l = {
         x: 0,
         y: 0,
-      } as TLayoutItem;
+      } as ILayoutItem;
     }
 
     if(eventName === EDragEvent.DRAG_START && !props.verticalCompact) {
@@ -309,7 +309,7 @@
       l = {
         h: 0,
         w: 0,
-      } as TLayoutItem;
+      } as ILayoutItem;
     }
     const internalW = Number(w);
     const internalH = Number(h);
@@ -413,7 +413,7 @@
   eventBus.on(`dragEvent`, dragEventHandler);
 
   // find difference in layouts
-  const findDifference = (layout: TLayout, orgLayout: TLayout): TLayoutItem[] => {
+  const findDifference = (layout: TLayout, orgLayout: TLayout): ILayoutItem[] => {
     // Find values that are in result1 but not in result2
     const uniqueResultOne = layout.filter(obj => {
       return !orgLayout.some(obj2 => {
@@ -531,7 +531,7 @@
       if(oldVal === null) {
         /*
           If oldval == null is when the width has never been
-          set before. That only occurs when mouting is
+          set before. That only occurs when mounting is
           finished, and onWindowResize has been called and
           this.width has been changed the first time after it
           got set to null in the constructor. It is now time
@@ -547,7 +547,7 @@
           item-layout-ready (for the GridItem-s).
 
           This way any client event handlers can reliably
-          invistigate stable sizes of GridItem-s.
+          investigate stable sizes of GridItem-s.
         */
         nextTick(() => {
           emit(EGridLayoutEvent.LAYOUT_READY, props.layout);
