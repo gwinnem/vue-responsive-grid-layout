@@ -227,20 +227,20 @@
     return `vue-resizable-handle`;
   });
 
-  function calcGridItemWH(gridUnits: number, colOrRowSize: number, marginPx: number): number {
+  const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
     if(!Number.isFinite(gridUnits)) return gridUnits;
     return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
-  }
+  };
 
   // Similar to _.clamp
-  function clamp(num: number, lowerBound: number, upperBound: number): number {
+  const clamp = (num: number, lowerBound: number, upperBound: number): number => {
     return Math.max(Math.min(num, upperBound), lowerBound);
-  }
+  };
 
   // Helper for generating column width
-  function calcColWidth(): number {
+  const calcColWidth = (): number => {
     return (containerWidth.value - margin.value[0] * (cols.value + 1)) / cols.value;
-  }
+  };
 
   /**
    * Translate x and y coordinates from pixels to grid units.
@@ -249,7 +249,7 @@
    * @return {ICalcXy}     x and y in grid units.
    */
   // TODO check if this function needs change in order to support rtl.
-  function calcXY(top: number, left: number): ICalcXy {
+  const calcXY = (top: number, left: number): ICalcXy => {
     const colWidth = calcColWidth();
 
     // left = colWidth * x + margin * (x + 1)
@@ -270,9 +270,9 @@
       x,
       y,
     };
-  }
+  };
 
-  function handleDrag(event: MouseEvent): void {
+  const handleDrag = (event: MouseEvent): void => {
     if(props.isStatic) {
       return;
     }
@@ -411,9 +411,9 @@
       y: pos.y,
     };
     eventBus.emit(`dragEvent`, data);
-  }
+  };
 
-  function calcPosition(x: number, y: number, w: number, h: number): IGridItemPosition {
+  const calcPosition = (x: number, y: number, w: number, h: number): IGridItemPosition => {
     const colWidth = calcColWidth();
     // add rtl support
     let out;
@@ -440,9 +440,9 @@
     }
 
     return out;
-  }
+  };
 
-  function tryMakeDraggable(): void {
+  const tryMakeDraggable = (): void => {
     if(interactObj.value === null || interactObj.value === undefined) {
       interactObj.value = interact(gridItem.value);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -474,7 +474,7 @@
         enabled: false,
       });
     }
-  }
+  };
 
   /**
    * Given a height and width in pixel values, calculate grid units.
@@ -483,7 +483,7 @@
    * @param  {Boolean} autoSizeFlag  function autoSize identifier.
    * @return {ICalcWh} w, h as grid units.
    */
-  function calcWH(height: number, width: number, autoSizeFlag = false): ICalcWh {
+  const calcWH = (height: number, width: number, autoSizeFlag = false): ICalcWh => {
     const colWidth = calcColWidth();
 
     // width = colWidth * w - (margin * (w - 1))
@@ -504,9 +504,9 @@
       h,
       w,
     };
-  }
+  };
 
-  function tryMakeResizable(): void {
+  const tryMakeResizable = (): void => {
     if(interactObj.value === null || interactObj.value === undefined) {
       interactObj.value = interact(gridItem.value);
     }
@@ -568,9 +568,9 @@
         enabled: false,
       });
     }
-  }
+  };
 
-  function handleResize(event: MouseEvent): void {
+  const handleResize = (event: MouseEvent): void => {
     if(props.isStatic) {
       return;
     }
@@ -672,9 +672,9 @@
       y: innerY.value,
     };
     eventBus.emit(`resizeEvent`, data);
-  }
+  };
 
-  function createStyle(): void {
+  const createStyle = (): void => {
     if(props.x + props.w > cols.value) {
       innerX.value = 0;
       innerW.value = props.w > cols.value ? cols.value : props.w;
@@ -719,9 +719,9 @@
       }
     }
     styleObj.value = sty;
-  }
+  };
 
-  function emitContainerResized(): void {
+  const emitContainerResized = (): void => {
     // this.style has width and height with trailing 'px'. The
     // resized event is without them
     let styleProps: IGridItemWidthHeight = {
@@ -738,18 +738,18 @@
       styleProps = matches[1];
     }
     emit(EGridItemEvent.CONTAINER_RESIZED, props.i, props.h, props.w, styleProps.height, styleProps.width);
-  }
+  };
 
-  function updateWidth(width: number, colNum?: number): void {
+  const updateWidth = (width: number, colNum?: number): void => {
     containerWidth.value = width;
     if(colNum !== undefined && colNum !== null) {
       cols.value = colNum;
     }
-  }
+  };
 
-  function selfCompact(): void {
+  const selfCompact = (): void => {
     createStyle();
-  }
+  };
 
   // watch
   watch(() => props.isDraggable, val => {
@@ -848,52 +848,52 @@
   });
 
   //
-  function updateWidthHandler(width: number): void {
+  const updateWidthHandler = (width: number): void => {
     updateWidth(width);
-  }
+  };
 
-  function compactHandler(): void {
+  const compactHandler = (): void => {
     selfCompact();
-  }
+  };
 
-  function setDraggableHandler(isDraggable: boolean): void {
+  const setDraggableHandler = (isDraggable: boolean): void => {
     if(props.isDraggable === null) {
       draggable.value = isDraggable;
     }
-  }
+  };
 
-  function setResizableHandler(isResizable: boolean): void {
+  const setResizableHandler = (isResizable: boolean): void => {
     if(props.isResizable === null) {
       resizable.value = isResizable;
     }
-  }
+  };
 
-  function setBoundedHandler(isBounded: boolean): void {
+  const setBoundedHandler = (isBounded: boolean): void => {
     if(props.isBounded === null) {
       bounded.value = isBounded;
     }
-  }
+  };
 
-  function setTransformScaleHandler(tScale: number): void {
+  const setTransformScaleHandler = (tScale: number): void => {
     transformScale.value = tScale;
-  }
+  };
 
-  function setRowHeightHandler(rHeight: number): void {
+  const setRowHeightHandler = (rHeight: number): void => {
     rowHeight.value = rHeight;
-  }
+  };
 
-  function setMaxRowsHandler(mRows: number): void {
+  const setMaxRowsHandler = (mRows: number): void => {
     maxRows.value = mRows;
-  }
+  };
 
-  function directionChangeHandler(): void {
+  const directionChangeHandler = (): void => {
     rtl.value = getDocumentDir() === `rtl`;
     selfCompact();
-  }
+  };
 
-  function setColNum(colNum: number): void {
+  const setColNum = (colNum: number): void => {
     cols.value = colNum;
-  }
+  };
 
   // eventbus
   eventBus.on(`updateWidth`, updateWidthHandler);
