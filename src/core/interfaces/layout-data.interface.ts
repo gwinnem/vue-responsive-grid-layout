@@ -1,25 +1,25 @@
 import elementResizeDetectorMaker from 'element-resize-detector';
-import { TLayout } from '../../components/Grid/layout-definition';
+import { TLayout } from '@/components';
 
 export interface IPlaceholder {
+  h: number;
+  i: number | string;
   x: number;
   y: number;
   w: number;
-  h: number;
-  i: number | string;
 }
 
 export interface ILayoutData {
-  width: number | null;
-  mergeStyle: { [key: string]: string };
-  lastLayoutLength: number;
+  erd: elementResizeDetectorMaker.Erd | null;
   isDragging: boolean;
-  placeholder: IPlaceholder;
   layouts: { [key: string]: TLayout | any };
   lastBreakpoint: string | null;
+  lastLayoutLength: number;
+  mergeStyle: { [key: string]: string };
   originalLayout: TLayout | null;
-  erd: elementResizeDetectorMaker.Erd | null;
+  placeholder: IPlaceholder;
   positionsBeforeDrag: { [key: string]: string };
+  width: number | null;
   this$refsLayout: HTMLElement;
 }
 

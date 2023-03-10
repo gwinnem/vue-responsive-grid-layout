@@ -29,6 +29,7 @@
   } from 'vue';
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
+  import { ILayoutItem, TLayout } from 'layout-definition';
   import { IPlaceholder } from '@/core/interfaces/layout-data.interface';
   import GridItem from './GridItem.vue';
   import {
@@ -48,7 +49,6 @@
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
-  import { ILayoutItem, TLayout } from './layout-definition';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { EDragEvent } from '@/core/enums/EDragEvents';
 

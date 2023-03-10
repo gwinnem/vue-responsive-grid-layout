@@ -1033,33 +1033,32 @@
 </script>
 
 <style lang="scss" scoped>
-@use "sass:math";
+@use 'sass:math';
 @import '../../styles/variables';
 
 // Display a cross with CSS only.
-//
 // $size  : px or em
 // $color : color
 // $thickness : px
 @mixin cross($size: 20px, $color: currentColor, $thickness: 1px) {
+  background: none;
+  border: 0;
+  height: $size;
   margin: 0;
   padding: 0;
-  border: 0;
-  background: none;
   position: relative;
   width: $size;
-  height: $size;
 
   &:after,
   &:before {
-    content: '';
-    position: absolute;
-    top: math.div(($size - $thickness), 2);
-    left: 0;
-    right: 0;
-    height: $thickness;
     background: $color;
     border-radius: $thickness;
+    content: '';
+    height: $thickness;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: math.div(($size - $thickness), 2);
   }
 
   &:before {
@@ -1073,11 +1072,10 @@
   span {
     display: block;
   }
-
 }
 
 .vue-grid-item .resizing {
-  opacity: 0.9;
+  opacity: .9;
 }
 
 .vue-grid-item {
@@ -1162,7 +1160,7 @@
 
     &::before,
     &::after {
-      content: "";
+      content: '';
       display: block;
       left: 50%;
       position: absolute;
@@ -1176,13 +1174,8 @@
         border-bottom: 0;
         border-right: 0;
         height: .65em;
-        width: .65em;
-      }
-    }
-
-    &.icon-resize-se {
-      &::before {
         transform: translate(-75%, -50%) rotate(180deg);
+        width: .65em;
       }
     }
   }
