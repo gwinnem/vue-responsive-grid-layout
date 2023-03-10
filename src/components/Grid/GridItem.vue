@@ -1081,7 +1081,7 @@
 .vue-grid-item {
   box-sizing: border-box;
   color: $grid-item-text-color;
-  cursor: default !important;
+  cursor: default;
   font-size: $grid-item-font-size;
   touch-action: none;
   transition: all 200ms ease;
@@ -1111,11 +1111,11 @@
   }
 
   &.vue-draggable {
-    cursor: grab !important;
+    cursor: grab;
   }
 
   &.vue-draggable-dragging {
-    cursor: grabbing !important;
+    cursor: grabbing;
     transition: none;
     z-index: 3;
   }

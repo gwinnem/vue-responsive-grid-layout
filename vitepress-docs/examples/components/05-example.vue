@@ -538,7 +538,17 @@ button:hover {
   background-color: black;
   box-sizing: border-box;
   border-radius: 10px;
-  cursor: pointer;
+  cursor: grab;
+}
+
+.vue-grid-item {
+  &.vue-draggable {
+    cursor: default !important;
+  }
+
+  &.vue-draggable-dragging {
+    cursor: grabbing !important;
+  }
 }
 
 .hide {
