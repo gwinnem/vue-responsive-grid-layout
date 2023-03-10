@@ -12,6 +12,9 @@ title: Changelog
 * __Doc__ Added example ***Show Close Button.***
 * __Doc__ Added example ***Add default border-radius.***
 * __Doc__ Added example ***Drag allow/ignore elements.***
+* * __Doc__ Added example ***Horizontal shift GridItem's.***
+* __CodeBase__ Refactored all functions to use arrow syntax.
+
 
 ## v: 1.0.4b (2023-03-06)
 * __Codebase:__ Added new enum values for drag and dragged to EGridItemEvent.

@@ -210,6 +210,10 @@ function getExamplesSidebar() {
           text: 'Add default border-radius',
           link: '/examples/14-example'
         },
+        {
+          text: 'Horizontal shift GridItems',
+          link: '/examples/15-example'
+        },
       ],
     },
   ];
