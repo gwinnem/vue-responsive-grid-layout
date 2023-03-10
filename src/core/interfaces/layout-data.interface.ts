@@ -22,3 +22,11 @@ export interface ILayoutData {
   positionsBeforeDrag: { [key: string]: string };
   this$refsLayout: HTMLElement;
 }
+
+export interface IPositionParameters {
+  cols: number;
+  containerWidth: number | null;
+  margin: [number, number];
+  maxRows: number | null;
+  rowHeight: number | null;
+}
