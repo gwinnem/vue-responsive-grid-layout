@@ -10,12 +10,12 @@
 
 ## What is vue-ts-responsive-grid-layout
 VUE 3 responsive grid layout is based on the original work by [JBaysolution's vue-grid-layout](https://github.com/jbaysolutions/vue-grid-layout).
+
 <br/>
+
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
 
 ### **Current version:** 1.0.5beta (2023/03/xx)
-#### **Changes in this version:**
-* More examples added to the documentation.
 
 <br/>
 
