@@ -168,7 +168,7 @@
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem from '../src/components/Grid/GridItem.vue';
-  import { TLayoutItem } from '../src/components/Grid/layout-definition';
+  import { ILayoutItem } from '../src/components/Grid/layout-definition';
 
   // Used for testing the package before publishing to npm.
   // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
@@ -255,7 +255,7 @@
     publishToEventLog(i, 'resizedEvent', newX, newY);
   };
 
-  const itemTitle = (item: TLayoutItem): string => {
+  const itemTitle = (item: ILayoutItem): string => {
     let result = item.i;
     if(item.isStatic) {
       result += " - Static";

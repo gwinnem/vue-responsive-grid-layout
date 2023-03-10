@@ -28,7 +28,7 @@ export type TLayoutItem = ILayoutItemRequired & {
   moved?: boolean;
 }
 
-export type TLayout = TLayoutItem[];
+export type TLayout = ILayoutItem[];
 
 export type TResponsiveLayout = {
   xxl?: TLayout;

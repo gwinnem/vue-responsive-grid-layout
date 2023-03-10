@@ -5,7 +5,6 @@ import CustomDragElement from './common/CustomDragElement.vue';
 import {
   ILayoutItem,
   TLayout,
-  TLayoutItem,
   TResponsiveLayout,
 } from '@/components/Grid/layout-definition';
 
@@ -22,6 +21,5 @@ export type {
   EGridItemEvent,
   ILayoutItem,
   TLayout,
-  TLayoutItem,
   TResponsiveLayout,
 };

@@ -1,5 +1,5 @@
 import { TMovingDirection, EMovingDirections } from '@/core/helpers/moving-directions';
-import { TLayout, TLayoutItem } from '@/components/Grid/layout-definition';
+import { ILayoutItem, TLayout, TLayoutItem } from '@/components/Grid/layout-definition';
 
 /**
  * Get all static elements.
@@ -7,7 +7,7 @@ import { TLayout, TLayoutItem } from '@/components/Grid/layout-definition';
  * @return {Array}        Array of static layout items..
  */
 // eslint-disable-next-line no-undef
-export function getStatics(layout: TLayout): TLayoutItem[] {
+export function getStatics(layout: TLayout): ILayoutItem[] {
   return layout.filter(l => l.isStatic);
 }
 
@@ -28,7 +28,7 @@ export function bottom(layout: TLayout): number {
 }
 
 // Fast path to cloning, since this is monomorphic
-export function cloneLayoutItem(layoutItem: TLayoutItem): TLayoutItem {
+export function cloneLayoutItem(layoutItem: ILayoutItem): TLayoutItem {
   return JSON.parse(JSON.stringify(layoutItem));
 }
 
@@ -45,7 +45,7 @@ export function cloneLayout(layout: TLayout): TLayout {
  *
  * @return {Boolean}   True if colliding.
  */
-export function collides(l1: TLayoutItem, l2: TLayoutItem): boolean {
+export function collides(l1: ILayoutItem, l2: ILayoutItem): boolean {
   if(l1 === l2) return false; // same element
   if(l1.x + l1.w <= l2.x) return false; // l1 is left of l2
   if(l1.x >= l2.x + l2.w) return false; // l1 is right of l2
@@ -60,10 +60,10 @@ export function collides(l1: TLayoutItem, l2: TLayoutItem): boolean {
  * perhaps that is the wrong thing to do.
  *
  * @param  {TLayout}     layout     The entire grid layout.
- * @param  {TLayoutItem} layoutItem Layout item.
- * @return {TLayoutItem|undefined}  A colliding layout item, or undefined.
+ * @param  {ILayoutItem} layoutItem Layout item.
+ * @return {ILayoutItem|undefined}  A colliding layout item, or undefined.
  */
-export function getFirstCollision(layout: TLayout, layoutItem: TLayoutItem): TLayoutItem | undefined {
+export function getFirstCollision(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem | undefined {
   for(let i = 0, len = layout.length; i < len; i++) {
     if(collides(layout[i], layoutItem)) {
       return layout[i];
@@ -79,7 +79,7 @@ export function getFirstCollision(layout: TLayout, layoutItem: TLayoutItem): TLa
  * @return {TLayout}        Layout, sorted static items first.
  */
 export function sortLayoutItemsByRowCol(layout: TLayout): TLayout {
-  const a: TLayoutItem[] = [];
+  const a: ILayoutItem[] = [];
   return a.concat(layout)
     .sort((itemA, itemB) => {
       if(itemA.y === itemB.y && itemA.x === itemB.x) {
@@ -99,10 +99,10 @@ export function sortLayoutItemsByRowCol(layout: TLayout): TLayout {
  */
 export function compactItem(
   compareWith: TLayout,
-  l: TLayoutItem,
+  l: ILayoutItem,
   verticalCompact: boolean,
   minPositions?: any,
-): TLayoutItem {
+): ILayoutItem {
   if(verticalCompact) {
     // Move the element up as far as it can go without colliding.
     while (l.y > 0 && !getFirstCollision(compareWith, l)) {
@@ -198,12 +198,12 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }): TLayou
  *
  * @param  {Array}  layout Layout array.
  * @param  {String} id     ID
- * @return {TLayoutItem}    Item at ID.
+ * @return {ILayoutItem}    Item at ID.
  */
 export function getLayoutItem(
   layout: TLayout,
   id: string | number | undefined,
-): TLayoutItem | undefined {
+): ILayoutItem | undefined {
   for(let i = 0, len = layout.length; i < len; i++) {
     if(layout[i].i === id) {
       return layout[i];
@@ -212,7 +212,7 @@ export function getLayoutItem(
   return undefined;
 }
 
-export function getAllCollisions(layout: TLayout, layoutItem: TLayoutItem): TLayoutItem[] {
+export function getAllCollisions(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem[] {
   return layout.filter(l => collides(l, layoutItem));
 }
 
@@ -220,7 +220,7 @@ export function getAllCollisions(layout: TLayout, layoutItem: TLayoutItem): TLay
  * Move an element. Responsible for doing cascading movements of other elements.
  *
  * @param  {TLayout}      layout              Full layout to modify.
- * @param  {TLayoutItem}  l                   element to move.
+ * @param  {ILayoutItem}  l                   element to move.
  * @param  {Number}       [x]                 X position in grid units.
  * @param  {Number}       [y]                 Y position in grid units.
  * @param  {Boolean}      [isUserAction]      If true, designates that the item we're moving is being dragged/resized by the user.
@@ -230,7 +230,7 @@ export function getAllCollisions(layout: TLayout, layoutItem: TLayoutItem): TLay
  */
 export function moveElement(
   layout: TLayout,
-  l: TLayoutItem,
+  l: ILayoutItem,
   x: number,
   y: number,
   isUserAction: boolean,
@@ -309,8 +309,8 @@ export function moveElement(
  * We attempt to move it up if there's room, otherwise it goes below.
  *
  * @param  {TLayout} layout             Full layout to modify.
- * @param  {TLayoutItem} collidesWith   Layout item we're colliding with.
- * @param  {TLayoutItem} itemToMove     Layout item we're moving.
+ * @param  {ILayoutItem} collidesWith   Layout item we're colliding with.
+ * @param  {ILayoutItem} itemToMove     Layout item we're moving.
  * @param  {Boolean} [isUserAction]     If true, designates that the item we're moving is being dragged/resized by the user.
  * @param  {Boolean} [movingDirection]
  * @param  {Boolean} [horizontalShift]
@@ -318,8 +318,8 @@ export function moveElement(
  */
 export function moveElementAwayFromCollision(
   layout: TLayout,
-  collidesWith: TLayoutItem,
-  itemToMove: TLayoutItem,
+  collidesWith: ILayoutItem,
+  itemToMove: ILayoutItem,
   isUserAction: boolean,
   movingDirection: TMovingDirection,
   horizontalShift: boolean,
@@ -330,7 +330,7 @@ export function moveElementAwayFromCollision(
   // unwanted swapping behavior.
   if(isUserAction) {
     // Make a mock item, so we don't modify the item here, only modify in moveElement.
-    const fakeItem: TLayoutItem = {
+    const fakeItem: ILayoutItem = {
       h: itemToMove.h,
       i: `-1`,
       w: itemToMove.w,
