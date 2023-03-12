@@ -174,10 +174,10 @@ function getExamplesSidebar() {
           text: 'Drag allow/ignore elements',
           link: '/examples/05-example'
         },
-        // {
-        //   text: 'Mirrored (rtl)',
-        //   link: '/examples/06-example'
-        // },
+        {
+          text: 'Mirrored (rtl)',
+          link: '/examples/06-example'
+        },
         // {
         //   text: 'Responsive',
         //   link: '/examples/07-example'
