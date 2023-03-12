@@ -381,6 +381,15 @@ export interface ITransformStyle {
   position: `absolute` | `relative`;
 }
 
+/**
+ * Returns default direction
+ *
+ * @param top
+ * @param left
+ * @param width
+ * @param height
+ * @returns {ITransformStyle}
+ */
 export function setTransform(
   top: number,
   left: number,
@@ -408,7 +417,7 @@ export function setTransform(
  * @param right
  * @param width
  * @param height
- * @returns {{transform: string, WebkitTransform: string, MozTransform: string, msTransform: string, OTransform: string, width: string, height: string, position: string}}
+ * @returns {ITransformStyle}
  */
 export function setTransformRtl(
   top: number,
@@ -448,16 +457,6 @@ export function setTopLeft(top: number, left: number, width: number, height: num
   };
 }
 
-/**
- * Just like the setTopLeft method, but instead, it will return a right property instead of left.
- *
- * @param top
- * @param right
- * @param width
- * @param height
- * @returns {{top: string, right: string, width: string, height: string, position: string}}
- */
-
 export interface ITopRightStyle {
   top: string;
   right: string;
@@ -466,6 +465,15 @@ export interface ITopRightStyle {
   position: string;
 }
 
+/**
+ * Just like the setTopLeft method, but instead, it will return a right property instead of left.
+ *
+ * @param top
+ * @param right
+ * @param width
+ * @param height
+ * @returns {ITopRightStyle}
+ */
 export function setTopRight(
   top: number,
   right: number,
