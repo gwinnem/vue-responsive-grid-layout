@@ -1,6 +1,6 @@
 export type TDirection = `ltr` | `rtl` | `auto`
 
-const currentDir: TDirection = `auto`;
+let currentDir: TDirection = `auto`;
 
 function hasDocument(): boolean {
   return typeof document !== `undefined`;
@@ -17,6 +17,16 @@ export function getDocumentDir(): TDirection | string {
   return typeof document.dir !== `undefined`
     ? document.dir
     : document.getElementsByTagName(`html`)[0].getAttribute(`dir`) || `auto`;
+}
+
+export function setDocumentDir(dir: `ltr` | `rtl` | `auto`): void {
+  if(!hasDocument) {
+    currentDir = dir;
+    return;
+  }
+
+  const html = document.getElementsByTagName(`html`)[0];
+  html.setAttribute(`dir`, dir);
 }
 
 export function addWindowEventListener(event: string, callback: () => any): boolean {
