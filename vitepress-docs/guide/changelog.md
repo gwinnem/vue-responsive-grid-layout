@@ -6,6 +6,10 @@ title: Changelog
 
 # Changelog
 
+## v: 1.0.6b (2023-03-xx)
+* __Doc:__ Added example ***Add Drag, drop from outside the grid.***
+
+
 ## v: 1.0.5b (2023-03-12)
 * __Doc__ Added example ***Prevent Collision.***
 * __Doc__ Added example ***Add and Remove items.***

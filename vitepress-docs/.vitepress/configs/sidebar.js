@@ -194,10 +194,10 @@ function getExamplesSidebar() {
           text: 'Add or Remove items',
           link: '/examples/10-example'
         },
-        // {
-        //   text: 'Drag, drop from outside',
-        //   link: '/examples/11-example'
-        // },
+        {
+          text: 'Drag, drop from outside',
+          link: '/examples/11-example'
+        },
         // {
         //   text: 'Drag, drop from grid to grid',
         //   link: '/examples/12-example'
