@@ -147,17 +147,18 @@
   const defaultGridItem = ref();
   const colNum = ref(props.colNum);
   const eventBus: Emitter<{
-    resizeEvent?: IEventsData;
-    dragEvent?: IEventsData;
-    updateWidth: number | null;
-    setColNum: number;
-    setRowHeight: number;
-    setDraggable: boolean;
-    setResizable: boolean;
-    setBounded: boolean;
-    setTransformScale: number;
-    setMaxRows: number;
+    changeDirection: boolean;
     compact: void;
+    dragEvent?: IEventsData;
+    resizeEvent?: IEventsData;
+    setColNum: number;
+    setBounded: boolean;
+    setDraggable: boolean;
+    setMaxRows: number;
+    setResizable: boolean;
+    setRowHeight: number;
+    updateWidth: number | null;
+    setTransformScale: number;
   }> = mitt();
 
   provide(`eventBus`, eventBus);
@@ -585,6 +586,10 @@
     eventBus.emit(`setBounded`, val);
   });
 
+  watch(() => props.isMirrored, val => {
+    eventBus.emit(`changeDirection`, val);
+  });
+
   watch(() => props.transformScale, val => {
     eventBus.emit(`setTransformScale`, val);
   });
@@ -606,7 +611,6 @@
   });
 
   // Expose some property for this
-  // TODO Refactor this away
   defineExpose({
     ...props,
     defaultGridItem,
