@@ -845,7 +845,6 @@
     emitContainerResized();
   });
 
-  //
   const updateWidthHandler = (width: number): void => {
     updateWidth(width);
   };
