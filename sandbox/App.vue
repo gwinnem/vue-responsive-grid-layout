@@ -164,11 +164,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, nextTick, onBeforeUnmount, computed } from 'vue';
+  import { ref, onMounted, nextTick, onBeforeUnmount, computed, watch, onActivated } from 'vue';
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem from '../src/components/Grid/GridItem.vue';
   import { ILayoutItem } from '../src/components/Grid/layout-definition';
+  import { getDocumentDir, setDocumentDir, TDirection } from "../src/core/helpers/DOM";
 
   // Used for testing the package before publishing to npm.
   // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
@@ -182,7 +183,7 @@
   const horizontalShift = ref(false);
   const isBounded = ref(false);
   const isDraggable = ref(true);
-  const isMirrored = ref(false); // TODO Not auto updating
+  const isMirrored = ref(false);
   const isResizable = ref(true);
   const isResponsive = ref(true);
   const marginLeftRight = ref(10); // TODO Not working as expected
@@ -376,6 +377,25 @@
     mouseXY.x = e.clientX;
     mouseXY.y = e.clientY;
   }
+
+  const updateLayoutDirection = (): void => {
+    let documentDirection = getDocumentDir();
+    let toggle: TDirection;
+    if (documentDirection === 'rtl') {
+      toggle = 'ltr';
+    } else {
+      toggle = 'rtl';
+    }
+    setDocumentDir(toggle);
+  };
+
+  watch(() => isMirrored.value, () => {
+    updateLayoutDirection();
+  });
+
+  onActivated( () => {
+    updateLayoutDirection();
+  });
 
   onMounted(() => {
     document.addEventListener("dragover", addDragOverEvent);
