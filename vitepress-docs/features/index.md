@@ -17,6 +17,7 @@ title: Features
 * Close button in GridItem.
 * New Test application, styled with [mini.css](https://minicss.us/).
 * Cursor styling.
+* Fixed mirrored layout so only the GridItems are rearranged.
 <br/><br/>
 
 ## Original features:
