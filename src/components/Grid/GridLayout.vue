@@ -2,6 +2,7 @@
   <div
     ref="refsLayout"
     class="vue-grid-layout"
+    :dir="props.isMirrored ? 'rtl' : 'ltr'"
     :style="mergeStyle">
     <slot></slot>
     <GridItem

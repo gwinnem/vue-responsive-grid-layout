@@ -33,8 +33,6 @@
   } from '@/core/helpers/utils';
   import { getControlPosition, createCoreData } from '@/core/helpers/draggableUtils';
   import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
-  import { getDocumentDir } from '@/core/helpers/DOM';
-
   import '@interactjs/auto-start';
   import '@interactjs/auto-scroll';
   import '@interactjs/actions/drag';
@@ -883,8 +881,8 @@
     maxRows.value = mRows;
   };
 
-  const changeDirectionHandler = (): void => {
-    rtl.value = getDocumentDir() === `rtl`;
+  const changeDirectionHandler = (isMirrored: boolean): void => {
+    rtl.value = isMirrored;
     selfCompact();
   };
 
@@ -903,8 +901,6 @@
   eventBus.on(`setRowHeight`, setRowHeightHandler);
   eventBus.on(`setTransformScale`, setTransformScaleHandler);
   eventBus.on(`updateWidth`, updateWidthHandler);
-
-  // rtl.value = getDocumentDir() === `rtl`;
 
   onBeforeUnmount(() => {
     // Remove listeners
