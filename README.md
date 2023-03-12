@@ -19,10 +19,6 @@ This new and refactored component has more features, typesafe Emits, Props and a
 
 <br/>
 
-[Complete changelog](https://vue-ts-responsive-grid-layout.winnem.tech/guide/changelog)
-
-<br/>
-
 ### New Features:
 * GridLayout now has slot for GridItem.
 * Prop for displaying grid lines in GridLayout.
