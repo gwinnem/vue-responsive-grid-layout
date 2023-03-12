@@ -6,14 +6,16 @@ title: Changelog
 
 # Changelog
 
-## v: 1.0.5b (2023-03-xx)
+## v: 1.0.5b (2023-03-12)
 * __Doc__ Added example ***Prevent Collision.***
 * __Doc__ Added example ***Add and Remove items.***
 * __Doc__ Added example ***Show Close Button.***
 * __Doc__ Added example ***Add default border-radius.***
 * __Doc__ Added example ***Drag allow/ignore elements.***
 * __Doc__ Added example ***Horizontal shift GridItem's.***
+* __Doc__ Added example ***Mirrored / Right to Left layout.***
 * __CodeBase__ Refactored all functions to use arrow syntax.
+* __Codebase__ Refactored away get and setDocumentDir in DOM.ts.
 
 
 ## v: 1.0.4b (2023-03-06)
