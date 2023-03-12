@@ -89,18 +89,19 @@
 
   // eventBus
   const eventBus = inject(`eventBus`) as Emitter<{
-    resizeEvent?: IEventsData;
+    changeDirection: boolean;
+    compact?: undefined;
     dragEvent?: IEventsData;
-    updateWidth: number;
+    resizeEvent?: IEventsData;
+    setBounded: boolean;
     setColNum: number;
-    setRowHeight: number;
+    setMirrored: boolean;
     setDraggable: boolean;
     setResizable: boolean;
-    setBounded: boolean;
+    setRowHeight: number;
+    updateWidth: number;
     setTransformScale: number;
     setMaxRows: number;
-    compact?: undefined;
-    directionchange: undefined;
   }>;
 
   const emit = defineEmits<{
@@ -196,8 +197,7 @@
   });
 
   const isAndroid = computed(() => {
-    return navigator.userAgent.toLowerCase()
-      .indexOf(`android`) !== -1;
+    return navigator.userAgent.toLowerCase().indexOf(`android`) !== -1;
   });
 
   const renderRtl = computed(() => {
@@ -514,8 +514,6 @@
     if(resizable.value && !props.isStatic) {
       const maximum = calcPosition(0, 0, props.maxW, props.maxH);
       const minimum = calcPosition(0, 0, props.minW, props.minH);
-      // console.log(`### MAX ${JSON.stringify(maximum)}`);
-      // console.log(`### MIN ${JSON.stringify(minimum)}`);
 
       const opts = {
         edges: {
@@ -886,7 +884,7 @@
     maxRows.value = mRows;
   };
 
-  const directionChangeHandler = (): void => {
+  const changeDirectionHandler = (): void => {
     rtl.value = getDocumentDir() === `rtl`;
     selfCompact();
   };
@@ -896,31 +894,31 @@
   };
 
   // eventbus
-  eventBus.on(`updateWidth`, updateWidthHandler);
+  eventBus.on(`changeDirection`, changeDirectionHandler);
   eventBus.on(`compact`, compactHandler);
-  eventBus.on(`setDraggable`, setDraggableHandler);
-  eventBus.on(`setResizable`, setResizableHandler);
   eventBus.on(`setBounded`, setBoundedHandler);
-  eventBus.on(`setTransformScale`, setTransformScaleHandler);
-  eventBus.on(`setRowHeight`, setRowHeightHandler);
-  eventBus.on(`setMaxRows`, setMaxRowsHandler);
-  eventBus.on(`directionchange`, directionChangeHandler);
   eventBus.on(`setColNum`, setColNum);
+  eventBus.on(`setDraggable`, setDraggableHandler);
+  eventBus.on(`setMaxRows`, setMaxRowsHandler);
+  eventBus.on(`setResizable`, setResizableHandler);
+  eventBus.on(`setRowHeight`, setRowHeightHandler);
+  eventBus.on(`setTransformScale`, setTransformScaleHandler);
+  eventBus.on(`updateWidth`, updateWidthHandler);
 
-  rtl.value = getDocumentDir() === `rtl`;
+  // rtl.value = getDocumentDir() === `rtl`;
 
   onBeforeUnmount(() => {
     // Remove listeners
-    eventBus.off(`updateWidth`, updateWidthHandler);
+    eventBus.off(`changeDirection`, changeDirectionHandler);
     eventBus.off(`compact`, compactHandler);
-    eventBus.off(`setDraggable`, setDraggableHandler);
-    eventBus.off(`setResizable`, setResizableHandler);
     eventBus.off(`setBounded`, setBoundedHandler);
-    eventBus.off(`setTransformScale`, setTransformScaleHandler);
-    eventBus.off(`setRowHeight`, setRowHeightHandler);
-    eventBus.off(`setMaxRows`, setMaxRowsHandler);
-    eventBus.off(`directionchange`, directionChangeHandler);
     eventBus.off(`setColNum`, setColNum);
+    eventBus.off(`setDraggable`, setDraggableHandler);
+    eventBus.off(`setMaxRows`, setMaxRowsHandler);
+    eventBus.off(`setResizable`, setResizableHandler);
+    eventBus.off(`setRowHeight`, setRowHeightHandler);
+    eventBus.off(`setTransformScale`, setTransformScaleHandler);
+    eventBus.off(`updateWidth`, updateWidthHandler);
     if(interactObj.value) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
