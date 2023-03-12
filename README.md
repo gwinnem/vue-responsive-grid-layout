@@ -15,7 +15,7 @@ VUE 3 responsive grid layout is based on the original work by [JBaysolution's vu
 
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
 
-### **Current version:** 1.0.5beta (2023/03/xx)
+### **Current version:** 1.0.5beta (2023/03/12)
 
 <br/>
 
