@@ -285,13 +285,11 @@
 
 <script lang="ts" setup>
   import {
-    ref, onMounted, nextTick, onBeforeUnmount, watch, onActivated,
+    ref, onMounted, nextTick, onBeforeUnmount,
   } from 'vue';
   import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
   import { GridLayout, GridItem, ILayoutItem } from 'vue-ts-responsive-grid-layout';
-  // import { EGridItemEvent } from "../../../src/core/enums/EGridItemEvents";
   import { testData } from './test';
-  import { getDocumentDir, setDocumentDir, TDirection } from '../../../src/core/helpers/DOM';
 
   const autoResizeGridLayout = ref(true);
   const colNum = ref(8);
@@ -479,25 +477,6 @@
     mouseXY.x = e.clientX;
     mouseXY.y = e.clientY;
   };
-
-  const updateLayoutDirection = (): void => {
-    const documentDirection = getDocumentDir();
-    let toggle: TDirection;
-    if(documentDirection === `rtl`) {
-      toggle = `ltr`;
-    } else {
-      toggle = `rtl`;
-    }
-    setDocumentDir(toggle);
-  };
-
-  watch(() => isMirrored.value, () => {
-    updateLayoutDirection();
-  });
-
-  onActivated(() => {
-    updateLayoutDirection();
-  });
 
   onMounted(() => {
     document.addEventListener(`dragover`, addDragOverEvent);
