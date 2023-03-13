@@ -98,7 +98,6 @@
               ref="refLayout"
               v-model:layout="testLayout"
               :auto-size="autoResizeGridLayout"
-              :class="{grid: showGridLines}"
               :col-num="colNum"
               :horizontal-shift="horizontalShift"
               :is-bounded="isBounded"
@@ -112,6 +111,7 @@
               :restore-on-drag="restoreOnDrag"
               :row-height="rowHeight"
               :show-close-button="showCloseButton"
+              :show-grid-lines="showGridLines"
               :use-border-radius="useBorderRadius"
               :use-css-transforms="true"
               :vertical-compact="verticalCompact"
@@ -203,7 +203,7 @@
   const mapCache: Map<string, any> = new Map();
 
   const margin = computed(() => {
-    return [marginTopBottom.value, marginLeftRight.value];
+    return [marginLeftRight.value, marginTopBottom.value];
   });
 
   let orgColNum = colNum.value;
@@ -424,25 +424,6 @@ form {
 .container {
   background: #646cff;
   min-width: 330px;
-}
-
-.grid::before {
-  content: '';
-  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
-  background-image: linear-gradient(
-      to right,
-      $grid-line-color 1px,
-      transparent 1px
-  ),
-  linear-gradient(
-      to bottom,
-      $grid-line-color 1px,
-      transparent 1px);
-  height: calc(100% - 5px);
-  width: calc(100% - 5px);
-  position: absolute;
-  background-repeat: repeat;
-  margin: 5px;
 }
 
 .vue-grid-item .text {

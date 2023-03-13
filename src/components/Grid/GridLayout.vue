@@ -2,13 +2,14 @@
   <div
     ref="refsLayout"
     class="vue-grid-layout"
+    :class="{grid: props.showGridLines}"
     :dir="props.isMirrored ? 'rtl' : 'ltr'"
     :style="mergeStyle">
     <slot></slot>
     <GridItem
       v-show="isDragging"
       ref="defaultGridItem"
-      class="vue-grid-placeholder"
+      class="vue-grid-placeholder grid"
       :h="placeholder.h"
       :i="placeholder.i"
       :show-close-button="showCloseButton"
@@ -26,7 +27,7 @@
     provide,
     onBeforeMount,
     nextTick,
-    watch,
+    watch, computed,
   } from 'vue';
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
@@ -73,6 +74,7 @@
     restoreOnDrag?: boolean;
     rowHeight?: number;
     showCloseButton?: boolean;
+    showGridLines?: boolean;
     transformScale?: number;
     useBorderRadius?: boolean;
     useCssTransforms?: boolean;
@@ -119,6 +121,7 @@
     restoreOnDrag: false,
     rowHeight: 150,
     showCloseButton: false,
+    showGridLines: false,
     transformScale: 1,
     useBorderRadius: false,
     useCssTransforms: true,
@@ -626,11 +629,39 @@
     placeholder,
     width,
   });
+
+  const rowHeightPx = computed((): string => {
+    if(!props.rowHeight) {
+      return `0`;
+    }
+    return `${props.rowHeight}px`;
+  });
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/variables";
+
 .vue-grid-layout {
   position: relative;
   transition: height 200ms ease;
+}
+
+.grid::before {
+  content: '';
+  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
+  background-image: linear-gradient(
+      to right,
+      $grid-line-color 1px,
+      transparent 1px
+  ),
+  linear-gradient(
+      to bottom,
+      $grid-line-color 1px,
+      transparent 1px);
+  height: calc(100% - 5px);
+  width: calc(100% - 5px);
+  position: absolute;
+  background-repeat: repeat;
+  margin: 5px;
 }
 </style>
