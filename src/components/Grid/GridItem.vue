@@ -1092,11 +1092,17 @@
     border-radius: $grid-item-border-radius;
   }
 
-  &.css-transforms {
-    left: 0;
-    right: auto;
-    transition-property: transform;
-  }
+  //&.cssTransforms {
+  //  left: 0;
+  //  right: auto;
+  //  transition-property: transform;
+  //}
+  //
+  //&.cssTransforms, render-rtl {
+  //  left: auto;
+  //  right: 0;
+  //  transition-property: transform;
+  //}
 
   &.resizing {
     opacity: .6;
@@ -1124,83 +1130,165 @@
   &.disable-user-select {
     user-select: none;
   }
-}
 
-.vue-resizable-handle {
-  background-origin: content-box;
-  background-position: bottom right;
-  background-repeat: no-repeat;
-  bottom: 5px;
-  box-sizing: border-box;
-  cursor: se-resize;
-  height: 20px;
-  padding: 0 3px 3px 0;
-  position: absolute;
-  right: -3px;
-  width: 20px;
-  z-index: 20;
-
-  & > .icon {
+  & > .vue-resizable-handle {
+    background-origin: content-box;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    bottom: 5px;
     box-sizing: border-box;
-    display: inline-block;
-    font-size: inherit;
-    font-style: normal;
-    height: 1em;
-    position: relative;
-    text-indent: -9999px;
-    vertical-align: middle;
-    width: 1em;
+    cursor: se-resize;
+    height: 20px;
+    padding: 0 3px 3px 0;
+    position: absolute;
+    right: -3px;
+    width: 20px;
+    z-index: 20;
 
-    &::before,
-    &::after {
-      content: '';
-      display: block;
-      left: 50%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
+    & > .icon {
+      box-sizing: border-box;
+      display: inline-block;
+      font-size: inherit;
+      font-style: normal;
+      height: 1em;
+      position: relative;
+      text-indent: -9999px;
+      vertical-align: middle;
+      width: 1em;
 
-    &.icon-resize-se {
-      &::before {
-        border: 3px solid black;
-        border-bottom: 0;
-        border-right: 0;
-        height: .65em;
-        transform: translate(-75%, -50%) rotate(180deg);
-        width: .65em;
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      &.icon-resize-se {
+        &::before {
+          border: 3px solid black;
+          border-bottom: 0;
+          border-right: 0;
+          height: .65em;
+          transform: translate(-75%, -50%) rotate(180deg);
+          width: .65em;
+        }
       }
     }
   }
-}
 
-.btn-close {
-  align-items: center;
-  background: red;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  flex-flow: column nowrap;
-  height: 24px;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  transition: all 150ms;
-  width: 24px;
-  z-index: 20;
+  & > .vue-rtl-resizable-handle {
+    background-origin: content-box;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    bottom: 5px;
+    box-sizing: border-box;
+    cursor: sw-resize;
+    height: 20px;
+    left: 0;
+    margin: 0 3px 2px 5px;
+    position: absolute;
+    right: auto;
+    width: 20px;
+    z-index: 20;
 
-  & > .icon-cross {
-    @include cross(16px, #fff, 4px);
+    & > .icon, .icon-resize-se {
+      box-sizing: border-box;
+      display: inline-block;
+      font-size: inherit;
+      font-style: normal;
+      height: 1em;
+      position: relative;
+      text-indent: -9999px;
+      vertical-align: middle;
+      width: 1em;
+
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      &.icon-resize-se {
+        &::before {
+          border: 3px solid black;
+          border-bottom: 0;
+          border-right: 0;
+          height: .65em;
+          transform: translate(-75%, -50%) rotate(270deg);
+          width: .65em;
+        }
+      }
+    }
   }
 
-  &:hover,
-  &:focus {
-    background: #1481b4;
-    transform: rotateZ(90deg);
+  &.render-rtl {
+    & > .btn-close {
+      align-items: center;
+      background: red;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      flex-flow: column nowrap;
+      height: 24px;
+      justify-content: center;
+      left: 4px !important;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      right: auto !important;
+      top: 4px;
+      transition: all 150ms;
+      width: 24px;
+      z-index: 20;
+
+      & > .icon-cross {
+        @include cross(16px, #fff, 4px);
+      }
+
+      &:hover,
+      &:focus {
+        background: #1481b4;
+        transform: rotateZ(90deg);
+      }
+    }
+  }
+  & > .btn-close {
+    align-items: center;
+    background: red;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    flex-flow: column nowrap;
+    height: 24px;
+    justify-content: center;
+    left: auto;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    transition: all 150ms;
+    width: 24px;
+    z-index: 20;
+
+    & > .icon-cross {
+      @include cross(16px, #fff, 4px);
+    }
+
+    &:hover,
+    &:focus {
+      background: #1481b4;
+      transform: rotateZ(90deg);
+    }
   }
 }
 

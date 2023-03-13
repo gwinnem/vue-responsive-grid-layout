@@ -8,6 +8,8 @@ title: Changelog
 
 ## v: 1.0.6b (2023-03-xx)
 * __Doc:__ Added example ***Add Drag, drop from outside the grid.***
+* __Codebase__ Fixed resize icon when layout is mirrored.
+* __Codebase__ Fixed close button when layout is mirrored.
 
 
 ## v: 1.0.5b (2023-03-12)
