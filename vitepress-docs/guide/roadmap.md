@@ -12,7 +12,6 @@ title: Roadmap
 * __Examples:__ Add Responsive.
 * __Examples:__ Add Responsive predefined layouts.
 * __Examples:__ Drag, drop from grid to grid.
-* __Examples:__ Add Show Layout Grid.
 * __New Feature:__ Add pre styled GridItem.
 * __New Feature:__ Add native drag and drop to GridLayout.
 * __Codebase:__ Refactoring, so it is possible to unit test more of the sourcecode.

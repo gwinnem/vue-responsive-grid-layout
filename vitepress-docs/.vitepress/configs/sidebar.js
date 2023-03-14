@@ -214,6 +214,10 @@ function getExamplesSidebar() {
           text: 'Horizontal shift GridItems',
           link: '/examples/15-example'
         },
+        {
+          text: 'ShowGridLines',
+          link: '/examples/16-example'
+        },
       ],
     },
   ];
