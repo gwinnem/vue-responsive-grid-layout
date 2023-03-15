@@ -3,7 +3,7 @@
 
 When ***horizontalShift*** is not set, the GridItem's will shift vertically.
 Set it to ```true``` and they will shift horizontally instead. This applies when you are dragging a GridItem over another horizontally.
-
+ 
 <br/>
 <CustomComponent/>
 
