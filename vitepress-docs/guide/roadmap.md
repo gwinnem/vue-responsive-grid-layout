@@ -9,7 +9,6 @@ title: Roadmap
 ## Upcoming updates and fixes
 * __Examples:__ Add example app to CodeSandbox, so user's can test layouts.
 * __Examples:__ Add Multiple Grids.
-* __Examples:__ Add Responsive.
 * __Examples:__ Add Responsive predefined layouts.
 * __Examples:__ Drag, drop from grid to grid.
 * __New Feature:__ Add pre styled GridItem.

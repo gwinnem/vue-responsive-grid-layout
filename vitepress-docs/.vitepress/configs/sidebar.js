@@ -178,10 +178,10 @@ function getExamplesSidebar() {
           text: 'Mirrored (rtl)',
           link: '/examples/06-example'
         },
-        // {
-        //   text: 'Responsive',
-        //   link: '/examples/07-example'
-        // },
+        {
+          text: 'Responsive breakpoints',
+          link: '/examples/07-example'
+        },
         {
           text: 'Prevent Collision',
           link: '/examples/08-example'

@@ -9,6 +9,7 @@ title: Changelog
 ## v: 1.0.6b (2023-03-xx)
 * __Doc__ Added example ***Add Drag, drop from outside the grid.***
 * __Doc__ Added example ***Show Gridlines.***
+* __Doc__ Added example ***Responsive.***
 * __Codebase__ Fixed resize icon placement when layout is mirrored.
 * __Codebase__ Fixed close button placement when layout is mirrored.
 * __Feature__ ShowGridLines moved to GridLayout. ***Experimental***
