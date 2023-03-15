@@ -634,7 +634,7 @@
     if(!props.rowHeight) {
       return `0`;
     }
-    return `${props.rowHeight}px`;
+    return `${props.rowHeight + 10}px`;
   });
 </script>
 
@@ -649,17 +649,9 @@
 .grid::before {
   content: '';
   background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
-  background-image: linear-gradient(
-      to right,
-      $grid-line-color 1px,
-      transparent 1px
-  ),
-  linear-gradient(
-      to bottom,
-      $grid-line-color 1px,
-      transparent 1px);
+  background-image: linear-gradient($grid-line-color 1px, transparent 1px), linear-gradient(90deg, $grid-line-color 1px, transparent 1px);
   height: calc(100% - 5px);
-  width: calc(100% - 5px);
+  width: calc(100% + 5px);
   position: absolute;
   background-repeat: repeat;
   margin: 5px;
