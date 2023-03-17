@@ -1,5 +1,5 @@
 import { TMovingDirection, EMovingDirections } from '@/core/helpers/moving-directions';
-import { ILayoutItem, TLayout, TLayoutItem } from '@/components/Grid/layout-definition';
+import { ILayoutItem, TLayout } from '@/components/Grid/layout-definition';
 
 /**
  * Get all static elements.
@@ -28,7 +28,7 @@ export function bottom(layout: TLayout): number {
 }
 
 // Fast path to cloning, since this is monomorphic
-export function cloneLayoutItem(layoutItem: ILayoutItem): TLayoutItem {
+export function cloneLayoutItem(layoutItem: ILayoutItem): ILayoutItem {
   return JSON.parse(JSON.stringify(layoutItem));
 }
 
