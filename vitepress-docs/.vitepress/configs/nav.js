@@ -23,5 +23,10 @@ export default [
     text: 'Examples',
     link: '/examples/01-example',
     activeMatch: '^/examples/',
+  },
+  {
+    text: 'Changelog',
+    link: '/guide/changelog',
+    activeMatch: '^/guide/',
   }
 ];
