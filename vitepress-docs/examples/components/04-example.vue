@@ -5,47 +5,6 @@
         <form>
           <fieldset>
             <legend>Test bench</legend>
-            <label
-              class="hide"
-              for="rowHeight">
-              Row Height(px)
-            </label>
-            <input
-              id="rowHeight"
-              v-model="rowHeight"
-              class="hide"
-              type="number" />
-            <label
-              class="hide"
-              for="colNum">
-              Max Columns
-            </label>
-            <input
-              id="colNum"
-              v-model="colNum"
-              class="hide"
-              type="number" />
-            <label
-              class="hide"
-              for="maxRows">
-              Max Rows
-            </label>
-            <input
-              id="maxRows"
-              v-model="maxRows"
-              class="hide"
-              type="number" />
-            <br class="hide" />
-            <label
-              class="hide"
-              for="autosize">
-              autosize
-            </label>
-            <input
-              id="autosize"
-              v-model="autoResizeGridLayout"
-              class="hide"
-              type="checkbox" />
             <label for="editMode">
               editMode
             </label>
@@ -53,125 +12,15 @@
               id="editMode"
               v-model="enableEditMode"
               type="checkbox" />
-            <label
-              class="hide"
-              for="horizontalShift">
-              horizontalShift
-            </label>
-            <input
-              id="horizontalShift"
-              v-model="horizontalShift"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isBounded">
-              isBounded
-            </label>
-            <input
-              id="isBounded"
-              v-model="isBounded"
-              class="hide"
-              type="checkbox" />
             <label for="isDraggable">isDraggable</label>
             <input
               id="isDraggable"
               v-model="isDraggable"
               type="checkbox" />
-            <label
-              class="hide"
-              for="isMirrored">
-              isMirrored
-            </label>
-            <input
-              id="isMirrored"
-              v-model="isMirrored"
-              class="hide"
-              type="checkbox" />
             <label for="isResizable">isResizable</label>
             <input
               id="isResizable"
               v-model="isResizable"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isResponsive">
-              isResponsive
-            </label>
-            <input
-              id="isResponsive"
-              v-model="isResponsive"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="preserveAspectRatio">
-              preserveAspectRatio
-            </label>
-            <input
-              id="preserveAspectRatio"
-              v-model="preserveAspectRatio"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="preventCollision">
-              preventCollision
-            </label>
-            <input
-              id="preventCollision"
-              v-model="preventCollision"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="restoreOnDrag">
-              restoreOnDrag
-            </label>
-            <input
-              id="restoreOnDrag"
-              v-model="restoreOnDrag"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="showCloseButton">
-              showCloseButton
-            </label>
-            <input
-              class="hide"
-              id="showCloseButton"
-              v-model="showCloseButton"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="showGridLines">
-              showGridLines
-            </label>
-            <input
-              id="showGridLines"
-              v-model="showGridLines"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="useBorderRadius">
-              useBorderRadius
-            </label>
-            <input
-              id="useBorderRadius"
-              v-model="useBorderRadius"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="verticalCompact">
-              verticalCompact
-            </label>
-            <input
-              id="verticalCompact"
-              v-model="verticalCompact"
-              class="hide"
               type="checkbox" />
           </fieldset>
         </form>
@@ -285,7 +134,7 @@
             class="content">
             <GridLayout
               ref="refLayout"
-              v-model:layout="testLayout"
+              v-model:layout="testLayout2"
               :auto-size="autoResizeGridLayout"
               :class="{grid: showGridLines}"
               :col-num="colNum"
@@ -373,6 +222,7 @@
   const verticalCompact = ref(true);
 
   const testLayout = ref(testData);
+  const testLayout2 = ref(testData2);
   const refLayout = ref();
   const mapCache: Map<string, any> = new Map();
 
@@ -382,33 +232,6 @@
       orgColNum = value;
       colNum.value = value;
     }
-  };
-  const containerResizedEvent = (): void => {
-    // TBD
-  };
-
-  const dragEvent = (): void => {
-    // TBD
-  };
-
-  const draggedEvent = (): void => {
-    // TBD
-  };
-
-  const moveEvent = (): void => {
-    // TBD
-  };
-
-  const movedEvent = (): void => {
-    // TBD
-  };
-
-  const resizeEvent = (): void => {
-    // TBD
-  };
-
-  const resizedEvent = (): void => {
-    // TBD
   };
 
   const removeGridItem = (id: string | number): void => {
