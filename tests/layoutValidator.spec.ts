@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { describe, expect, it } from 'vitest';
-import { layoutValidator, layoutValidatorPayload } from '../core/validators/layout-validator';
+import { layoutValidator, layoutValidatorPayload } from '@/core/validators/layout-validator';
 
 describe(`layoutValidator`, () => {
   const {

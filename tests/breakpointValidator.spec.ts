@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { describe, expect, it } from 'vitest';
-import { breakpointsValidator } from '../core/validators/breakpoint-validator';
+import { breakpointsValidator } from '@/core/validators/breakpoint-validator';
 
 const breakpointsValidatorPayload = {
   invalidBreakpointsKeys1: {

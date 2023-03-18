@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { describe, expect, it } from 'vitest';
-import { marginValidator } from '../core/validators/margin-validator';
+import { marginValidator } from '@/core/validators/margin-validator';
 
 export const marginValidatorPayload = {
   invalidMargin1: [0, 0, 0],
