@@ -33,7 +33,7 @@
   "main": "dist/vue-ts-responsive-grid-layout.umd.js",
   "module": "vue-ts-responsive-grid-layout.es.js",
   "typings": "src/index",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist/*"
   ],
@@ -42,7 +42,8 @@
     ".": {
       "import": "./dist/vue-ts-responsive-grid-layout.es.js",
       "require": "./dist/vue-ts-responsive-grid-layout.umd.js"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
   "homepage": "https://vue-ts-responsive-grid-layout.winnem.tech",
   "repository": {
@@ -54,9 +55,9 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && npm run build:types && npm pack",
+    "build:all": "vite build && npm run build:types && npm pack",
     "build:only": "vite build",
-    "build:types": "vue-tsc --project tsconfig.json --declaration --emitDeclarationOnly --outDir dist/types ",
+    "build:types": "vue-tsc --project tsconfig.json --declaration --emitDeclarationOnly --outDir ./dist",
     "typecheck": "vue-tsc --project tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.{js,ts,vue}\" --color",
     "lint:fix": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
