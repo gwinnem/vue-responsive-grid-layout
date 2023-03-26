@@ -4,8 +4,8 @@ import { layoutValidator, layoutValidatorPayload } from '@/core/validators/layou
 
 describe(`layoutValidator`, () => {
   const {
-    // invalidOptionalLayout,
-    // invalidRequiredLayout,
+    invalidOptionalLayout,
+    invalidRequiredLayout,
     validRequiredLayout,
     validOptionalLayout,
   } = layoutValidatorPayload;
@@ -17,15 +17,23 @@ describe(`layoutValidator`, () => {
     expect(result).toBe(true);
   });
 
+  it(`When layout with required keys is invalid`, () => {
+    const data = Array.from({ length: 5 }, () => invalidRequiredLayout);
+    // @ts-ignore
+    const result = layoutValidator(data);
+
+    expect(result).toBe(true);
+  });
+
   it(`When layout with required and optional keys is valid`, () => {
     const result = layoutValidator([validRequiredLayout, validOptionalLayout]);
 
     expect(result).toBe(true);
   });
 
-  // it(`When layout with required keys is valid and  optional keys is invalid`, () => {
-  //   const result = layoutValidator([validRequiredLayout, invalidOptionalLayout]);
-  //
-  //   expect(result).toBe(false);
-  // });
+  it(`When layout with required keys is valid and  optional keys is invalid`, () => {
+    const result = layoutValidator([validRequiredLayout, invalidOptionalLayout]);
+
+    expect(result).toBe(false);
+  });
 });
