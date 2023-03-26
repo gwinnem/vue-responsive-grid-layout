@@ -6,7 +6,12 @@ title: Changelog
 
 # Changelog
 
-## v: 1.0.6b (2023-03-xx)
+## v: 1.2.0 (2023-03-xx)
+* __Feature__ Adding support for resizing horizontally or vertically only.
+* 
+
+
+## v: 1.1.1 (2023-03-16)
 * __Doc__ Added example ***Add Drag, drop from outside the grid.***
 * __Doc__ Added example ***Show Gridlines.***
 * __Doc__ Added example ***Responsive.***

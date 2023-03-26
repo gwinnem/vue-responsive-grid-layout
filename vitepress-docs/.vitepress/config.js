@@ -111,7 +111,7 @@ export default defineConfig({
   vite: {
     server: {
       host: true,
-      port: 9090,
+      port: 9091,
     },
     json: {
       stringify: true,
