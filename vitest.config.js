@@ -9,9 +9,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, `./src`),
     },
   },
-  // test: {
-  //   environment: `jsdom`,
-  //   globals: true,
-  //   include: [`tests/*.spec.ts`, `tests/unit/*.spec.ts`],
-  // },
+  test: {
+    environment: `jsdom`,
+    globals: true,
+    include: [`tests/*.spec.ts`, `tests/unit/*.spec.ts`],
+  },
 });
