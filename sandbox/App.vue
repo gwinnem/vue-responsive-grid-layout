@@ -30,13 +30,17 @@
             <input id="isBounded" v-model="isBounded" type="checkbox">
             <label for="isDraggable">isDraggable</label>
             <input id="isDraggable" v-model="isDraggable" type="checkbox">
+            <label for="isHorizontalResize">isHorizontalResize</label>
+            <input id="isHorizontalResize" v-model="isHorizontalResize" type="checkbox">
             <label for="isMirrored">isMirrored</label>
             <input id="isMirrored" v-model="isMirrored" type="checkbox">
             <label for="isResizable">isResizable</label>
             <input id="isResizable" v-model="isResizable" type="checkbox">
-            <br/>
             <label for="isResponsive">isResponsive</label>
             <input id="isResponsive" v-model="isResponsive" type="checkbox">
+            <label for="isVerticalResize">isVerticalResize</label>
+            <input id="isVerticalResize" v-model="isVerticalResize" type="checkbox">
+            <br/>
             <label for="preserveAspectRatio">preserveAspectRatio</label>
             <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox">
             <label for="preventCollision">preventCollision</label>
@@ -182,9 +186,11 @@
   const horizontalShift = ref(false);
   const isBounded = ref(false);
   const isDraggable = ref(true);
+  const isHorizontalResize = ref(false);
   const isMirrored = ref(false);
   const isResizable = ref(true);
   const isResponsive = ref(true);
+  const isVerticalResize = ref(false);
   const marginLeftRight = ref(10); // TODO Not working as expected
   const marginTopBottom = ref(10); // TODO Not working as expected
   const maxRows = ref(40);
