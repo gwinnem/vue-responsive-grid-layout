@@ -7,8 +7,12 @@ title: Changelog
 # Changelog
 
 ## v: 1.2.0 (2023-03-xx)
-* __Feature__ Adding support for resizing horizontally or vertically only.
-* 
+* __Feature__ Adding support for resizing from all sides.
+* __Demo App__ Removed unused properties.
+* __Demo App__ Updated layout.
+* __Doc__ Added changelog to navbar.
+* __Tests__ Moved test folder to project root.
+* TBD
 
 
 ## v: 1.1.1 (2023-03-16)
