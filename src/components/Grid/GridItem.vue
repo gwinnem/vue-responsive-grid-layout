@@ -1097,7 +1097,7 @@
   //  right: auto;
   //  transition-property: transform;
   //}
-  //
+
   //&.cssTransforms, render-rtl {
   //  left: auto;
   //  right: 0;
@@ -1110,11 +1110,11 @@
   }
 
   &.vue-draggable {
-    cursor: grab;
+    cursor: grab !important;
   }
 
   &.vue-draggable-dragging {
-    cursor: grabbing;
+    cursor: grabbing !important;
     transition: none;
     z-index: 3;
   }
