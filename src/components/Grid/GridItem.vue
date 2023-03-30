@@ -1092,17 +1092,12 @@
     border-radius: $grid-item-border-radius;
   }
 
-  //&.cssTransforms {
-  //  left: 0;
-  //  right: auto;
-  //  transition-property: transform;
-  //}
-
-  //&.cssTransforms, render-rtl {
-  //  left: auto;
-  //  right: 0;
-  //  transition-property: transform;
-  //}
+  &.cssTransforms {
+    left: auto;
+    right: auto;
+    transition-duration: 400ms;
+    transition-property: transform;
+  }
 
   &.resizing {
     opacity: .6;
