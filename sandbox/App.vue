@@ -179,8 +179,8 @@
   const borderRadiusPx = ref(8);
   const colNum = ref(12);
   const enableEditMode = ref(true);
-  const horizontalShift = ref(false);
-  const isBounded = ref(false);
+  const horizontalShift = ref(true);
+  const isBounded = ref(true);
   const isDraggable = ref(true);
   const isMirrored = ref(false);
   const isResizable = ref(true);
