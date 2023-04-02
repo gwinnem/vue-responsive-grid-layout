@@ -9,7 +9,7 @@
     <GridItem
       v-show="isDragging"
       ref="defaultGridItem"
-      class="vue-grid-placeholder grid"
+      class="vue-grid-placeholder"
       :h="placeholder.h"
       :i="placeholder.i"
       :show-close-button="showCloseButton"
@@ -31,7 +31,7 @@
   } from 'vue';
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
-  import { ILayoutItem, TLayout } from './layout-definition';
+  import { ILayoutItem, TLayout } from '@/components';
   import { IPlaceholder } from '@/core/interfaces/layout-data.interface';
   import GridItem from './GridItem.vue';
   import {
@@ -60,6 +60,7 @@
     breakpoints?: IBreakpoints;
     colNum?: number;
     cols?: IColumns;
+    distributeEvenly?: boolean;
     horizontalShift?: boolean;
     isBounded?: boolean;
     isDraggable?: boolean;
@@ -108,6 +109,7 @@
       xs: 4,
       xxs: 2,
     }),
+    distributeEvenly: true,
     horizontalShift: false,
     isBounded: false,
     isDraggable: true,
@@ -212,12 +214,12 @@
       lastBreakpoint.value as string,
       newCols,
       props.verticalCompact,
+      props.distributeEvenly,
     );
 
     layouts.value[newBreakpoint] = layout;
 
     if(lastBreakpoint.value !== newBreakpoint) {
-      // noinspection TypeScriptValidateTypes
       emit(EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint, layout);
     }
 
