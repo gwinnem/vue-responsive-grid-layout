@@ -1,11 +1,19 @@
 # GridItem Properties
 
-## borderRadiusPx
-* default: `8`
+## distributeEvenly
+* default: `true`
 * required: `false`
 * type: `Boolean`
+
 <br/>
-Set's border-radius css value used for the GridItem.
+When true it will ensure that when the layout is resized, the grid item's are evenly distributed.
+
+### With normal layout:
+This means that a grid item will be moved to the left until it finds that a grid item already is to the left.
+
+#### With mirrored (rtl) layout:
+__WIP__
+
 
 ## enableEditMode
 * default: `false`

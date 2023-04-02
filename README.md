@@ -18,6 +18,7 @@ This new and refactored component has more features, typesafe Emits, Props and a
 <br/>
 
 ### New Features:
+* Prop in GridLayout for distributing GridItem's equally.
 * GridLayout now has slot for GridItem.
 * Prop for displaying grid lines in GridLayout.
 * Prop for setting edit mode in GridLayout. Shortcuts the isDraggable and isResizable props.

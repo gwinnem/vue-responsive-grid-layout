@@ -6,17 +6,19 @@ title: Changelog
 
 # Changelog
 
-## v: 1.2.0 (2023-03-xx)
-* __Feature__ Adding support for resizing from all sides.
+## v: 1.2.0 (2023-04-xx)
+* __Fixed Issue__ [responsive grid item will not be distributed equally.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/2)
+* __Components__ Added support for prop ***distributeEvenly*** in **GridLayout**.
+* __Codebase__ Moved ***correctBounds*** from utils to responsiveUtils.
 * __Demo App__ Removed unused properties.
 * __Demo App__ Updated layout.
+* __Demo App__ Added new prop: ***distributeEvenly***.
 * __Doc__ Added changelog to navbar.
 * __Tests__ Moved test folder to project root.
-* TBD
 
 
 ## v: 1.1.1 (2023-03-16)
-* __Doc__ Added example ***Add Drag, drop from outside the grid.***
+* __Doc__ Added example ***Add Drag and Drop from outside the grid.***
 * __Doc__ Added example ***Show Gridlines.***
 * __Doc__ Added example ***Responsive.***
 * __Codebase__ Fixed resize icon placement when layout is mirrored.
