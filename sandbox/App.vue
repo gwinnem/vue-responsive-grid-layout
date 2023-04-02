@@ -22,6 +22,8 @@
             <br/>
             <label for="autosize">autosize</label>
             <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
+            <label for="distributeEvenly">distributeEvenly</label>
+            <input id="distributeEvenly" v-model="distributeEvenly" type="checkbox">
             <label for="editMode">editMode</label>
             <input id="editMode" v-model="enableEditMode" type="checkbox">
             <label for="horizontalShift">horizontalShift</label>
@@ -99,6 +101,7 @@
               v-model:layout="testLayout"
               :auto-size="autoResizeGridLayout"
               :col-num="colNum"
+              :distribute-evenly="distributeEvenly"
               :horizontal-shift="horizontalShift"
               :is-bounded="isBounded"
               :is-draggable="isDraggable"
@@ -178,6 +181,7 @@
   const autoResizeGridLayout = ref(true);
   const borderRadiusPx = ref(8);
   const colNum = ref(12);
+  const distributeEvenly = ref(true);
   const enableEditMode = ref(true);
   const horizontalShift = ref(true);
   const isBounded = ref(true);
