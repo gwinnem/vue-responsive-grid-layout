@@ -1,4 +1,9 @@
-import { cloneLayout, compact, correctBounds } from './utils';
+import {
+  cloneLayout,
+  compact,
+  getFirstCollision,
+  getStatics,
+} from './utils';
 import {
   TBreakpoint,
   TBreakpoints,
@@ -60,6 +65,52 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   return cols[breakpoint];
 };
 
+// TODO move to responsiveUtils
+/**
+ * Given a layout, make sure all elements fit within its bounds.
+ *
+ * @param  {Array}  layout             Layout array.
+ * @param  {Number}  bounds            Number of columns.
+ * @param  {Boolean} distributeEvenly  Enforces that a grid item is moved all the way to left/right when there is available space for it
+ */
+export function correctBounds(layout: TLayout, bounds: { cols: number }, distributeEvenly: boolean): TLayout {
+  const collidesWith = getStatics(layout);
+  for(let i = 0, len = layout.length; i < len; i++) {
+    const l = layout[i];
+    // console.log(`layout item: ${i}`);
+    // works until 2 columns
+    if(distributeEvenly) {
+      // Overflows right, move item to the left
+      if(l.x + l.w > bounds.cols) {
+        l.x = bounds.cols - l.w;
+        console.log(`l=>overflow right => move item to the left:`, l);
+      }
+      // Overflows left
+      // TODO experiment to get a layout where this is the case, 01.04.2023, this is not being triggered..
+      if(l.x < 0) {
+        l.x = 0;
+        l.w = bounds.cols;
+        // console.log(`l=>left:`, l);
+      }
+      // console.log(`l:`, l);
+    } else {
+      // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
+    }
+
+    if(!l.isStatic) {
+      collidesWith.push(l);
+    } else {
+      // If this is static and collides with other statics, we must move it down.
+      // We have to do something nicer than just letting them overlap.
+      while (getFirstCollision(collidesWith, l)) {
+        l.y++;
+      }
+    }
+  }
+  // console.log(`layout`, layout);
+  return layout;
+}
+
 /**
  * Given existing layouts and a new breakpoint, find or generate a new layout.
  *
@@ -72,6 +123,7 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
  * @param  {TBreakpoint}   lastBreakpoint    Last breakpoint (for fallback).
  * @param  {Number}        cols              Column count at new breakpoint.
  * @param  {Boolean}       verticalCompact   Whether or not to compact the layout vertically.
+ * @param  {Boolean}       distributeEvenly
  * @return {TLayout}                         New layout.
  */
 export const findOrGenerateResponsiveLayout = (
@@ -82,11 +134,12 @@ export const findOrGenerateResponsiveLayout = (
   lastBreakpoint: TBreakpoint,
   cols: number,
   verticalCompact: boolean,
+  distributeEvenly: boolean,
 ): TLayout => {
   // If it already exists, just return it.
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if(layouts[breakpoint]) {
+  if(layouts[breakpoint] && !distributeEvenly) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return cloneLayout(layouts[breakpoint]);
@@ -108,5 +161,5 @@ export const findOrGenerateResponsiveLayout = (
     }
   }
   layout = cloneLayout(layout || []); // clone layout so we don't modify existing items
-  return compact(correctBounds(layout, { cols }), verticalCompact);
+  return compact(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
 };

@@ -164,36 +164,6 @@ export function compact(layout: TLayout, verticalCompact: boolean, minPositions?
 }
 
 /**
- * Given a layout, make sure all elements fit within its bounds.
- *
- * @param  {Array} layout Layout array.
- * @param  {Number} bounds Number of columns.
- */
-export function correctBounds(layout: TLayout, bounds: { cols: number }): TLayout {
-  const collidesWith = getStatics(layout);
-  for(let i = 0, len = layout.length; i < len; i++) {
-    const l = layout[i];
-    // Overflows right
-    if(l.x + l.w > bounds.cols) l.x = bounds.cols - l.w;
-    // Overflows left
-    if(l.x < 0) {
-      l.x = 0;
-      l.w = bounds.cols;
-    }
-    if(!l.isStatic) {
-      collidesWith.push(l);
-    } else {
-      // If this is static and collides with other statics, we must move it down.
-      // We have to do something nicer than just letting them overlap.
-      while (getFirstCollision(collidesWith, l)) {
-        l.y++;
-      }
-    }
-  }
-  return layout;
-}
-
-/**
  * Get a layout item by ID. Used so we can override later on if necessary.
  *
  * @param  {Array}  layout Layout array.
