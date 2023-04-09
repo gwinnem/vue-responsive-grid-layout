@@ -109,7 +109,7 @@
       xs: 4,
       xxs: 2,
     }),
-    distributeEvenly: true,
+    distributeEvenly: false,
     horizontalShift: false,
     isBounded: false,
     isDraggable: true,

@@ -53,6 +53,14 @@ If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridI
 Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
 
 
+## distributeEvenly
+* default: `false`
+* required: `false`
+* type: `Boolean`
+
+If set to `true` it will ensure that GridItems are distributed evenly in the layout.
+
+
 ## horizontalShift
 * default: `true`
 * required: `false`
