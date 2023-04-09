@@ -79,22 +79,31 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
     const l = layout[i];
     // console.log(`layout item: ${i}`);
     // works until 2 columns
+    // Overflows right, move item to the left
+    if(l.x + l.w > bounds.cols) {
+      l.x = bounds.cols - l.w;
+    }
+
     if(distributeEvenly) {
-      // Overflows right, move item to the left
-      if(l.x + l.w > bounds.cols) {
-        l.x = bounds.cols - l.w;
-        console.log(`l=>overflow right => move item to the left:`, l);
-      }
-      // Overflows left
-      // TODO experiment to get a layout where this is the case, 01.04.2023, this is not being triggered..
-      if(l.x < 0) {
-        l.x = 0;
-        l.w = bounds.cols;
-        // console.log(`l=>left:`, l);
-      }
-      // console.log(`l:`, l);
-    } else {
       // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
+      const tmpLayout = layout.find((item => (item.x === l.x - l.w) && item.y === l.y));
+      // console.log(tmpLayout, l);
+      if(tmpLayout === undefined) {
+        // Check i we have to move it up or to the left
+        const tmpItemAbove = layout.find((item => (item.y === l.y - l.h) && item.x === l.x));
+        if(tmpItemAbove === undefined) {
+          l.y -= l.y;
+        } else if(l.x - l.w >= 0) {
+          l.x -= l.w;
+        }
+      }
+    }
+
+    // Overflows left
+    // TODO experiment to get a layout where this is the case, 01.04.2023, this is not being triggered..
+    if(l.x < 0) {
+      l.x = 0;
+      l.w = bounds.cols;
     }
 
     if(!l.isStatic) {
@@ -107,7 +116,6 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
       }
     }
   }
-  // console.log(`layout`, layout);
   return layout;
 }
 
