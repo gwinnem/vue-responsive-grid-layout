@@ -18,6 +18,7 @@ title: Features
 * New Test application, styled with [mini.css](https://minicss.us/).
 * Cursor styling.
 * Fixed mirrored layout so only the GridItems are rearranged.
+* Added new feature for distributing GridItems evenly.
 <br/><br/>
 
 ## Original features:
