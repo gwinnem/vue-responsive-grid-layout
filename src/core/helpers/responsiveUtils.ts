@@ -1,6 +1,6 @@
 import {
   cloneLayout,
-  compact,
+  compactLayout,
   getFirstCollision,
   getStatics,
 } from './utils';
@@ -169,5 +169,5 @@ export const findOrGenerateResponsiveLayout = (
     }
   }
   layout = cloneLayout(layout || []); // clone layout so we don't modify existing items
-  return compact(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
+  return compactLayout(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
 };
