@@ -95,7 +95,7 @@ export function sortLayoutItemsByRowCol(layout: TLayout): TLayout {
 }
 
 /**
- * Compact an item in the layout.
+ * Compact a GridItem in the layout.
  */
 export function compactItem(
   compareWith: TLayout,
@@ -133,13 +133,13 @@ export function compactItem(
  * @param   {Object}  minPositions
  * @return  {TLayout}                 Compacted Layout.
  */
-export function compact(layout: TLayout, verticalCompact: boolean, minPositions?: any): TLayout {
+export function compactLayout(layout: TLayout, verticalCompact: boolean, minPositions?: any): TLayout {
   // Statics go in the compareWith array right away so items flow around them.
   const compareWith = getStatics(layout);
   // We go through the items by row and column.
   const sorted = sortLayoutItemsByRowCol(layout);
   // Holding for new items.
-  const out = Array(layout.length);
+  const out: TLayout = Array(layout.length);
 
   for(let i = 0, len = sorted.length; i < len; i++) {
     let l = sorted[i];
@@ -159,7 +159,6 @@ export function compact(layout: TLayout, verticalCompact: boolean, minPositions?
     // Clear moved flag, if it exists.
     l.moved = false;
   }
-
   return out;
 }
 
@@ -234,7 +233,9 @@ export function moveElement(
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout);
 
-  if(moving.UP) sorted = sorted.reverse();
+  if(moving.UP) {
+    sorted = sorted.reverse();
+  }
 
   const collisions = getAllCollisions(sorted, l);
 
