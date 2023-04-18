@@ -53,6 +53,14 @@ If false, `isDraggable` and `isResizeable` will be set to `false` and the `GridI
 Setting it from `false` to `true` will enable both the `isDraggable` and `isResizeable` props.
 
 
+## distributeEvenly
+* default: `false`
+* required: `false`
+* type: `Boolean`
+
+If set to `true` it will ensure that GridItems are distributed evenly in the layout.
+
+
 ## horizontalShift
 * default: `true`
 * required: `false`
@@ -108,7 +116,6 @@ The value must be an `Array` of type `TLayout` items. Each item must have:
 * `x` Column start position.
 * `y` Row start position.
 * `w` The number of columns the `GridItem` will use.
-properties.
 
 Please refer to the documentation for [GridItem](grid-item.md) for more details.
 
