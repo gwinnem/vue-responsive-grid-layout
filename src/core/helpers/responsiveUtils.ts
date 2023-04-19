@@ -57,7 +57,7 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   // @ts-ignore
   if(!cols[breakpoint]) {
     throw new Error(
-      `ResponsiveGridLayout: \`cols\` entry for breakpoint ${breakpoint} is missing!`,
+      `VueResponsiveGridLayout: \`cols\` entry for breakpoint ${breakpoint} is missing!`,
     );
   }
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -65,7 +65,6 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   return cols[breakpoint];
 };
 
-// TODO move to responsiveUtils
 /**
  * Given a layout, make sure all elements fit within its bounds.
  *

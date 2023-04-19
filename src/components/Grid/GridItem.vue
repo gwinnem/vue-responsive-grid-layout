@@ -224,6 +224,9 @@
     return thisLayout?.isMirrored ? !rtl.value : rtl.value;
   });
 
+  /**
+   * Computing css classes to add to the GridItem.
+   */
   const classObj = computed(() => {
     return {
       cssTransforms: useCssTransforms.value,
@@ -268,29 +271,28 @@
    * @param  {Number} left Left position (relative to parent) in pixels.
    * @return {ICalcXy}     x and y in grid units.
    */
-    // TODO check if this function needs change in order to support rtl.
   const calcXY = (top: number, left: number): ICalcXy => {
-      const colWidth = calcColWidth();
+    const colWidth = calcColWidth();
 
-      // left = colWidth * x + margin * (x + 1)
-      // l = cx + m(x+1)
-      // l = cx + mx + m
-      // l - m = cx + mx
-      // l - m = x(c + m)
-      // (l - m) / (c + m) = x
-      // x = (left - margin) / (coldWidth + margin)
-      let x = Math.round((left - margin.value[0]) / (colWidth + margin.value[0]));
-      let y = Math.round((top - margin.value[1]) / (rowHeight.value + margin.value[1]));
+    // left = colWidth * x + margin * (x + 1)
+    // l = cx + m(x+1)
+    // l = cx + mx + m
+    // l - m = cx + mx
+    // l - m = x(c + m)
+    // (l - m) / (c + m) = x
+    // x = (left - margin) / (coldWidth + margin)
+    let x = Math.round((left - margin.value[0]) / (colWidth + margin.value[0]));
+    let y = Math.round((top - margin.value[1]) / (rowHeight.value + margin.value[1]));
 
-      // Capping
-      x = Math.max(Math.min(x, cols.value - innerW.value), 0);
-      y = Math.max(Math.min(y, maxRows.value - innerH.value), 0);
+    // Capping
+    x = Math.max(Math.min(x, cols.value - innerW.value), 0);
+    y = Math.max(Math.min(y, maxRows.value - innerH.value), 0);
 
-      return {
-        x,
-        y,
-      };
+    return {
+      x,
+      y,
     };
+  };
 
   const handleDrag = (event: MouseEvent): void => {
     if(props.isStatic) {

@@ -14,7 +14,7 @@ export const calcGridColWidth = (positionParams: IPositionParameters): number =>
 };
 
 /**
- * Compute an item width and height.
+ * Calculate a GridItem width and height.
  *
  * @param  {IPositionParameters} positionParams Parameters of grid needed for coordinates calculations.
  * @param  {Number}                      w       W coordinate in grid units.
