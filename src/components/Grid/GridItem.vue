@@ -629,7 +629,7 @@
         resizing.value = newSize;
         isResizing.value = true;
         // console.log(`START => innerX: ${innerX.value} innerY: ${innerY.value} 'innerW:'${innerW.value} innerH:${innerH.value} pos: ${JSON.stringify(pos)}`);
-        edges = event.edges;
+        // TODO test properly and remove or implement: edges = event.edges;
         break;
       }
       case `resizemove`: {
