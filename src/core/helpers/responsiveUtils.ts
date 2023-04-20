@@ -1,6 +1,6 @@
 import {
   cloneLayout,
-  compact,
+  compactLayout,
   getFirstCollision,
   getStatics,
 } from './utils';
@@ -57,7 +57,7 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   // @ts-ignore
   if(!cols[breakpoint]) {
     throw new Error(
-      `ResponsiveGridLayout: \`cols\` entry for breakpoint ${breakpoint} is missing!`,
+      `VueResponsiveGridLayout: \`cols\` entry for breakpoint ${breakpoint} is missing!`,
     );
   }
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -65,7 +65,6 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   return cols[breakpoint];
 };
 
-// TODO move to responsiveUtils
 /**
  * Given a layout, make sure all elements fit within its bounds.
  *
@@ -77,26 +76,30 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
   const collidesWith = getStatics(layout);
   for(let i = 0, len = layout.length; i < len; i++) {
     const l = layout[i];
-    // console.log(`layout item: ${i}`);
-    // works until 2 columns
-    // Overflows right, move item to the left
-    if(l.x + l.w > bounds.cols) {
-      l.x = bounds.cols - l.w;
-    }
 
     if(distributeEvenly) {
       // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
-      const tmpLayout = layout.find((item => (item.x === l.x - l.w) && item.y === l.y));
-      // console.log(tmpLayout, l);
-      if(tmpLayout === undefined) {
-        // Check i we have to move it up or to the left
-        const tmpItemAbove = layout.find((item => (item.y === l.y - l.h) && item.x === l.x));
-        if(tmpItemAbove === undefined) {
-          l.y -= l.y;
-        } else if(l.x - l.w >= 0) {
-          l.x -= l.w;
+      // out of layout, move down and to the left.
+      if(l.x + l.w > bounds.cols) {
+        l.x = 0;
+        l.y += 1;
+      }
+
+      // find any item which is overlapped
+      while (getFirstCollision(layout, l)) {
+        l.x += l.w; // move x to next place which might be able to contain it
+        if(l.x + l.w > bounds.cols) {
+          // if this width is out of layout
+          l.y += 1; // move y to next y
+          l.x = 0; // start x from 0
         }
       }
+      // l = distributeGridItemsEvenly(layout, l, bounds.cols);
+    }
+
+    // Overflows right, move item to the left
+    if(l.x + l.w > bounds.cols) {
+      l.x = bounds.cols - l.w;
     }
 
     // Overflows left
@@ -169,5 +172,5 @@ export const findOrGenerateResponsiveLayout = (
     }
   }
   layout = cloneLayout(layout || []); // clone layout so we don't modify existing items
-  return compact(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
+  return compactLayout(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
 };

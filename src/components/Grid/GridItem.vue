@@ -168,17 +168,39 @@
   const previousH = ref<number | undefined>(undefined);
   const previousX = ref<number | undefined>(undefined);
   const previousY = ref<number | undefined>(undefined);
+
+  /**
+   * Defines start position in grid unit along the x-axis.
+   */
   const innerX = ref<number>(props.x);
+
+  /**
+   * Defines start position in grid units along the y-axis.
+   */
   const innerY = ref<number>(props.y);
+
+  /**
+   * Defines the width in grid units.
+   */
   const innerW = ref<number>(props.w);
+
+  /**
+   * Defines the height in grid units.
+   */
   const innerH = ref<number>(props.h);
 
   const bounded = ref<boolean | null>(null);
 
   const interactObj = ref<Interactable | undefined>(undefined);
 
+  /**
+   * Handler for click event on the close button.
+   * @param {string}   id   Id of the GridItem.
+   */
   const closeClicked = (id: string | number): void => {
-    emit(EGridItemEvent.REMOVE_ITEM, id);
+    if(props.enableEditMode) {
+      emit(EGridItemEvent.REMOVE_ITEM, id);
+    }
   };
 
   // computed
@@ -202,6 +224,9 @@
     return thisLayout?.isMirrored ? !rtl.value : rtl.value;
   });
 
+  /**
+   * Computing css classes to add to the GridItem.
+   */
   const classObj = computed(() => {
     return {
       cssTransforms: useCssTransforms.value,
@@ -246,7 +271,6 @@
    * @param  {Number} left Left position (relative to parent) in pixels.
    * @return {ICalcXy}     x and y in grid units.
    */
-  // TODO check if this function needs change in order to support rtl.
   const calcXY = (top: number, left: number): ICalcXy => {
     const colWidth = calcColWidth();
 
@@ -280,17 +304,11 @@
 
     const position = getControlPosition(event);
 
-    // Get the current drag point from the event. This is used as the offset.
-    if(position === null) {
-      return; // not possible but satisfies flow
-    }
-
     const {
       x,
       y,
     } = position;
 
-    // let shouldUpdate = false;
     const newPosition = {
       left: 0,
       top: 0,
@@ -394,12 +412,14 @@
     if(innerX.value !== pos.x || innerY.value !== pos.y) {
       emit(EGridItemEvent.MOVE, props.i, pos.x, pos.y);
     }
+
     if(
       event.type === `dragend`
       && (previousX.value !== innerX.value || previousY.value !== innerY.value)
     ) {
       emit(EGridItemEvent.MOVED, props.i, pos.x, pos.y);
     }
+
     const data: IEventsData = {
       eventType: event.type,
       h: innerH.value,
@@ -441,7 +461,7 @@
   };
 
   const tryMakeDraggable = (): void => {
-    if(interactObj.value === null || interactObj.value === undefined) {
+    if(interactObj.value === undefined) {
       interactObj.value = interact(gridItem.value);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -505,7 +525,7 @@
   };
 
   const tryMakeResizable = (): void => {
-    if(interactObj.value === null || interactObj.value === undefined) {
+    if(interactObj.value === undefined) {
       interactObj.value = interact(gridItem.value);
     }
 
@@ -515,12 +535,10 @@
 
       const opts = {
         edges: {
-          bottom: `.${resizableHandleClass.value.trim()
-            .replace(` `, `.`)}`,
-          left: false,
-          right: `.${resizableHandleClass.value.trim()
-            .replace(` `, `.`)}`,
-          top: false,
+          bottom: true,
+          left: true,
+          right: true,
+          top: true,
         },
         ignoreFrom: props.resizeIgnoreFrom,
         modifiers: [],
@@ -566,11 +584,25 @@
     }
   };
 
+  // Interfaces describing the resize interact edges.
+  interface IInteractEdges {
+    bottom: boolean;
+    left: boolean;
+    right: boolean;
+    top: boolean;
+  }
+
+  let edges: IInteractEdges = {
+    bottom: false,
+    left: false,
+    right: false,
+    top: false,
+  };
+
   const handleResize = (event: MouseEvent): void => {
     if(props.isStatic) {
       return;
     }
-
     // Get the current drag point from the event. This is used as the offset.
     const position = getControlPosition(event);
 
@@ -583,7 +615,9 @@
       height: 0,
       width: 0,
     };
+
     let pos;
+
     switch(event.type) {
       case `resizestart`: {
         tryMakeResizable();
@@ -594,28 +628,39 @@
         newSize.height = pos.height;
         resizing.value = newSize;
         isResizing.value = true;
+        // console.log(`START => innerX: ${innerX.value} innerY: ${innerY.value} 'innerW:'${innerW.value} innerH:${innerH.value} pos: ${JSON.stringify(pos)}`);
+        edges = event.edges;
         break;
       }
       case `resizemove`: {
-        //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
+        // console.log(`### resize => ${event.type}, lastW=${lastW.value}, lastH=${lastH.value}`);
         const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
-        if(renderRtl.value) {
-          newSize.width = Number(resizing.value?.width) - coreEvent.deltaX / transformScale.value;
-        } else {
-          newSize.width = Number(resizing.value?.width) + coreEvent.deltaX / transformScale.value;
+        // console.log(`coreEvent`, coreEvent);
+        // console.log(`edges`, edges);
+        if(edges.left && edges.bottom) {
+          newSize.width = (Number(resizing.value?.width) - coreEvent.deltaX) / transformScale.value;
+          newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
+        } else if(edges.right && edges.bottom && !edges.left && !edges.top) {
+          newSize.width = (Number(resizing.value?.width) + coreEvent.deltaX) / transformScale.value;
+          newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
+        } else if(edges.left && edges.top && !edges.bottom && !edges.right) {
+          //
+        } else if(edges.right && edges.top && !edges.bottom && !edges.left) {
+          //
+        } else if(edges.right && !edges.right && !edges.bottom && !edges.top) {
+          newSize.width = (Number(resizing.value?.width) + coreEvent.deltaX) / transformScale.value;
         }
-        newSize.height = Number(resizing.value?.height) + coreEvent.deltaY / transformScale.value;
 
-        /// console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+        // console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
         resizing.value = newSize;
         break;
       }
       case `resizeend`: {
-        // console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
+        // console.log(`### resize end => x=${innerX.value} y=${innerY.value} w=${innerW.value.v} h=${innerH.value}`);
         pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
         newSize.width = pos.width;
         newSize.height = pos.height;
-        //                        console.log("### resize end => " + JSON.stringify(newSize));
+        // console.log(`### resize end => ${JSON.stringify(newSize)}`);
         resizing.value = undefined;
         isResizing.value = false;
         break;
@@ -655,10 +700,13 @@
     }
     if(
       event.type === `resizeend`
-      && (previousW.value !== innerW.value || previousH.value !== innerH.value)
+      && (previousW.value !== innerW.value
+        || previousH.value !== innerH.value)
     ) {
       emit(EGridItemEvent.RESIZED, props.i, pos.h, pos.w, newSize.height, newSize.width);
     }
+
+    // Used for emit only
     const data = {
       eventType: event.type,
       h: pos.h,
@@ -667,6 +715,7 @@
       x: innerX.value,
       y: innerY.value,
     };
+    // console.log(`data`, data);
     eventBus.emit(`resizeEvent`, data);
   };
 
@@ -738,7 +787,7 @@
 
   const updateWidth = (width: number, colNum?: number): void => {
     containerWidth.value = width;
-    if(colNum !== undefined && colNum !== null) {
+    if(colNum !== undefined) {
       cols.value = colNum;
     }
   };
@@ -1080,6 +1129,10 @@
   transition: all 200ms ease;
   transition-property: left, top, right;
 
+  &:hover {
+    border: solid 1px #000;
+  }
+
   &.vue-static {
     background-color: $grid-item-static-bg-color;
   }
@@ -1104,15 +1157,15 @@
     z-index: 3;
   }
 
-  &.vue-draggable {
-    cursor: grab !important;
-  }
-
-  &.vue-draggable-dragging {
-    cursor: grabbing !important;
-    transition: none;
-    z-index: 3;
-  }
+  //&.vue-draggable {
+  //  cursor: grab !important;
+  //}
+  //
+  //&.vue-draggable-dragging {
+  //  cursor: grabbing !important;
+  //  transition: none;
+  //  z-index: 3;
+  //}
 
   &.vue-grid-placeholder {
     background: $grid-item-placeholder-bg-color;
@@ -1127,100 +1180,101 @@
   }
 
   & > .vue-resizable-handle {
-    background-origin: content-box;
-    background-position: bottom right;
-    background-repeat: no-repeat;
-    bottom: 5px;
-    box-sizing: border-box;
-    cursor: se-resize;
-    height: 20px;
-    padding: 0 3px 3px 0;
-    position: absolute;
-    right: -3px;
-    width: 20px;
-    z-index: 20;
+    //background-origin: content-box;
+    //background-position: bottom right;
+    //background-repeat: no-repeat;
+    //background-color: red;
+    //bottom: -3px;
+    //box-sizing: border-box;
+    //cursor: se-resize;
+    //height: 15px;
+    //padding: 0 3px 3px 0;
+    //position: absolute;
+    //right: -3px;
+    //width: 15px;
+    //z-index: 20;
 
-    & > .icon {
-      box-sizing: border-box;
-      display: inline-block;
-      font-size: inherit;
-      font-style: normal;
-      height: 1em;
-      position: relative;
-      text-indent: -9999px;
-      vertical-align: middle;
-      width: 1em;
-
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      &.icon-resize-se {
-        &::before {
-          border: 3px solid black;
-          border-bottom: 0;
-          border-right: 0;
-          height: .65em;
-          transform: translate(-75%, -50%) rotate(180deg);
-          width: .65em;
-        }
-      }
-    }
+    //& > .icon {
+    //  box-sizing: border-box;
+    //  display: inline-block;
+    //  font-size: inherit;
+    //  font-style: normal;
+    //  height: 1em;
+    //  position: relative;
+    //  text-indent: -9999px;
+    //  vertical-align: middle;
+    //  width: 1em;
+    //
+    //  &::before,
+    //  &::after {
+    //    content: '';
+    //    display: block;
+    //    left: 50%;
+    //    position: absolute;
+    //    top: 50%;
+    //    transform: translate(-50%, -50%);
+    //  }
+    //
+    //  &.icon-resize-se {
+    //    &::before {
+    //      border: 3px solid black;
+    //      border-bottom: 0;
+    //      border-right: 0;
+    //      height: .65em;
+    //      transform: translate(-75%, -50%) rotate(180deg);
+    //      width: .65em;
+    //    }
+    //  }
+    //}
   }
 
   & > .vue-rtl-resizable-handle {
-    background-origin: content-box;
-    background-position: bottom right;
-    background-repeat: no-repeat;
-    bottom: 5px;
-    box-sizing: border-box;
-    cursor: sw-resize;
-    height: 20px;
-    left: 0;
-    margin: 0 3px 2px 5px;
-    position: absolute;
-    right: auto;
-    width: 20px;
-    z-index: 20;
+    //background-origin: content-box;
+    //background-position: bottom right;
+    //background-repeat: no-repeat;
+    //bottom: 5px;
+    //box-sizing: border-box;
+    //cursor: sw-resize;
+    //height: 20px;
+    //left: 0;
+    //margin: 0 3px 2px 5px;
+    //position: absolute;
+    //right: auto;
+    //width: 20px;
+    //z-index: 20;
 
-    & > .icon, .icon-resize-se {
-      box-sizing: border-box;
-      display: inline-block;
-      font-size: inherit;
-      font-style: normal;
-      height: 1em;
-      position: relative;
-      text-indent: -9999px;
-      vertical-align: middle;
-      width: 1em;
-
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      &.icon-resize-se {
-        &::before {
-          border: 3px solid black;
-          border-bottom: 0;
-          border-right: 0;
-          height: .65em;
-          transform: translate(-75%, -50%) rotate(270deg);
-          width: .65em;
-        }
-      }
-    }
+    //& > .icon, .icon-resize-se {
+    //  box-sizing: border-box;
+    //  display: inline-block;
+    //  font-size: inherit;
+    //  font-style: normal;
+    //  height: 1em;
+    //  position: relative;
+    //  text-indent: -9999px;
+    //  vertical-align: middle;
+    //  width: 1em;
+    //
+    //  &::before,
+    //  &::after {
+    //    content: '';
+    //    display: block;
+    //    left: 50%;
+    //    position: absolute;
+    //    top: 50%;
+    //    transform: translate(-50%, -50%);
+    //  }
+    //
+    //  &.icon-resize-se {
+    //    &::before {
+    //      border: 3px solid black;
+    //      border-bottom: 0;
+    //      border-right: 0;
+    //      height: .65em;
+    //      transform: translate(-75%, -50%) rotate(270deg);
+    //      width: .65em;
+    //    }
+    //  }
+    //}
   }
 
   &.render-rtl {

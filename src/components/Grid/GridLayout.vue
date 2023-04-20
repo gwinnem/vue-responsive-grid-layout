@@ -36,7 +36,7 @@
   import GridItem from './GridItem.vue';
   import {
     bottom,
-    compact,
+    compactLayout,
     getLayoutItem,
     moveElement,
     validateLayout,
@@ -287,10 +287,10 @@
       // Do not compact items more than in layout before drag
       // Set moved item as static to avoid to compact it
       l.isStatic = true;
-      compact(props.layout, props.verticalCompact, positionsBeforeDrag.value);
+      compactLayout(props.layout, props.verticalCompact, positionsBeforeDrag.value);
       l.isStatic = false;
     } else {
-      compact(props.layout, props.verticalCompact);
+      compactLayout(props.layout, props.verticalCompact);
     }
 
     // needed because vue can't detect changes on array element properties
@@ -373,7 +373,7 @@
       responsiveGridLayout();
     }
 
-    compact(props.layout, props.verticalCompact);
+    compactLayout(props.layout, props.verticalCompact);
     eventBus.emit(`compact`);
     updateHeight();
 
@@ -468,7 +468,7 @@
         initResponsiveFeatures();
       }
 
-      compact(props.layout, props.verticalCompact);
+      compactLayout(props.layout, props.verticalCompact);
       eventBus.emit(`updateWidth`, width.value);
       updateHeight();
       emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
@@ -513,7 +513,7 @@
         // self.width = self.$el.offsetWidth;
         addWindowEventListener(`resize`, onWindowResize);
 
-        compact(props.layout, props.verticalCompact);
+        compactLayout(props.layout, props.verticalCompact);
 
         emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
 
@@ -657,5 +657,16 @@
   position: absolute;
   background-repeat: repeat;
   margin: 5px;
+
+  //position: absolute;
+  //width: calc(100% - 5px);
+  //height: calc(100% - 5px);
+  //margin: 5px;
+  //content: '';
+  //background-image:
+  //  linear-gradient(to right,lightgrey 1px,transparent 1px),
+  //  linear-gradient(to bottom, lightgrey 1px, transparent 1px);
+  //background-repeat: repeat;
+  //background-size: calc(calc(100% - 5px) / 12) 30px;
 }
 </style>

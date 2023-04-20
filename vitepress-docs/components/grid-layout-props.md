@@ -116,7 +116,6 @@ The value must be an `Array` of type `TLayout` items. Each item must have:
 * `x` Column start position.
 * `y` Row start position.
 * `w` The number of columns the `GridItem` will use.
-properties.
 
 Please refer to the documentation for [GridItem](grid-item.md) for more details.
 
