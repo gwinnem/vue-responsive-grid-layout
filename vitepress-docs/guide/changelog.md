@@ -6,6 +6,12 @@ title: Changelog
 
 # Changelog
 
+## v: 1.2.1 (2023.04.20)
+* __Updated Issue__ [responsive grid item will not be distributed equally.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/2)
+* __Codebase__ Documenting function's.
+* __Doc__ Added example ***Distribute Evenly.***
+
+
 ## v: 1.2.0 (2023-04-09)
 * __Fixed Issue__ [responsive grid item will not be distributed equally.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/2)
 * __Components__ Added support for prop ***distributeEvenly*** in **GridLayout**.
