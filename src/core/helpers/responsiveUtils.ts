@@ -94,7 +94,6 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
           l.x = 0; // start x from 0
         }
       }
-      // l = distributeGridItemsEvenly(layout, l, bounds.cols);
     }
 
     // Overflows right, move item to the left
