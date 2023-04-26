@@ -1180,101 +1180,101 @@
   }
 
   & > .vue-resizable-handle {
-    //background-origin: content-box;
-    //background-position: bottom right;
-    //background-repeat: no-repeat;
-    //background-color: red;
-    //bottom: -3px;
-    //box-sizing: border-box;
-    //cursor: se-resize;
-    //height: 15px;
-    //padding: 0 3px 3px 0;
-    //position: absolute;
-    //right: -3px;
-    //width: 15px;
-    //z-index: 20;
+    background-origin: content-box;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    // background-color: red;
+    bottom: -3px;
+    box-sizing: border-box;
+    cursor: se-resize;
+    height: 15px;
+    padding: 0 3px 3px 0;
+    position: absolute;
+    right: -3px;
+    width: 15px;
+    z-index: 20;
 
-    //& > .icon {
-    //  box-sizing: border-box;
-    //  display: inline-block;
-    //  font-size: inherit;
-    //  font-style: normal;
-    //  height: 1em;
-    //  position: relative;
-    //  text-indent: -9999px;
-    //  vertical-align: middle;
-    //  width: 1em;
-    //
-    //  &::before,
-    //  &::after {
-    //    content: '';
-    //    display: block;
-    //    left: 50%;
-    //    position: absolute;
-    //    top: 50%;
-    //    transform: translate(-50%, -50%);
-    //  }
-    //
-    //  &.icon-resize-se {
-    //    &::before {
-    //      border: 3px solid black;
-    //      border-bottom: 0;
-    //      border-right: 0;
-    //      height: .65em;
-    //      transform: translate(-75%, -50%) rotate(180deg);
-    //      width: .65em;
-    //    }
-    //  }
-    //}
+    & > .icon {
+     box-sizing: border-box;
+     display: inline-block;
+     font-size: inherit;
+     font-style: normal;
+     height: 1em;
+     position: relative;
+     text-indent: -9999px;
+     vertical-align: middle;
+     width: 1em;
+
+     &::before,
+     &::after {
+       content: '';
+       display: block;
+       left: 50%;
+       position: absolute;
+       top: 50%;
+       transform: translate(-50%, -50%);
+     }
+
+     &.icon-resize-se {
+       &::before {
+        //  border: 3px solid black;
+         border-bottom: 0;
+         border-right: 0;
+         height: .65em;
+         transform: translate(-75%, -50%) rotate(180deg);
+         width: .65em;
+       }
+     }
+    }
   }
 
   & > .vue-rtl-resizable-handle {
-    //background-origin: content-box;
-    //background-position: bottom right;
-    //background-repeat: no-repeat;
-    //bottom: 5px;
-    //box-sizing: border-box;
-    //cursor: sw-resize;
-    //height: 20px;
-    //left: 0;
-    //margin: 0 3px 2px 5px;
-    //position: absolute;
-    //right: auto;
-    //width: 20px;
-    //z-index: 20;
+    background-origin: content-box;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    bottom: 5px;
+    box-sizing: border-box;
+    cursor: sw-resize;
+    height: 20px;
+    left: 0;
+    margin: 0 3px 2px 5px;
+    position: absolute;
+    right: auto;
+    width: 20px;
+    z-index: 20;
 
-    //& > .icon, .icon-resize-se {
-    //  box-sizing: border-box;
-    //  display: inline-block;
-    //  font-size: inherit;
-    //  font-style: normal;
-    //  height: 1em;
-    //  position: relative;
-    //  text-indent: -9999px;
-    //  vertical-align: middle;
-    //  width: 1em;
-    //
-    //  &::before,
-    //  &::after {
-    //    content: '';
-    //    display: block;
-    //    left: 50%;
-    //    position: absolute;
-    //    top: 50%;
-    //    transform: translate(-50%, -50%);
-    //  }
-    //
-    //  &.icon-resize-se {
-    //    &::before {
-    //      border: 3px solid black;
-    //      border-bottom: 0;
-    //      border-right: 0;
-    //      height: .65em;
-    //      transform: translate(-75%, -50%) rotate(270deg);
-    //      width: .65em;
-    //    }
-    //  }
-    //}
+    & > .icon, .icon-resize-se {
+     box-sizing: border-box;
+     display: inline-block;
+     font-size: inherit;
+     font-style: normal;
+     height: 1em;
+     position: relative;
+     text-indent: -9999px;
+     vertical-align: middle;
+     width: 1em;
+
+     &::before,
+     &::after {
+       content: '';
+       display: block;
+       left: 50%;
+       position: absolute;
+       top: 50%;
+       transform: translate(-50%, -50%);
+     }
+
+     &.icon-resize-se {
+       &::before {
+        //  border: 3px solid black;
+         border-bottom: 0;
+         border-right: 0;
+         height: .65em;
+         transform: translate(-75%, -50%) rotate(270deg);
+         width: .65em;
+       }
+     }
+    }
   }
 
   &.render-rtl {

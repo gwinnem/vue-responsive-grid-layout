@@ -5,6 +5,7 @@ import {
   getStatics,
 } from './utils';
 import {
+  ILayoutItem,
   TBreakpoint,
   TBreakpoints,
   TLayout,
@@ -65,6 +66,23 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   return cols[breakpoint];
 };
 
+const moveToCorrectPlace = (l:ILayoutItem, layout: TLayout, bounds: { cols: number }, staticItem: ILayoutItem[]):void => {
+  if(l.x + l.w > bounds.cols) {
+    l.x = 0;
+    l.y += 1;
+  }
+  // eslint-disable-next-line no-cond-assign
+  while (getFirstCollision(staticItem, l)) {
+    l.x += l.w;
+    // move x to next place which might be able to contain it
+    if(l.x + l.w > bounds.cols) {
+      // if this width is out of layout
+      l.y += 1; // move y to next y
+      l.x = 0; // start x from 0
+    }
+  }
+};
+
 /**
  * Given a layout, make sure all elements fit within its bounds.
  *
@@ -79,44 +97,35 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
 
     if(distributeEvenly) {
       // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
-      // out of layout, move down and to the left.
+      // it's not static or it's out of layout
+      if(!collidesWith.includes(l) || l.x + l.w > bounds.cols) {
+        moveToCorrectPlace(l, layout, bounds, collidesWith);
+      }
+    } else if(!distributeEvenly) {
+      // Overflows right, move item to the left
       if(l.x + l.w > bounds.cols) {
-        l.x = 0;
-        l.y += 1;
-      }
-
-      // find any item which is overlapped
-      while (getFirstCollision(layout, l)) {
-        l.x += l.w; // move x to next place which might be able to contain it
-        if(l.x + l.w > bounds.cols) {
-          // if this width is out of layout
-          l.y += 1; // move y to next y
-          l.x = 0; // start x from 0
-        }
+        l.x = bounds.cols - l.w;
       }
     }
-
-    // Overflows right, move item to the left
-    if(l.x + l.w > bounds.cols) {
-      l.x = bounds.cols - l.w;
-    }
-
     // Overflows left
     // TODO experiment to get a layout where this is the case, 01.04.2023, this is not being triggered..
     if(l.x < 0) {
       l.x = 0;
-      l.w = bounds.cols;
+      // this will cause incorrect width when drag item from outside
+      // l.w = bounds.cols;
     }
 
     if(!l.isStatic) {
       collidesWith.push(l);
-    } else {
-      // If this is static and collides with other statics, we must move it down.
-      // We have to do something nicer than just letting them overlap.
-      while (getFirstCollision(collidesWith, l)) {
-        l.y++;
-      }
     }
+    // this will cause the item which is real static be moved
+    // else {
+    //   // If this is static and collides with other statics, we must move it down.
+    //   // We have to do something nicer than just letting them overlap.
+    //   while (getFirstCollision(collidesWith, l)) {
+    //     l.y++;
+    //   }
+    // }
   }
   return layout;
 }

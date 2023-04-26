@@ -318,8 +318,8 @@
     if(index !== -1) {
       try {
         refLayout.value.defaultGridItem.$el.style.display = "none";
-      } catch {
-        // Do nothing
+      } catch (e){
+        console.log(e);
       }
       let el = mapCache.get("drop");
       if(!el) {
@@ -336,10 +336,12 @@
         DragPos.i = String(index);
         DragPos.x = testLayout.value[index].x;
         DragPos.y = testLayout.value[index].y;
+        DragPos.w = 2;
+        DragPos.h = 2;
       }
       if(mouseInGrid === false) {
         refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 2, 2);
-        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
+        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
       }
     }
   }
@@ -364,13 +366,15 @@
         testLayout.value.push({
           x: DragPos.x,
           y: DragPos.y,
-          w: 1,
-          h: 1,
+          w: 2,
+          h: 2,
           minH: 1,
           minW: 1,
           i: DragPos.i
         });
         refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 2, 2);
+        mouseXY.x = 0;
+        mouseXY.y = 0;
         mapCache.delete("drop");
       });
     }
