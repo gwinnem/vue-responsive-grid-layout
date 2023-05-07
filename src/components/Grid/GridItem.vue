@@ -629,6 +629,7 @@
         resizing.value = newSize;
         isResizing.value = true;
         // console.log(`START => innerX: ${innerX.value} innerY: ${innerY.value} 'innerW:'${innerW.value} innerH:${innerH.value} pos: ${JSON.stringify(pos)}`);
+        // @ts-ignore
         edges = event.edges;
         break;
       }
