@@ -21,6 +21,14 @@
     <slot :style="styleObj"></slot>
   </div>
 </template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  export default defineComponent({
+    name: `GridItem`,
+  })
+
+</script>
 <script lang="ts" setup>
   import {
     ref, inject, computed, watch, onBeforeUnmount, onMounted, useSlots,
