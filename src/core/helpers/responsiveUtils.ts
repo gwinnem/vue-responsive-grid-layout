@@ -92,6 +92,14 @@ const moveToCorrectPlace = (l:ILayoutItem, layout: TLayout, bounds: { cols: numb
  */
 export function correctBounds(layout: TLayout, bounds: { cols: number }, distributeEvenly: boolean): TLayout {
   const collidesWith = getStatics(layout);
+  const staticItem = getStatics(layout);
+  for(let i = 0, len = staticItem.length; i < len; i++) {
+    // move static item first
+    // try not move their y
+    while (staticItem[i].x + staticItem[i].w > bounds.cols || getFirstCollision(staticItem, staticItem[i])) {
+      staticItem[i].x -= 1;
+    }
+  }
   for(let i = 0, len = layout.length; i < len; i++) {
     const l = layout[i];
 
