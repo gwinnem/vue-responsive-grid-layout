@@ -19,7 +19,7 @@
       :y="placeholder.y" />
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
   import {
     ref,
     onMounted,
@@ -28,7 +28,15 @@
     onBeforeMount,
     nextTick,
     watch, computed,
+    defineComponent,
   } from 'vue';
+
+  export default defineComponent({
+    name: `GridLayout`,
+  });
+
+</script>
+<script lang="ts" setup>
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
   import { ILayoutItem, TLayout } from '@/components';
