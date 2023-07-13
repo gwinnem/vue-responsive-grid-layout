@@ -66,6 +66,13 @@
           @dragend="dragend">
           Droppable Element (Drag me!)
         </div>
+        <!-- <DragItem
+          :testLayout="testLayout"
+          :colNum="colNum"
+          :refLayout="refLayout"
+          :map-cache="mapCache"
+          @updateTestLayout="updateTestLayout">
+        </DragItem> -->
       </div>
       <div class="col-sm-6">
         <div class="layoutJSON">
@@ -171,7 +178,9 @@
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem from '../src/components/Grid/GridItem.vue';
-  import { ILayoutItem } from '../src/components';
+  import { ILayoutItem, TLayout } from '../src/components';
+
+  // import DragItem from '@/components/Grid/DragItem.vue';
 
   // Used for testing the package before publishing to npm.
   // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
@@ -195,7 +204,7 @@
   const preserveAspectRatio = ref(false);
   const preventCollision = ref(false);
   const rowHeight = ref(50);
-  const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
+  // const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
   const restoreOnDrag = ref(false);
   const showCloseButton = ref(false);
   const showGridLines = ref(false);
@@ -204,7 +213,7 @@
 
   const testLayout = ref(testData);
   const refLayout = ref();
-  const mapCache: Map<string, any> = new Map();
+  const mapCache = new Map();
 
   const margin = computed(() => {
     return [marginLeftRight.value, marginTopBottom.value];
@@ -227,35 +236,36 @@
   const eventsDiv = ref<HTMLDivElement>();
   const eventsLog = ref<string[]>([]);
 
-  const publishToEventLog = (i, msg, newX, newY): void => {
+  const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
     eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
-    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+    if(eventsDiv.value)
+      eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   }
-  const containerResizedEvent = (i, newX, newY): void => {
+  const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'containerResizedEvent', newX, newY);
   };
 
-  const dragEvent = (i, newX, newY): void => {
+  const dragEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'dragEvent', newX, newY);
   };
 
-  const draggedEvent = (i, newX, newY): void => {
+  const draggedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'draggedEvent', newX, newY);
   };
 
-  const moveEvent = (i, newX, newY): void => {
+  const moveEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'moveEvent', newX, newY);
   };
 
-  const movedEvent = (i, newX, newY): void => {
+  const movedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'movedEvent', newX, newY);
   };
 
-  const resizeEvent = (i, newX, newY): void => {
+  const resizeEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'resizeEvent', newX, newY);
   };
 
-  const resizedEvent = (i, newX, newY): void => {
+  const resizedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'resizedEvent', newX, newY);
   };
 
@@ -277,6 +287,11 @@
     x: 0,
     y: 0,
   };
+
+  const updateTestLayout = (updateLayout: TLayout) => {
+    console.log(`update layout`);
+    testLayout.value = updateLayout;
+  }
 
   let DragPos = {
     x: 0,
