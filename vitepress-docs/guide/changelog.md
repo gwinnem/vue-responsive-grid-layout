@@ -6,9 +6,10 @@ title: Changelog
 
 # Changelog
 
-## v: 1.2.1 (2023-05-07)
-* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks t0 [UTing1119](https://github.com/UTing1119)
-* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks t0 [UTing1119](https://github.com/UTing1119)
+## v: 1.2.1 (2023.04.20)
+* __Updated Issue__ [responsive grid item will not be distributed equally.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/2)
+* __Codebase__ Documenting function's.
+* __Doc__ Added example ***Distribute Evenly.***
 
 
 ## v: 1.2.0 (2023-04-09)

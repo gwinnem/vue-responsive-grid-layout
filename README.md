@@ -1,3 +1,13 @@
+
+[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/BuZZ-dEE/uuid-generator-ts)
+[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/vue-ts-responsive-grid-layout)](https://libraries.io/npm/vue-ts-responsive-grid-layout)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/vue-ts-responsive-grid-layout)](https://bundlephobia.com/result?p=vue-ts-responsive-grid-layout)
+[![npm](https://img.shields.io/npm/v/vue-ts-responsive-grid-layout)](https://www.npmjs.com/package/vue-ts-responsive-grid-layout)
+[![NPM](https://img.shields.io/npm/l/vue-ts-responsive-grid-layout)](https://github.com/gwinnem/vue-ts-responsive-grid-layout/blob/master/LICENSE)
+
+</br>
+</br>
 <p align="center">
   <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/main/docs/Data%20Grid.svg" height="200" alt="logo">
 </p>
@@ -57,6 +67,17 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Using proper linting rules for vue, typescript and styles.
 * Component using script setup style syntax.
 * Props and emits are typesafe.
+
+## Changelog
+
+### v: 1.2.2 ()
+* Updated package.json with contributors.
+* Updated README with badges.
+* Updated outdated dependencies.
+
+### v: 1.2.1 (2023-05-07)
+* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks t0 [UTing1119](https://github.com/UTing1119)
+* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks t0 [UTing1119](https://github.com/UTing1119)
 
 ## Donate
 <a href="https://paypal.me/gwinnem/">
