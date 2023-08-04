@@ -39,18 +39,18 @@
             <label for="isResponsive">isResponsive</label>
             <input id="isResponsive" v-model="isResponsive" type="checkbox">
             <br/>
-            <label for="preserveAspectRatio">preserveAspectRatio</label>
-            <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox">
+            <!-- <label for="preserveAspectRatio">preserveAspectRatio</label>
+            <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox"> -->
             <label for="preventCollision">preventCollision</label>
             <input id="preventCollision" v-model="preventCollision" type="checkbox">
-            <label for="restoreOnDrag">restoreOnDrag</label>
-            <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">
-            <label for="showCloseButton">showCloseButton</label>
+            <!-- <label for="restoreOnDrag">restoreOnDrag</label>
+            <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox"> -->
+            <!-- <label for="showCloseButton">showCloseButton</label>
             <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
             <label for="showGridLines">showGridLines</label>
             <input id="showGridLines" v-model="showGridLines" type="checkbox">
             <label for="useBorderRadius">useBorderRadius</label>
-            <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox">
+            <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox"> -->
             <label for="verticalCompact">verticalCompact</label>
             <input id="verticalCompact" v-model="verticalCompact" type="checkbox">
           </fieldset>
@@ -180,6 +180,11 @@
   import GridItem from '../src/components/Grid/GridItem.vue';
   import { ILayoutItem, TLayout } from '../src/components';
 
+  import {
+    getStatics,
+    getFirstCollision,
+  } from '../src/core/helpers/utils';
+
   // import DragItem from '@/components/Grid/DragItem.vue';
 
   // Used for testing the package before publishing to npm.
@@ -288,34 +293,38 @@
     y: 0,
   };
 
-  const updateTestLayout = (updateLayout: TLayout) => {
-    console.log(`update layout`);
-    testLayout.value = updateLayout;
-  }
+  // const updateTestLayout = (updateLayout: TLayout) => {
+  //   console.log(`update layout`);
+  //   testLayout.value = updateLayout;
+  // }
 
-  let DragPos = {
-    x: 0,
-    y: 0,
+  interface position {
+    x: number|undefined
+    y: number|undefined
+    w: number
+    h:number
+    i:string
+  }
+  let DragPos:position = {
+    x: undefined,
+    y: undefined,
     w: 1,
     h: 1,
     i: ``,
   };
 
-  function drag(e: DragEvent) {
+  const drag = (e: DragEvent): void => {
     e.stopPropagation();
     e.preventDefault();
-    if(!enableEditMode && !isDraggable) {
+    if(!enableEditMode.value && !isDraggable.value) {
       return;
     }
-    const t = document.getElementById("content") as HTMLElement;
-    let parentRect = t.getBoundingClientRect();
+    const t = document.getElementById(`content`) as HTMLElement;
+    const parentRect = t.getBoundingClientRect();
     let mouseInGrid = false;
     if(
-      mouseXY.x > parentRect.left &&
-      mouseXY.x < parentRect.right &&
-      mouseXY.y > parentRect.top &&
-      mouseXY.y < parentRect.bottom
-    ) {
+      ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
+      ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
       mouseInGrid = true;
     }
     if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === "drop") === -1) {
@@ -324,28 +333,46 @@
         y: testLayout.value.length + colNum.value, // puts it at the bottom
         w: 2,
         h: 2,
-        i: "drop"
+        i: "drop",
       });
+      // emit('updateTestLayout', testLayout.value);
     }
 
-    let index = testLayout.value.findIndex(item => item.i === "drop");
+    const index = testLayout.value.findIndex(item => item.i === "drop");
 
-    if(index !== -1) {
-      try {
-        refLayout.value.defaultGridItem.$el.style.display = "none";
-      } catch (e){
-        console.log(e);
-      }
+    if(index !== -1 && refLayout.value && mapCache) {
       let el = mapCache.get("drop");
       if(!el) {
         return;
       }
+      
+      try {
+        refLayout.value.defaultGridItem.$el.style.display = "none";
+      } catch(e) {
+        console.log(e);
+      }
+    
+      let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
+
+      const static_item = getStatics(testLayout.value)
+      if(getFirstCollision(static_item,{
+        i: `index`,
+        h: 2,
+        w: 2,
+        x: new_pos.x,
+        y: new_pos.y,
+      })){
+        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+        return
+      }
+
+      if(DragPos.x === new_pos.x && DragPos.y === new_pos.y)
+        return
 
       el.dragging = {
         top: mouseXY.y - parentRect.top,
         left: mouseXY.x - parentRect.left
       };
-      let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
       if(mouseInGrid === true) {
         refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 2, 2);
         DragPos.i = String(index);
@@ -358,8 +385,9 @@
         refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 2, 2);
         testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
       }
+      
     }
-  }
+  };
 
   function dragend() {
     const t = document.getElementById("content") as HTMLElement;
@@ -375,12 +403,23 @@
     }
 
     if(mouseInGrid === true) {
+      const static_item = getStatics(testLayout.value)
+      if(getFirstCollision(static_item,{
+        i: `index`,
+        h: 2,
+        w: 2,
+        x: DragPos.x!,
+        y: DragPos.y!,
+      })){
+        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+        return
+      }
       refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 2, 2);
       testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
       nextTick(() => {
         testLayout.value.push({
-          x: DragPos.x,
-          y: DragPos.y,
+          x: DragPos.x!,
+          y: DragPos.y!,
           w: 2,
           h: 2,
           minH: 1,

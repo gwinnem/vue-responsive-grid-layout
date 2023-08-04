@@ -29,6 +29,7 @@
     nextTick,
     watch, computed,
     defineComponent,
+    toRef,
   } from 'vue';
 
   export default defineComponent({
@@ -50,6 +51,8 @@
     validateLayout,
     cloneLayout,
     getAllCollisions,
+    getStatics,
+    getFirstCollision,
   } from '@/core/helpers/utils';
   import {
     getBreakpointFromWidth,
@@ -160,6 +163,7 @@
 
   const defaultGridItem = ref();
   const colNum = ref(props.colNum);
+  const propsLayout = toRef(props, 'layout');
   const eventBus: Emitter<{
     changeDirection: boolean;
     compact: void;
@@ -277,10 +281,24 @@
       placeholder.value.y = l.y as number;
       placeholder.value.w = w as number;
       placeholder.value.h = h as number;
-      nextTick(() => {
-        isDragging.value = true;
-      });
-      eventBus.emit(`updateWidth`, width.value);
+
+      const staticItem = getStatics(propsLayout.value);
+      if(getFirstCollision(staticItem, {
+        i: `index`,
+        h: placeholder.value.h,
+        w: placeholder.value.w,
+        x: placeholder.value.x,
+        y: placeholder.value.y,
+      }) === undefined) {
+        nextTick(() => {
+          isDragging.value = true;
+        });
+        eventBus.emit(`updateWidth`, width.value);
+      } else {
+        nextTick(() => {
+          isDragging.value = false;
+        });
+      }
     } else {
       nextTick(() => {
         isDragging.value = false;
