@@ -58,6 +58,7 @@
     getBreakpointFromWidth,
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
+    correctBounds,
   } from '@/core/helpers/responsiveUtils';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
@@ -162,7 +163,10 @@
   const refsLayout = ref<HTMLElement>({} as HTMLElement);
 
   const defaultGridItem = ref();
-  const colNum = ref(props.colNum);
+  const colNum = toRef(props, 'colNum');
+  const colNumResponsive = ref(props.colNum);
+  const distributeEvenly = toRef(props, 'distributeEvenly');
+  const verticalCompact = toRef(props, 'verticalCompact');
   const propsLayout = toRef(props, 'layout');
   const eventBus: Emitter<{
     changeDirection: boolean;
@@ -205,13 +209,17 @@
       height: containerHeight(),
     };
   };
-
   // finds or generates new layouts for set breakpoints
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
-    colNum.value = newCols;
-    emit(EGridLayoutEvent.COLUMNS_CHANGED, newCols);
+    colNumResponsive.value = newCols;
+
+    let colsCompute = newCols;
+
+    if(colNum.value < colNumResponsive.value) {
+      colsCompute = colNum.value;
+    }
 
     if(lastBreakpoint.value != null && !layouts.value[lastBreakpoint.value]) {
       layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
@@ -224,12 +232,12 @@
       props.breakpoints,
       newBreakpoint,
       lastBreakpoint.value as string,
-      newCols,
+      colsCompute,
       props.verticalCompact,
       props.distributeEvenly,
     );
 
-    layouts.value[newBreakpoint] = layout;
+    layouts.value[newBreakpoint] = cloneLayout(layout);
 
     if(lastBreakpoint.value !== newBreakpoint) {
       emit(EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint, layout);
@@ -240,7 +248,24 @@
     emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
 
     lastBreakpoint.value = newBreakpoint;
-    eventBus.emit(`setColNum`, getColsFromBreakpoint(newBreakpoint, props.cols));
+    eventBus.emit(`setColNum`, colsCompute);
+  };
+
+  const generateNewLayoutByCols = (cols: number): void => {
+    const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
+
+    emit(EGridLayoutEvent.COLUMNS_CHANGED, cols);
+    if(lastBreakpoint.value != null) {
+      layouts.value[newBreakpoint] = cloneLayout(compactLayout(correctBounds(layouts.value[newBreakpoint], { cols }, distributeEvenly.value), verticalCompact.value));
+      // new prop sync
+      // noinspection TypeScriptValidateTypes
+      emit(EGridLayoutEvent.UPDATE_LAYOUT, layouts.value[newBreakpoint]);
+
+      // lastBreakpoint.value = newBreakpoint;
+      eventBus.emit(`setColNum`, cols);
+
+      // layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
+    }
   };
 
   const dragEvent = (
@@ -602,6 +627,7 @@
 
   watch(() => props.colNum, val => {
     eventBus.emit(`setColNum`, val);
+    generateNewLayoutByCols(val);
   });
 
   watch(() => props.rowHeight, val => {
