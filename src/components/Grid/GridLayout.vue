@@ -343,9 +343,7 @@
     } else {
       compactLayout(props.layout, props.verticalCompact);
     }
-    if(props.responsive) {
-      responsiveGridLayout();
-    }
+
     // needed because vue can't detect changes on array element properties
     eventBus.emit(`compact`);
     updateHeight();
