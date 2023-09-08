@@ -39,18 +39,18 @@
             <label for="isResponsive">isResponsive</label>
             <input id="isResponsive" v-model="isResponsive" type="checkbox">
             <br/>
-            <!-- <label for="preserveAspectRatio">preserveAspectRatio</label>
-            <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox"> -->
+            <label for="preserveAspectRatio">preserveAspectRatio</label>
+            <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox">
             <label for="preventCollision">preventCollision</label>
             <input id="preventCollision" v-model="preventCollision" type="checkbox">
-            <!-- <label for="restoreOnDrag">restoreOnDrag</label>
-            <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox"> -->
-            <!-- <label for="showCloseButton">showCloseButton</label>
+            <label for="restoreOnDrag">restoreOnDrag</label>
+            <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">
+            <label for="showCloseButton">showCloseButton</label>
             <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
             <label for="showGridLines">showGridLines</label>
             <input id="showGridLines" v-model="showGridLines" type="checkbox">
             <label for="useBorderRadius">useBorderRadius</label>
-            <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox"> -->
+            <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox">
             <label for="verticalCompact">verticalCompact</label>
             <input id="verticalCompact" v-model="verticalCompact" type="checkbox">
           </fieldset>
@@ -178,7 +178,7 @@
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem from '../src/components/Grid/GridItem.vue';
-  import { ILayoutItem, TLayout } from '../src/components';
+  import { ILayoutItem, } from '../src/components';
 
   import {
     getStatics,
@@ -340,14 +340,14 @@
 
     const index = testLayout.value.findIndex(item => item.i === "drop");
 
-    if(index !== -1 && refLayout.value && mapCache) {
+    if(index !== -1) {
       let el = mapCache.get("drop");
       if(!el) {
         return;
       }
       
       try {
-        refLayout.value.defaultGridItem.$el.style.display = "none";
+        refLayout.value.$refs.refsLayout.children[index].style.display = "none"
       } catch(e) {
         console.log(e);
       }
