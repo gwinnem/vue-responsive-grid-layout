@@ -395,6 +395,7 @@
     if(renderRtl.value) {
       pos = calcXY(newPosition.top, newPosition.left);
     } else {
+      // TODO Change to newPosition.left to right
       pos = calcXY(newPosition.top, newPosition.left);
     }
 
@@ -528,9 +529,9 @@
       const opts = {
         edges: {
           bottom: true,
-          left: true,
+          left: false,
           right: true,
-          top: true,
+          top: false,
         },
         ignoreFrom: props.resizeIgnoreFrom,
         modifiers: [],
@@ -626,6 +627,7 @@
         break;
       }
       case `resizemove`: {
+        // TODO handle rtl properly
         const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
         if(edges.left && edges.bottom && !edges.right && !edges.top) {
           // Bottom left
