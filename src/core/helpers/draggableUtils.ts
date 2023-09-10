@@ -3,11 +3,19 @@ export interface IPoint {
   y: number;
 }
 
+/**
+ * Checking if the number is a real number and not NaN.
+ * @param num       The number to validate.
+ * @returns boolean If the param is a real number it returns true, if not it returns false.
+ */
 function isNum(num: number): boolean {
   return !Number.isNaN(num);
 }
 
-// Get from offsetParent
+/**
+ * Get from offsetParent
+ * @param evt
+ */
 export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
   const t = evt.target as HTMLElement;
   const offsetParent = t.offsetParent || document.body;
@@ -28,7 +36,10 @@ export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
   };
 }
 
-// Get {x, y} positions from event.
+/**
+ * Get {x, y} positions from event.
+ * @param e
+ */
 export function getControlPosition(e: MouseEvent): IPoint {
   return offsetXYFromParentOf(e);
 }
@@ -42,7 +53,13 @@ export interface IDraggableCoreData {
   y: number;
 }
 
-// Create a data object exposed by <DraggableCore>'s events
+/**
+ * Create a data object exposed by <DraggableCore>'s events
+ * @param lastX
+ * @param lastY
+ * @param x
+ * @param y
+ */
 export function createCoreData(
   lastX: number,
   lastY: number,
