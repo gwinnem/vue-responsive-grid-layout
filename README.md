@@ -61,10 +61,15 @@ This new and refactored component has more features, typesafe Emits, Props and a
 
 ## Changelog
 
-### v: 1.2.2 ()
-* Updated package.json with contributors.
-* Updated README with badges.
-* Updated outdated dependencies.
+### v: 1.2.2 (2023-09-xx)
+* __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
+* __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
+  * __Right, Right Bottom and Bottom__ resize fixed.
+  * __Left, Top Left, Top and Top Right__ resize not fixed.
+* __Codebase__ Adding description to functions.
+* __Codebase__ Added contributors to package.json.
+* __Codebase__ Added badges to README file.
+* __Codebase__ Fixed outdated dependencies.
 
 ### v: 1.2.1 (2023-05-07)
 * --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks t0 [UTing1119](https://github.com/UTing1119)
