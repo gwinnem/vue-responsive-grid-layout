@@ -66,7 +66,7 @@ export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoint
   return cols[breakpoint];
 };
 
-const moveToCorrectPlace = (l:ILayoutItem, layout: TLayout, bounds: { cols: number }, staticItem: ILayoutItem[]):void => {
+const moveToCorrectPlace = (l:ILayoutItem, bounds: { cols: number }, staticItem: ILayoutItem[]):void => {
   if(l.x + l.w > bounds.cols) {
     l.x = 0;
     l.y += 1;
@@ -105,9 +105,9 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
 
     if(distributeEvenly) {
       // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
-      // it's not static or it's out of layout
-      if(!collidesWith.includes(l) || l.x + l.w > bounds.cols) {
-        moveToCorrectPlace(l, layout, bounds, collidesWith);
+      // it's not static and it's out of layout
+      if(!collidesWith.includes(l) && l.x + l.w > bounds.cols) {
+        moveToCorrectPlace(l, bounds, collidesWith);
       }
     } else if(!distributeEvenly) {
       // Overflows right, move item to the left
