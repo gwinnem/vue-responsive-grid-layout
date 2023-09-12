@@ -1,9 +1,9 @@
 <template>
   <div
     ref="gridItem"
-    class="vue-grid-item"
     :class="classObj"
-    :style="styleObj">
+    :style="styleObj"
+    class="vue-grid-item">
     <button
       v-if="showCloseButton && enableEditMode && !isStatic"
       class="btn-close"
@@ -35,10 +35,8 @@
   import interact from '@interactjs/interact';
   import { Emitter } from 'mitt';
   import { Interactable } from '@interactjs/core/Interactable';
-  import {
-    setTopLeft, setTopRight, setTransformRtl, setTransform,
-  } from '@/core/helpers/utils';
-  import { getControlPosition, createCoreData } from '@/core/helpers/draggableUtils';
+  import { setTopLeft, setTopRight, setTransform, setTransformRtl, } from '@/core/helpers/utils';
+  import { createCoreData, getControlPosition } from '@/core/helpers/draggableUtils';
   import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
   import '@interactjs/auto-start';
   import '@interactjs/auto-scroll';
@@ -50,12 +48,7 @@
   import { IGridLayoutProps } from './grid-layout-props.interface';
   import { ILayoutData } from '@/core/interfaces/layout-data.interface';
   import { EGridItemEvent } from '@/core/enums/EGridItemEvents';
-  import {
-    ICalcWh,
-    ICalcXy,
-    IGridItemPosition,
-    IGridItemWidthHeight,
-  } from '@/core/interfaces/grid-item.interfaces';
+  import { ICalcWh, ICalcXy, IGridItemPosition, IGridItemWidthHeight, } from '@/core/interfaces/grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
 
@@ -224,7 +217,8 @@
   });
 
   const isAndroid = computed(() => {
-    return navigator.userAgent.toLowerCase().indexOf(`android`) !== -1;
+    return navigator.userAgent.toLowerCase()
+      .indexOf(`android`) !== -1;
   });
 
   const renderRtl = computed(() => {
@@ -410,6 +404,7 @@
     if(renderRtl.value) {
       pos = calcXY(newPosition.top, newPosition.left);
     } else {
+      // TODO Change to newPosition.left to right
       pos = calcXY(newPosition.top, newPosition.left);
     }
 
@@ -543,9 +538,9 @@
       const opts = {
         edges: {
           bottom: true,
-          left: true,
+          left: false,
           right: true,
-          top: true,
+          top: false,
         },
         ignoreFrom: props.resizeIgnoreFrom,
         modifiers: [],
@@ -636,29 +631,54 @@
         resizing.value = newSize;
         isResizing.value = true;
         // console.log(`START => innerX: ${innerX.value} innerY: ${innerY.value} 'innerW:'${innerW.value} innerH:${innerH.value} pos: ${JSON.stringify(pos)}`);
+        // @ts-ignore
         edges = event.edges;
         break;
       }
       case `resizemove`: {
-        // console.log(`### resize => ${event.type}, lastW=${lastW.value}, lastH=${lastH.value}`);
+        // TODO handle rtl properly
         const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
-        // console.log(`coreEvent`, coreEvent);
-        // console.log(`edges`, edges);
-        if(edges.left && edges.bottom) {
-          newSize.width = (Number(resizing.value?.width) - coreEvent.deltaX) / transformScale.value;
-          newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
-        } else if(edges.right && edges.bottom && !edges.left && !edges.top) {
+        if(edges.left && edges.bottom && !edges.right && !edges.top) {
+          // Bottom left
+          // newSize.width = (Number(resizing.value?.width) - coreEvent.deltaX) / transformScale.value;
+          // newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
+        } else if(edges.right && edges.bottom) {
+          // Bottom right
           newSize.width = (Number(resizing.value?.width) + coreEvent.deltaX) / transformScale.value;
           newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
-        } else if(edges.left && edges.top && !edges.bottom && !edges.right) {
-          //
-        } else if(edges.right && edges.top && !edges.bottom && !edges.left) {
-          //
-        } else if(edges.right && !edges.right && !edges.bottom && !edges.top) {
+        } else if(edges.left && edges.top && !edges.right) {
+          // Top Left
+          // pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+          // newSize.width = pos.width;
+          // newSize.height = pos.height;
+        } else if(edges.right && edges.top) {
+          // Top Right
+          // pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+          // newSize.height = pos.height;
+          // newSize.width = (Number(resizing.value?.width) + coreEvent.deltaX) / transformScale.value;
+        } else if(edges.right && !edges.left && !edges.top && !edges.bottom) {
+          // Right
           newSize.width = (Number(resizing.value?.width) + coreEvent.deltaX) / transformScale.value;
+          newSize.height = Number(resizing.value?.height);
+        } else if(edges.left && !edges.right && !edges.top && !edges.bottom) {
+          // Left
+          // pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+          // newSize.height = pos.height;
+          // newSize.width = (Number(resizing.value?.width) + coreEvent.deltaX) / transformScale.value;
+          // Calculate start point for the item.
+        } else if(edges.bottom && !edges.left && !edges.right && !edges.top) {
+          // Bottom
+          newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
+          pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+          newSize.width = pos.width;
+        } else if(edges.top && !edges.left && !edges.right && !edges.bottom) {
+          // Top
+          // newSize.height = (Number(resizing.value?.height) + coreEvent.deltaY) / transformScale.value;
+          // pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
+          // newSize.width = pos.width;
+          // Calculate new top starting point for the item.
         }
 
-        // console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
         resizing.value = newSize;
         break;
       }
@@ -1202,36 +1222,36 @@
     z-index: 20;
 
     & > .icon {
-     box-sizing: border-box;
-     display: inline-block;
-     font-size: inherit;
-     font-style: normal;
-     height: 1em;
-     position: relative;
-     text-indent: -9999px;
-     vertical-align: middle;
-     width: 1em;
+      box-sizing: border-box;
+      display: inline-block;
+      font-size: inherit;
+      font-style: normal;
+      height: 1em;
+      position: relative;
+      text-indent: -9999px;
+      vertical-align: middle;
+      width: 1em;
 
-     &::before,
-     &::after {
-       content: '';
-       display: block;
-       left: 50%;
-       position: absolute;
-       top: 50%;
-       transform: translate(-50%, -50%);
-     }
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
 
-     &.icon-resize-se {
-       &::before {
-        //  border: 3px solid black;
-         border-bottom: 0;
-         border-right: 0;
-         height: .65em;
-         transform: translate(-75%, -50%) rotate(180deg);
-         width: .65em;
-       }
-     }
+      &.icon-resize-se {
+        &::before {
+          //  border: 3px solid black;
+          border-bottom: 0;
+          border-right: 0;
+          height: .65em;
+          transform: translate(-75%, -50%) rotate(180deg);
+          width: .65em;
+        }
+      }
     }
   }
 
@@ -1251,36 +1271,36 @@
     z-index: 20;
 
     & > .icon, .icon-resize-se {
-     box-sizing: border-box;
-     display: inline-block;
-     font-size: inherit;
-     font-style: normal;
-     height: 1em;
-     position: relative;
-     text-indent: -9999px;
-     vertical-align: middle;
-     width: 1em;
+      box-sizing: border-box;
+      display: inline-block;
+      font-size: inherit;
+      font-style: normal;
+      height: 1em;
+      position: relative;
+      text-indent: -9999px;
+      vertical-align: middle;
+      width: 1em;
 
-     &::before,
-     &::after {
-       content: '';
-       display: block;
-       left: 50%;
-       position: absolute;
-       top: 50%;
-       transform: translate(-50%, -50%);
-     }
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
 
-     &.icon-resize-se {
-       &::before {
-        //  border: 3px solid black;
-         border-bottom: 0;
-         border-right: 0;
-         height: .65em;
-         transform: translate(-75%, -50%) rotate(270deg);
-         width: .65em;
-       }
-     }
+      &.icon-resize-se {
+        &::before {
+          //  border: 3px solid black;
+          border-bottom: 0;
+          border-right: 0;
+          height: .65em;
+          transform: translate(-75%, -50%) rotate(270deg);
+          width: .65em;
+        }
+      }
     }
   }
 
@@ -1316,6 +1336,7 @@
       }
     }
   }
+
   & > .btn-close {
     align-items: center;
     background: red;
