@@ -420,10 +420,6 @@
       });
     }
 
-    if(props.responsive) {
-      responsiveGridLayout();
-    }
-
     compactLayout(props.layout, props.verticalCompact);
     eventBus.emit(`compact`);
     updateHeight();
@@ -532,6 +528,10 @@
     const widthT = refsLayout.value.offsetWidth;
     if(widthT > 0) {
       width.value = widthT;
+    }
+
+    if(props.responsive) {
+      responsiveGridLayout();
     }
     eventBus.emit(`resizeEvent`);
   };
