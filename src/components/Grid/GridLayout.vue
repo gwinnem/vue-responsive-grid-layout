@@ -58,7 +58,6 @@
     getBreakpointFromWidth,
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
-    correctBounds,
   } from '@/core/helpers/responsiveUtils';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
@@ -165,8 +164,6 @@
   const defaultGridItem = ref();
   const colNum = toRef(props, 'colNum');
   const colNumResponsive = ref(props.colNum);
-  const distributeEvenly = toRef(props, 'distributeEvenly');
-  const verticalCompact = toRef(props, 'verticalCompact');
   const propsLayout = toRef(props, 'layout');
   const eventBus: Emitter<{
     changeDirection: boolean;
@@ -213,10 +210,11 @@
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
+    // responsive cols
     colNumResponsive.value = newCols;
 
     let colsCompute = newCols;
-
+    // max is colNum which is set by user
     if(colNum.value < colNumResponsive.value) {
       colsCompute = colNum.value;
     }
@@ -249,23 +247,6 @@
 
     lastBreakpoint.value = newBreakpoint;
     eventBus.emit(`setColNum`, colsCompute);
-  };
-
-  const generateNewLayoutByCols = (cols: number): void => {
-    const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
-
-    emit(EGridLayoutEvent.COLUMNS_CHANGED, cols);
-    if(lastBreakpoint.value != null) {
-      layouts.value[newBreakpoint] = cloneLayout(compactLayout(correctBounds(layouts.value[newBreakpoint], { cols }, distributeEvenly.value), verticalCompact.value));
-      // new prop sync
-      // noinspection TypeScriptValidateTypes
-      emit(EGridLayoutEvent.UPDATE_LAYOUT, layouts.value[newBreakpoint]);
-
-      // lastBreakpoint.value = newBreakpoint;
-      eventBus.emit(`setColNum`, cols);
-
-      // layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
-    }
   };
 
   const dragEvent = (
@@ -625,7 +606,7 @@
 
   watch(() => props.colNum, val => {
     eventBus.emit(`setColNum`, val);
-    generateNewLayoutByCols(val);
+    responsiveGridLayout();
   });
 
   watch(() => props.rowHeight, val => {
