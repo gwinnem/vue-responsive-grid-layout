@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "declaration": true,
     "declarationDir": "dist/types",
     "esModuleInterop": true,
@@ -23,10 +22,9 @@
     // "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*",
-      ],
+      "@/*": ["src/*"],
       "@theme/*": ["vitepress-docs/.vitepress/theme/*"],
     },
     "resolveJsonModule": true,
@@ -49,6 +47,6 @@
     "node_modules",
     "*.tgz"
   ],
-  "include": ["./src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.vue", "./**/*.vue"],
   "references": [],
 }

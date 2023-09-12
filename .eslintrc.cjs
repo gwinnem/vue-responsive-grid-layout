@@ -20,7 +20,8 @@ module.exports = {
       rules: {
         indent: `off`,
         'sort-keys': `off`,
-        'vue/sort-keys': [`warn`, `asc`],
+        'vue/sort-keys': `off`,
+        'operator-linebreak': `off`,
       },
     },
     {
@@ -186,9 +187,9 @@ module.exports = {
     'prefer-const': [`error`, { ignoreReadBeforeAssign: false }],
     'prefer-destructuring': `warn`,
     'prefer-promise-reject-errors': `off`,
-    quotes: [`error`, `backtick`],
+    quotes: `off`,
     semi: [`error`, `always`],
-    'sort-keys': [`warn`, `asc`],
+    'sort-keys': `off`,
     'space-before-function-paren': `off`,
     'vue/attribute-hyphenation': [`error`, `always`],
     'vue/attributes-order': [`warn`, {

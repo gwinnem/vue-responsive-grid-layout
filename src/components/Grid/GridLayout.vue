@@ -19,7 +19,7 @@
       :y="placeholder.y" />
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
   import {
     ref,
     onMounted,
@@ -28,7 +28,16 @@
     onBeforeMount,
     nextTick,
     watch, computed,
+    defineComponent,
+    toRef,
   } from 'vue';
+
+  export default defineComponent({
+    name: `GridLayout`,
+  });
+
+</script>
+<script lang="ts" setup>
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
   import { ILayoutItem, TLayout } from '@/components';
@@ -42,6 +51,8 @@
     validateLayout,
     cloneLayout,
     getAllCollisions,
+    getStatics,
+    getFirstCollision,
   } from '@/core/helpers/utils';
   import {
     getBreakpointFromWidth,
@@ -151,7 +162,9 @@
   const refsLayout = ref<HTMLElement>({} as HTMLElement);
 
   const defaultGridItem = ref();
-  const colNum = ref(props.colNum);
+  const colNum = toRef(props, 'colNum');
+  const colNumResponsive = ref(props.colNum);
+  const propsLayout = toRef(props, 'layout');
   const eventBus: Emitter<{
     changeDirection: boolean;
     compact: void;
@@ -193,13 +206,18 @@
       height: containerHeight(),
     };
   };
-
   // finds or generates new layouts for set breakpoints
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
-    colNum.value = newCols;
-    emit(EGridLayoutEvent.COLUMNS_CHANGED, newCols);
+    // responsive cols
+    colNumResponsive.value = newCols;
+
+    let colsCompute = newCols;
+    // max is colNum which is set by user
+    if(colNum.value < colNumResponsive.value) {
+      colsCompute = colNum.value;
+    }
 
     if(lastBreakpoint.value != null && !layouts.value[lastBreakpoint.value]) {
       layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
@@ -212,12 +230,12 @@
       props.breakpoints,
       newBreakpoint,
       lastBreakpoint.value as string,
-      newCols,
+      colsCompute,
       props.verticalCompact,
       props.distributeEvenly,
     );
 
-    layouts.value[newBreakpoint] = layout;
+    layouts.value[newBreakpoint] = cloneLayout(layout);
 
     if(lastBreakpoint.value !== newBreakpoint) {
       emit(EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint, layout);
@@ -228,7 +246,7 @@
     emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
 
     lastBreakpoint.value = newBreakpoint;
-    eventBus.emit(`setColNum`, getColsFromBreakpoint(newBreakpoint, props.cols));
+    eventBus.emit(`setColNum`, colsCompute);
   };
 
   const dragEvent = (
@@ -269,10 +287,24 @@
       placeholder.value.y = l.y as number;
       placeholder.value.w = w as number;
       placeholder.value.h = h as number;
-      nextTick(() => {
-        isDragging.value = true;
-      });
-      eventBus.emit(`updateWidth`, width.value);
+
+      const staticItem = getStatics(propsLayout.value);
+      if(getFirstCollision(staticItem, {
+        i: `index`,
+        h: placeholder.value.h,
+        w: placeholder.value.w,
+        x: placeholder.value.x,
+        y: placeholder.value.y,
+      }) === undefined) {
+        nextTick(() => {
+          isDragging.value = true;
+        });
+        eventBus.emit(`updateWidth`, width.value);
+      } else {
+        nextTick(() => {
+          isDragging.value = false;
+        });
+      }
     } else {
       nextTick(() => {
         isDragging.value = false;
@@ -292,9 +324,7 @@
     } else {
       compactLayout(props.layout, props.verticalCompact);
     }
-    if(props.responsive) {
-      responsiveGridLayout();
-    }
+
     // needed because vue can't detect changes on array element properties
     eventBus.emit(`compact`);
     updateHeight();
@@ -369,10 +399,6 @@
       nextTick(() => {
         isDragging.value = false;
       });
-    }
-
-    if(props.responsive) {
-      responsiveGridLayout();
     }
 
     compactLayout(props.layout, props.verticalCompact);
@@ -484,6 +510,10 @@
     if(widthT > 0) {
       width.value = widthT;
     }
+
+    if(props.responsive) {
+      responsiveGridLayout();
+    }
     eventBus.emit(`resizeEvent`);
   };
 
@@ -576,6 +606,7 @@
 
   watch(() => props.colNum, val => {
     eventBus.emit(`setColNum`, val);
+    responsiveGridLayout();
   });
 
   watch(() => props.rowHeight, val => {

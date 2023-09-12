@@ -66,6 +66,13 @@
           @dragend="dragend">
           Droppable Element (Drag me!)
         </div>
+        <!-- <DragItem
+          :testLayout="testLayout"
+          :colNum="colNum"
+          :refLayout="refLayout"
+          :map-cache="mapCache"
+          @updateTestLayout="updateTestLayout">
+        </DragItem> -->
       </div>
       <div class="col-sm-6">
         <div class="layoutJSON">
@@ -171,7 +178,14 @@
   import { testData } from './test';
   import GridLayout from '../src/components/Grid/GridLayout.vue';
   import GridItem from '../src/components/Grid/GridItem.vue';
-  import { ILayoutItem } from '../src/components';
+  import { ILayoutItem, } from '../src/components';
+
+  import {
+    getStatics,
+    getFirstCollision,
+  } from '../src/core/helpers/utils';
+
+  // import DragItem from '@/components/Grid/DragItem.vue';
 
   // Used for testing the package before publishing to npm.
   // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
@@ -195,7 +209,7 @@
   const preserveAspectRatio = ref(false);
   const preventCollision = ref(false);
   const rowHeight = ref(50);
-  const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
+  // const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
   const restoreOnDrag = ref(false);
   const showCloseButton = ref(false);
   const showGridLines = ref(false);
@@ -204,7 +218,7 @@
 
   const testLayout = ref(testData);
   const refLayout = ref();
-  const mapCache: Map<string, any> = new Map();
+  const mapCache = new Map();
 
   const margin = computed(() => {
     return [marginLeftRight.value, marginTopBottom.value];
@@ -227,35 +241,36 @@
   const eventsDiv = ref<HTMLDivElement>();
   const eventsLog = ref<string[]>([]);
 
-  const publishToEventLog = (i, msg, newX, newY): void => {
+  const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
     eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
-    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+    if(eventsDiv.value)
+      eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
   }
-  const containerResizedEvent = (i, newX, newY): void => {
+  const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'containerResizedEvent', newX, newY);
   };
 
-  const dragEvent = (i, newX, newY): void => {
+  const dragEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'dragEvent', newX, newY);
   };
 
-  const draggedEvent = (i, newX, newY): void => {
+  const draggedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'draggedEvent', newX, newY);
   };
 
-  const moveEvent = (i, newX, newY): void => {
+  const moveEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'moveEvent', newX, newY);
   };
 
-  const movedEvent = (i, newX, newY): void => {
+  const movedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'movedEvent', newX, newY);
   };
 
-  const resizeEvent = (i, newX, newY): void => {
+  const resizeEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'resizeEvent', newX, newY);
   };
 
-  const resizedEvent = (i, newX, newY): void => {
+  const resizedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'resizedEvent', newX, newY);
   };
 
@@ -278,29 +293,38 @@
     y: 0,
   };
 
-  let DragPos = {
-    x: 0,
-    y: 0,
+  // const updateTestLayout = (updateLayout: TLayout) => {
+  //   console.log(`update layout`);
+  //   testLayout.value = updateLayout;
+  // }
+
+  interface position {
+    x: number|undefined
+    y: number|undefined
+    w: number
+    h:number
+    i:string
+  }
+  let DragPos:position = {
+    x: undefined,
+    y: undefined,
     w: 1,
     h: 1,
     i: ``,
   };
 
-  function drag(e: DragEvent) {
+  const drag = (e: DragEvent): void => {
     e.stopPropagation();
     e.preventDefault();
-    if(!enableEditMode && !isDraggable) {
+    if(!enableEditMode.value && !isDraggable.value) {
       return;
     }
-    const t = document.getElementById("content") as HTMLElement;
-    let parentRect = t.getBoundingClientRect();
+    const t = document.getElementById(`content`) as HTMLElement;
+    const parentRect = t.getBoundingClientRect();
     let mouseInGrid = false;
     if(
-      mouseXY.x > parentRect.left &&
-      mouseXY.x < parentRect.right &&
-      mouseXY.y > parentRect.top &&
-      mouseXY.y < parentRect.bottom
-    ) {
+      ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
+      ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
       mouseInGrid = true;
     }
     if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === "drop") === -1) {
@@ -309,28 +333,46 @@
         y: testLayout.value.length + colNum.value, // puts it at the bottom
         w: 2,
         h: 2,
-        i: "drop"
+        i: "drop",
       });
+      // emit('updateTestLayout', testLayout.value);
     }
 
-    let index = testLayout.value.findIndex(item => item.i === "drop");
+    const index = testLayout.value.findIndex(item => item.i === "drop");
 
     if(index !== -1) {
-      try {
-        refLayout.value.defaultGridItem.$el.style.display = "none";
-      } catch (e){
-        console.log(e);
-      }
       let el = mapCache.get("drop");
       if(!el) {
         return;
       }
+      
+      try {
+        refLayout.value.$refs.refsLayout.children[index].style.display = "none"
+      } catch(e) {
+        console.log(e);
+      }
+    
+      let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
+
+      const static_item = getStatics(testLayout.value)
+      if(getFirstCollision(static_item,{
+        i: `index`,
+        h: 2,
+        w: 2,
+        x: new_pos.x,
+        y: new_pos.y,
+      })){
+        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+        return
+      }
+
+      if(DragPos.x === new_pos.x && DragPos.y === new_pos.y)
+        return
 
       el.dragging = {
         top: mouseXY.y - parentRect.top,
         left: mouseXY.x - parentRect.left
       };
-      let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
       if(mouseInGrid === true) {
         refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 2, 2);
         DragPos.i = String(index);
@@ -343,8 +385,9 @@
         refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 2, 2);
         testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
       }
+      
     }
-  }
+  };
 
   function dragend() {
     const t = document.getElementById("content") as HTMLElement;
@@ -360,12 +403,23 @@
     }
 
     if(mouseInGrid === true) {
+      const static_item = getStatics(testLayout.value)
+      if(getFirstCollision(static_item,{
+        i: `index`,
+        h: 2,
+        w: 2,
+        x: DragPos.x!,
+        y: DragPos.y!,
+      })){
+        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+        return
+      }
       refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 2, 2);
       testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
       nextTick(() => {
         testLayout.value.push({
-          x: DragPos.x,
-          y: DragPos.y,
+          x: DragPos.x!,
+          y: DragPos.y!,
           w: 2,
           h: 2,
           minH: 1,

@@ -21,8 +21,17 @@
     <slot :style="styleObj"></slot>
   </div>
 </template>
+<script lang="ts">
+  import {
+    ref, inject, computed, watch, onBeforeUnmount, onMounted, useSlots, defineComponent,
+  } from 'vue';
+
+  export default defineComponent({
+    name: `GridItem`,
+  });
+
+</script>
 <script lang="ts" setup>
-  import { computed, inject, onBeforeUnmount, onMounted, ref, useSlots, watch, } from 'vue';
   import interact from '@interactjs/interact';
   import { Emitter } from 'mitt';
   import { Interactable } from '@interactjs/core/Interactable';
