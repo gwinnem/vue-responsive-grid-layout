@@ -6,9 +6,9 @@ import {
   ILayoutItem,
   TLayout,
   TResponsiveLayout,
-} from '@/components/Grid/layout-definition';
+} from './Grid/layout-definition';
 
-import { EGridItemEvent } from '@/core/enums/EGridItemEvents';
+import { EGridItemEvent } from '../core/enums/EGridItemEvents';
 
 export {
   CustomCloseButton,
