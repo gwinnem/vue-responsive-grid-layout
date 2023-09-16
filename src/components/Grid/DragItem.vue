@@ -22,7 +22,6 @@
 
   import { TLayoutItem, TLayout } from './layout-definition';
   import GridLayout from './GridLayout.vue';
-  // import GridItem from './GridItem.vue';
 
   const prop = defineProps({
     enableEditMode: {
@@ -50,8 +49,6 @@
       default: null,
     },
   });
-
-  const emit = defineEmits(['updateTestLayout']);
 
   const enableEditMode = toRef(prop, `enableEditMode`);
   const isDraggable = toRef(prop, `isDraggable`);
@@ -91,7 +88,7 @@
     ) {
       mouseInGrid = true;
     }
-    if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === "drop") === -1) {
+    if(mouseInGrid && testLayout.value.findIndex(item => item.i === "drop") === -1) {
       testLayout.value.push({
         x: (testLayout.value.length * 2) % colNum.value,
         y: testLayout.value.length + colNum.value, // puts it at the bottom
@@ -99,7 +96,6 @@
         h: 2,
         i: "drop",
       });
-      // emit('updateTestLayout', testLayout.value);
     }
 
     const index = testLayout.value.findIndex(item => item.i === "drop");
@@ -108,7 +104,7 @@
       try {
         refLayout.value.defaultGridItem.$el.style.display = "none";
       } catch(e) {
-        console.log(e);
+        console.error(e);
       }
       const el = mapCache.value.get("drop");
       if(!el) {
@@ -121,16 +117,15 @@
       };
 
       const newPos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
-      if(mouseInGrid === true) {
+      if(mouseInGrid) {
         refLayout.value.dragEvent("dragstart", "drop", newPos.x, newPos.y, 2, 2);
         DragPos.i = String(index);
         DragPos.x = testLayout.value[index].x;
         DragPos.y = testLayout.value[index].y;
         DragPos.w = 2;
         DragPos.h = 2;
-        // emit('updateTestLayout', testLayout.value);
       }
-      if(mouseInGrid === false) {
+      if(!mouseInGrid) {
         if(newPos.x === null) {
           newPos.x = 0;
         }
@@ -139,8 +134,6 @@
         }
         refLayout.value.dragEvent("dragend", "drop", newPos.x, newPos.y, 2, 2);
         testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
-
-        // emit('updateTestLayout', testLayout.value);
       }
     }
   };
@@ -163,7 +156,7 @@
       mouseInGrid = true;
     }
 
-    if(mouseInGrid === true && refLayout.value) {
+    if(mouseInGrid && refLayout.value) {
       refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 2, 2);
       testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
       nextTick(() => {
