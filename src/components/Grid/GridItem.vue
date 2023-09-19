@@ -1,9 +1,9 @@
 <template>
   <div
     ref="gridItem"
+    class="vue-grid-item"
     :class="classObj"
-    :style="styleObj"
-    class="vue-grid-item">
+    :style="styleObj">
     <button
       v-if="showCloseButton && enableEditMode && !isStatic"
       class="btn-close"
@@ -35,7 +35,12 @@
   import interact from '@interactjs/interact';
   import { Emitter } from 'mitt';
   import { Interactable } from '@interactjs/core/Interactable';
-  import { setTopLeft, setTopRight, setTransform, setTransformRtl, } from '@/core/helpers/utils';
+  import {
+    setTopLeft,
+    setTopRight,
+    setTransform,
+    setTransformRtl,
+  } from '@/core/helpers/utils';
   import { createCoreData, getControlPosition } from '@/core/helpers/draggableUtils';
   import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
   import '@interactjs/auto-start';
@@ -48,7 +53,12 @@
   import { IGridLayoutProps } from './grid-layout-props.interface';
   import { ILayoutData } from '@/core/interfaces/layout-data.interface';
   import { EGridItemEvent } from '@/core/enums/EGridItemEvents';
-  import { ICalcWh, ICalcXy, IGridItemPosition, IGridItemWidthHeight, } from '@/core/interfaces/grid-item.interfaces';
+  import {
+    ICalcWh,
+    ICalcXy,
+    IGridItemPosition,
+    IGridItemWidthHeight,
+  } from '@/core/interfaces/grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
 
@@ -631,6 +641,8 @@
         resizing.value = newSize;
         isResizing.value = true;
         // console.log(`START => innerX: ${innerX.value} innerY: ${innerY.value} 'innerW:'${innerW.value} innerH:${innerH.value} pos: ${JSON.stringify(pos)}`);
+        // TODO strongly type event.edges
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         edges = event.edges;
         break;
