@@ -38,6 +38,7 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Added tab navigation support.
 * Close button in GridItem for removing the GridItem from the GridLayout.
 * Added more events to GridLayout and GridItem.
+* Support for resize Bottom, Bottom Right and Right in GridIem.
 
 
 ### Original Features:
@@ -61,7 +62,7 @@ This new and refactored component has more features, typesafe Emits, Props and a
 
 ## Changelog
 
-### v: 1.2.2 (2023-09-xx)
+### v: 1.2.2 (2023-09-19)
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
 * __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
   * __Right, Right Bottom and Bottom__ resize fixed.
@@ -71,9 +72,12 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * __Codebase__ Added badges to README file.
 * __Codebase__ Fixed outdated dependencies.
 
+Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this release.
+
+
 ### v: 1.2.1 (2023-05-07)
-* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks t0 [UTing1119](https://github.com/UTing1119)
-* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks t0 [UTing1119](https://github.com/UTing1119)
+* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks to [UTing1119](https://github.com/UTing1119)
+* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks to [UTing1119](https://github.com/UTing1119)
 
 ## Donate
 <a href="https://paypal.me/gwinnem/">

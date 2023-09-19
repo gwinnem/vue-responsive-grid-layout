@@ -6,7 +6,7 @@ title: Changelog
 
 # Changelog
 
-## v: 1.2.2 (2023.09.xx)
+## v: 1.2.2 (2023.09.19)
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
 * __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
   * __Right, Right Bottom and Bottom__ resize fixed.
@@ -15,6 +15,8 @@ title: Changelog
 * __Codebase__ Added contributors to package.json.
 * __Codebase__ Added badges to README file.
 * __Codebase__ Fixed outdated dependencies.
+
+Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this release.
 
 ## v: 1.2.1 (2023.04.20)
 * __Updated Issue__ [responsive grid item will not be distributed equally.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/2)
