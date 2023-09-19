@@ -51,7 +51,7 @@
     },
   });
 
-  const emit = defineEmits(['updateTestLayout']);
+  // const emit = defineEmits(['updateTestLayout']);
 
   const enableEditMode = toRef(prop, `enableEditMode`);
   const isDraggable = toRef(prop, `isDraggable`);
