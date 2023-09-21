@@ -163,30 +163,10 @@ export const findOrGenerateResponsiveLayout = (
   verticalCompact: boolean,
   distributeEvenly: boolean,
 ): TLayout => {
-  // If it already exists, just return it.
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if(layouts[breakpoint] && !distributeEvenly) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return cloneLayout(layouts[breakpoint]);
-  }
-  // Find or generate the next layout
-  let layout = orgLayout;
+  // we cant return the layouts[breakpoints] directly because we dunno whether user change the layout or not
 
-  const breakpointsSorted = sortBreakpoints(breakpoints);
-  const breakpointsAbove = breakpointsSorted.slice(breakpointsSorted.indexOf(breakpoint));
-  for(let i = 0, len = breakpointsAbove.length; i < len; i++) {
-    const b = breakpointsAbove[i];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if(layouts[b]) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      layout = layouts[b];
-      break;
-    }
-  }
-  layout = cloneLayout(layout || []); // clone layout so we don't modify existing items
+  // Find or generate the next layout
+  const layout = cloneLayout(orgLayout || []);
+
   return compactLayout(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
 };

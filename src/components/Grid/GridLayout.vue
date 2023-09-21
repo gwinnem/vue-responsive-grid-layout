@@ -243,6 +243,7 @@
 
     // new prop sync
     // noinspection TypeScriptValidateTypes
+    originalLayout.value = layout;
     emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
 
     lastBreakpoint.value = newBreakpoint;
@@ -330,6 +331,7 @@
     updateHeight();
     if(eventName === EDragEvent.DRAG_END) {
       positionsBeforeDrag.value = undefined;
+      originalLayout.value = layout;
       emit(EGridLayoutEvent.LAYOUT_UPDATED, layout);
     }
   };
@@ -406,6 +408,7 @@
     updateHeight();
 
     if(eventName === `resizeend`) {
+      originalLayout.value = props.layout;
       emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
     }
   };
@@ -499,6 +502,7 @@
       compactLayout(props.layout, props.verticalCompact);
       eventBus.emit(`updateWidth`, width.value);
       updateHeight();
+      originalLayout.value = props.layout;
       emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
     }
   };
