@@ -5,6 +5,29 @@
         <form style="border-radius: 8px;">
           <fieldset>
             <legend>Test bench</legend>
+            <div
+                v-if="!hideEventLog"
+                class="row">
+              <button
+                  class="btn-hover col-sm-2"
+                  style="height: 43px; margin: 0 10px 0 0;"
+                  @click.prevent="clearEventLog">
+                Clear Event Log
+              </button>
+              <VueMultiselect
+                  v-model="selected"
+                  :hide-selected="false"
+                  :multiple="true"
+                  :taggable="true"
+                  :options="options"
+                  class="col-sm-9"
+                  deselect-label="Remove me"
+                  placeholder="Select events to log"
+                  select-label="Select me"
+                  style="width: 50%" @update:model-value="updateSelected">
+              </VueMultiselect>
+            </div>
+            <hr/>
             <label for="rowHeight">Row Height(px)</label>
             <input id="rowHeight" v-model="rowHeight" type="number"/>
             <label for="colNum">Max Columns</label>
@@ -17,8 +40,12 @@
             <input id="mlr" v-model="marginLeftRight" class="hide" type="number"/>
             <label class="hide" for="borderRadius">Border Radius</label>
             <input id="borderRadius" v-model="borderRadiusPx" class="hide" type="number"/>
+            <label for="hideLayout">Hide Layout</label>
+            <input id="hideLayout" v-model="hideLayout" type="checkbox">
             <label for="hideEventLog">Hide Event Log</label>
             <input id="hideEventLog" v-model="hideEventLog" type="checkbox">
+            <label for="hideDroppable">Hide Droppable</label>
+            <input id="hideDroppable" v-model="hideDroppable" type="checkbox">
             <br/>
             <label for="autosize">autosize</label>
             <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
@@ -58,12 +85,14 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-2">
+      <div
+          v-if="!hideDroppable"
+          class="col-sm-2">
         <div
-          class="droppable-element"
-          draggable="true"
-          @drag="drag"
-          @dragend="dragend">
+            class="droppable-element"
+            draggable="true"
+            @drag="drag"
+            @dragend="dragend">
           Droppable Element (Drag me!)
         </div>
         <!-- <DragItem
@@ -74,7 +103,9 @@
           @updateTestLayout="updateTestLayout">
         </DragItem> -->
       </div>
-      <div class="col-sm-6">
+      <div
+          v-if="!hideLayout"
+          class="col-sm-6">
         <div class="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div class="columns">
@@ -85,14 +116,14 @@
         </div>
       </div>
       <div
-        v-if="!hideEventLog"
-        class="col-sm-4">
+          v-if="!hideEventLog"
+          class="col-sm-4">
         <div
-          ref="eventsDiv"
-          class="eventsJSON">
+            ref="eventsDiv"
+            class="eventsJSON">
           <div
-            v-for="event in eventsLog"
-            :key="event">
+              v-for="event in eventsLog"
+              :key="event">
             {{ event }}
           </div>
         </div>
@@ -104,55 +135,55 @@
         <div class="layout">
           <div id="content">
             <GridLayout
-              ref="refLayout"
-              v-model:layout="testLayout"
-              :auto-size="autoResizeGridLayout"
-              :col-num="colNum"
-              :distribute-evenly="distributeEvenly"
-              :horizontal-shift="horizontalShift"
-              :is-bounded="isBounded"
-              :is-draggable="isDraggable"
-              :is-mirrored="isMirrored"
-              :is-resizable="isResizable"
-              :margin="margin"
-              :max-rows="maxRows"
-              :prevent-collision="preventCollision"
-              :responsive="isResponsive"
-              :restore-on-drag="restoreOnDrag"
-              :row-height="rowHeight"
-              :show-close-button="showCloseButton"
-              :show-grid-lines="showGridLines"
-              :use-border-radius="useBorderRadius"
-              :use-css-transforms="true"
-              :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged">
-              <GridItem
-                v-for="item in testLayout"
-                :key="item.i"
-                :ref="el => setChildRef(el)"
-                :enable-edit-mode="enableEditMode"
-                :h="item.h"
-                :i="item.i"
-                :is-draggable="item.isDraggable"
-                :is-resizable="item.isResizable"
-                :isStatic="item.isStatic"
-                :min-h="item.minH"
-                :min-w="item.minW"
-                :preserve-aspect-ratio="preserveAspectRatio"
+                ref="refLayout"
+                v-model:layout="testLayout"
+                :auto-size="autoResizeGridLayout"
+                :col-num="colNum"
+                :distribute-evenly="distributeEvenly"
+                :horizontal-shift="horizontalShift"
+                :is-bounded="isBounded"
+                :is-draggable="isDraggable"
+                :is-mirrored="isMirrored"
+                :is-resizable="isResizable"
+                :margin="margin"
+                :max-rows="maxRows"
+                :prevent-collision="preventCollision"
+                :responsive="isResponsive"
+                :restore-on-drag="restoreOnDrag"
+                :row-height="rowHeight"
                 :show-close-button="showCloseButton"
+                :show-grid-lines="showGridLines"
                 :use-border-radius="useBorderRadius"
-                :w="item.w"
-                :x="item.x"
-                :y="item.y"
-                class="test"
-                @container-resized="containerResizedEvent"
-                @drag="dragEvent"
-                @dragged="draggedEvent"
-                @move="moveEvent"
-                @moved="movedEvent"
-                @remove-grid-item="removeGridItem"
-                @resize="resizeEvent"
-                @resized="resizedEvent">
+                :use-css-transforms="true"
+                :vertical-compact="verticalCompact"
+                @columns-changed="colNumChanged">
+              <GridItem
+                  v-for="item in testLayout"
+                  :key="item.i"
+                  :ref="el => setChildRef(el)"
+                  :enable-edit-mode="enableEditMode"
+                  :h="item.h"
+                  :i="item.i"
+                  :is-draggable="item.isDraggable"
+                  :is-resizable="item.isResizable"
+                  :isStatic="item.isStatic"
+                  :min-h="item.minH"
+                  :min-w="item.minW"
+                  :preserve-aspect-ratio="preserveAspectRatio"
+                  :show-close-button="showCloseButton"
+                  :use-border-radius="useBorderRadius"
+                  :w="item.w"
+                  :x="item.x"
+                  :y="item.y"
+                  class="test"
+                  @container-resized="containerResizedEvent"
+                  @drag="dragEvent"
+                  @dragged="draggedEvent"
+                  @move="moveEvent"
+                  @moved="movedEvent"
+                  @remove-grid-item="removeGridItem"
+                  @resize="resizeEvent"
+                  @resized="resizedEvent">
                 <span class="text">
                   {{ itemTitle(item) }}
                 </span>
@@ -174,281 +205,299 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, nextTick, onBeforeUnmount, computed } from 'vue';
-  import { testData } from './test';
-  import GridLayout from '../src/components/Grid/GridLayout.vue';
-  import GridItem from '../src/components/Grid/GridItem.vue';
-  import { ILayoutItem, } from '../src/components';
+import {ref, onMounted, nextTick, onBeforeUnmount, computed} from 'vue';
+import {testData} from './test';
+import GridLayout from '../src/components/Grid/GridLayout.vue';
+import GridItem from '../src/components/Grid/GridItem.vue';
+import {
+  getStatics,
+  getFirstCollision,
+} from '@/core/helpers/utils';
+import {ILayoutItem} from "@/components/Grid/layout-definition";
+import VueMultiselect from 'vue-multiselect';
 
-  import {
-    getStatics,
-    getFirstCollision,
-  } from '../src/core/helpers/utils';
+const selected = ref('All');
+const options = ['All', 'Layout Updated', 'options'];
 
-  // import DragItem from '@/components/Grid/DragItem.vue';
+// import DragItem from '@/components/Grid/DragItem.vue';
 
-  // Used for testing the package before publishing to npm.
-  // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
-  // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
-  const hideEventLog = ref(false);
+// Used for testing the package before publishing to npm.
+// import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
+// import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
 
-  const autoResizeGridLayout = ref(true);
-  const borderRadiusPx = ref(8);
-  const colNum = ref(12);
-  const distributeEvenly = ref(true);
-  const enableEditMode = ref(true);
-  const horizontalShift = ref(true);
-  const isBounded = ref(true);
-  const isDraggable = ref(true);
-  const isMirrored = ref(false);
-  const isResizable = ref(true);
-  const isResponsive = ref(true);
-  const marginLeftRight = ref(10); // TODO Not working as expected
-  const marginTopBottom = ref(10); // TODO Not working as expected
-  const maxRows = ref(40);
-  const preserveAspectRatio = ref(false);
-  const preventCollision = ref(false);
-  const rowHeight = ref(50);
-  // const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
-  const restoreOnDrag = ref(false);
-  const showCloseButton = ref(false);
-  const showGridLines = ref(false);
-  const useBorderRadius = ref(false);
-  const verticalCompact = ref(true);
+const updateSelected = (val: any): void => {
+  if(val.length > 0 && val.includes('All')) {
+    selected.value = 'All'
+    console.error(val[0]);
+  }
+};
+const hideLayout = ref(true);
+const hideEventLog = ref(false);
+const hideDroppable = ref(true);
 
-  const testLayout = ref(testData);
-  const refLayout = ref();
-  const mapCache = new Map();
+const autoResizeGridLayout = ref(true);
+const borderRadiusPx = ref(8);
+const colNum = ref(12);
+const distributeEvenly = ref(true);
+const enableEditMode = ref(true);
+const horizontalShift = ref(true);
+const isBounded = ref(true);
+const isDraggable = ref(true);
+const isMirrored = ref(false);
+const isResizable = ref(true);
+const isResponsive = ref(true);
+const marginLeftRight = ref(10); // TODO Not working as expected
+const marginTopBottom = ref(10); // TODO Not working as expected
+const maxRows = ref(40);
+const preserveAspectRatio = ref(false);
+const preventCollision = ref(false);
+const rowHeight = ref(50);
+// const rowHeightPx = ref(rowHeight.value + marginTopBottom.value + 'px');
+const restoreOnDrag = ref(false);
+const showCloseButton = ref(false);
+const showGridLines = ref(false);
+const useBorderRadius = ref(false);
+const verticalCompact = ref(true);
 
-  const margin = computed(() => {
-    return [marginLeftRight.value, marginTopBottom.value];
+const testLayout = ref(testData);
+const refLayout = ref();
+const mapCache = new Map();
+
+const margin = computed(() => {
+  return [marginLeftRight.value, marginTopBottom.value];
+});
+
+let orgColNum = colNum.value;
+const colNumChanged = (value: number): void => {
+  if (orgColNum !== value) {
+    orgColNum = value;
+    colNum.value = value;
+  }
+};
+
+const removeGridItem = (id: string | number): void => {
+  testLayout.value = testLayout.value.filter((item) => {
+    return item.i !== id;
   });
+};
 
-  let orgColNum = colNum.value;
-  const colNumChanged = (value: number): void => {
-    if(orgColNum !== value) {
-      orgColNum = value;
-      colNum.value = value;
-    }
-  };
+const eventsDiv = ref<HTMLDivElement>();
+const eventsLog = ref<string[]>([]);
+const clearEventLog = (): void => {
+  eventsLog.value = [];
+};
 
-  const removeGridItem = (id: string | number): void => {
-    testLayout.value = testLayout.value.filter((item) => {
-      return item.i !== id;
-    });
-  };
+const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
+  eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
+  if (eventsDiv.value)
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+}
+const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'containerResizedEvent', newX, newY);
+};
 
-  const eventsDiv = ref<HTMLDivElement>();
-  const eventsLog = ref<string[]>([]);
+const dragEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'dragEvent', newX, newY);
+};
 
-  const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
-    eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
-    if(eventsDiv.value)
-      eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+const draggedEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'draggedEvent', newX, newY);
+};
+
+const moveEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'moveEvent', newX, newY);
+};
+
+const movedEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'movedEvent', newX, newY);
+};
+
+const resizeEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'resizeEvent', newX, newY);
+};
+
+const resizedEvent = (i: number | string, newX: number, newY: number): void => {
+  publishToEventLog(i, 'resizedEvent', newX, newY);
+};
+
+const itemTitle = (item: ILayoutItem): string => {
+  let result = item.i;
+  if (item.isStatic) {
+    result += " - Static";
   }
-  const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'containerResizedEvent', newX, newY);
-  };
+  return <string>result;
+};
 
-  const dragEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'dragEvent', newX, newY);
-  };
-
-  const draggedEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'draggedEvent', newX, newY);
-  };
-
-  const moveEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'moveEvent', newX, newY);
-  };
-
-  const movedEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'movedEvent', newX, newY);
-  };
-
-  const resizeEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'resizeEvent', newX, newY);
-  };
-
-  const resizedEvent = (i: number | string, newX: number, newY: number): void => {
-    publishToEventLog(i, 'resizedEvent', newX, newY);
-  };
-
-  const itemTitle = (item: ILayoutItem): string => {
-    let result = item.i;
-    if(item.isStatic) {
-      result += " - Static";
-    }
-    return <string>result;
-  };
-
-  function setChildRef(vm: any) {
-    if(vm && vm.i) {
-      mapCache.set(vm.i, vm);
-    }
+function setChildRef(vm: any) {
+  if (vm && vm.i) {
+    mapCache.set(vm.i, vm);
   }
+}
 
-  let mouseXY = {
-    x: 0,
-    y: 0,
-  };
+let mouseXY = {
+  x: 0,
+  y: 0,
+};
 
-  // const updateTestLayout = (updateLayout: TLayout) => {
-  //   console.log(`update layout`);
-  //   testLayout.value = updateLayout;
-  // }
+// const updateTestLayout = (updateLayout: TLayout) => {
+//   console.log(`update layout`);
+//   testLayout.value = updateLayout;
+// }
 
-  interface position {
-    x: number|undefined
-    y: number|undefined
-    w: number
-    h:number
-    i:string
+interface position {
+  x: number | undefined
+  y: number | undefined
+  w: number
+  h: number
+  i: string
+}
+
+let DragPos: position = {
+  x: undefined,
+  y: undefined,
+  w: 1,
+  h: 1,
+  i: ``,
+};
+
+const drag = (e: DragEvent): void => {
+  e.stopPropagation();
+  e.preventDefault();
+  if (!enableEditMode.value && !isDraggable.value) {
+    return;
   }
-  let DragPos:position = {
-    x: undefined,
-    y: undefined,
-    w: 1,
-    h: 1,
-    i: ``,
-  };
-
-  const drag = (e: DragEvent): void => {
-    e.stopPropagation();
-    e.preventDefault();
-    if(!enableEditMode.value && !isDraggable.value) {
-      return;
-    }
-    const t = document.getElementById(`content`) as HTMLElement;
-    const parentRect = t.getBoundingClientRect();
-    let mouseInGrid = false;
-    if(
+  const t = document.getElementById(`content`) as HTMLElement;
+  const parentRect = t.getBoundingClientRect();
+  let mouseInGrid = false;
+  if (
       ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
       ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
-      mouseInGrid = true;
+    mouseInGrid = true;
+  }
+  if (mouseInGrid && testLayout.value.findIndex(item => item.i === "drop") === -1) {
+    testLayout.value.push({
+      x: (testLayout.value.length * 2) % colNum.value,
+      y: testLayout.value.length + colNum.value, // puts it at the bottom
+      w: 2,
+      h: 2,
+      i: "drop",
+    });
+    // emit('updateTestLayout', testLayout.value);
+  }
+
+  const index = testLayout.value.findIndex(item => item.i === "drop");
+
+  if (index !== -1) {
+    let el = mapCache.get("drop");
+    if (!el) {
+      return;
     }
-    if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === "drop") === -1) {
-      testLayout.value.push({
-        x: (testLayout.value.length * 2) % colNum.value,
-        y: testLayout.value.length + colNum.value, // puts it at the bottom
-        w: 2,
-        h: 2,
-        i: "drop",
-      });
-      // emit('updateTestLayout', testLayout.value);
+
+    try {
+      refLayout.value.$refs.refsLayout.children[index].style.display = "none"
+    } catch (e) {
+      console.log(e);
     }
 
-    const index = testLayout.value.findIndex(item => item.i === "drop");
+    let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
 
-    if(index !== -1) {
-      let el = mapCache.get("drop");
-      if(!el) {
-        return;
-      }
-      
-      try {
-        refLayout.value.$refs.refsLayout.children[index].style.display = "none"
-      } catch(e) {
-        console.log(e);
-      }
-    
-      let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
-
-      const static_item = getStatics(testLayout.value)
-      if(getFirstCollision(static_item,{
-        i: `index`,
-        h: 2,
-        w: 2,
-        x: new_pos.x,
-        y: new_pos.y,
-      })){
-        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
-        return
-      }
-
-      if(DragPos.x === new_pos.x && DragPos.y === new_pos.y)
-        return
-
-      el.dragging = {
-        top: mouseXY.y - parentRect.top,
-        left: mouseXY.x - parentRect.left
-      };
-      if(mouseInGrid === true) {
-        refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 2, 2);
-        DragPos.i = String(index);
-        DragPos.x = testLayout.value[index].x;
-        DragPos.y = testLayout.value[index].y;
-        DragPos.w = 2;
-        DragPos.h = 2;
-      }
-      if(mouseInGrid === false) {
-        refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 2, 2);
-        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
-      }
-      
+    const static_item = getStatics(testLayout.value)
+    if (getFirstCollision(static_item, {
+      i: `index`,
+      h: 2,
+      w: 2,
+      x: new_pos.x,
+      y: new_pos.y,
+    })) {
+      testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+      return
     }
-  };
 
-  function dragend() {
-    const t = document.getElementById("content") as HTMLElement;
-    let parentRect = t.getBoundingClientRect();
-    let mouseInGrid = false;
-    if(
+    if (DragPos.x === new_pos.x && DragPos.y === new_pos.y)
+      return
+
+    el.dragging = {
+      top: mouseXY.y - parentRect.top,
+      left: mouseXY.x - parentRect.left
+    };
+    if (mouseInGrid) {
+      refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 2, 2);
+      DragPos.i = String(index);
+      DragPos.x = testLayout.value[index].x;
+      DragPos.y = testLayout.value[index].y;
+      DragPos.w = 2;
+      DragPos.h = 2;
+    }
+    if (!mouseInGrid) {
+      refLayout.value.dragEvent("dragend", "drop", new_pos.x, new_pos.y, 2, 2);
+      testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+    }
+
+  }
+};
+
+function dragend() {
+  const t = document.getElementById("content") as HTMLElement;
+  let parentRect = t.getBoundingClientRect();
+  let mouseInGrid = false;
+  if (
       mouseXY.x > parentRect.left
       && mouseXY.x < parentRect.right
       && mouseXY.y > parentRect.top
       && mouseXY.y < parentRect.bottom
-    ) {
-      mouseInGrid = true;
-    }
+  ) {
+    mouseInGrid = true;
+  }
 
-    if(mouseInGrid === true) {
-      const static_item = getStatics(testLayout.value)
-      if(getFirstCollision(static_item,{
-        i: `index`,
-        h: 2,
-        w: 2,
+  if (mouseInGrid) {
+    const static_item = getStatics(testLayout.value)
+    if (getFirstCollision(static_item, {
+      i: `index`,
+      h: 2,
+      w: 2,
+      x: DragPos.x!,
+      y: DragPos.y!,
+    })) {
+      testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
+      return
+    }
+    refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 2, 2);
+    testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
+    nextTick(() => {
+      testLayout.value.push({
         x: DragPos.x!,
         y: DragPos.y!,
-      })){
-        testLayout.value = testLayout.value.filter(obj => obj.i !== "drop").slice(0);
-        return
-      }
-      refLayout.value.dragEvent("dragend", "drop", DragPos.x, DragPos.y, 2, 2);
-      testLayout.value = testLayout.value.filter(obj => obj.i !== "drop");
-      nextTick(() => {
-        testLayout.value.push({
-          x: DragPos.x!,
-          y: DragPos.y!,
-          w: 2,
-          h: 2,
-          minH: 1,
-          minW: 1,
-          i: DragPos.i
-        });
-        refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 2, 2);
-        mouseXY.x = 0;
-        mouseXY.y = 0;
-        mapCache.delete("drop");
+        w: 2,
+        h: 2,
+        minH: 1,
+        minW: 1,
+        i: DragPos.i
       });
-    }
+      refLayout.value.dragEvent("dragend", DragPos.i, DragPos.x, DragPos.y, 2, 2);
+      mouseXY.x = 0;
+      mouseXY.y = 0;
+      mapCache.delete("drop");
+    });
   }
+}
 
-  function addDragOverEvent(e: DragEvent) {
-    mouseXY.x = e.clientX;
-    mouseXY.y = e.clientY;
-  }
+function addDragOverEvent(e: DragEvent) {
+  mouseXY.x = e.clientX;
+  mouseXY.y = e.clientY;
+}
 
-  onMounted(() => {
-    document.addEventListener("dragover", addDragOverEvent);
-  });
-  onBeforeUnmount(() => {
-    document.removeEventListener("dragover", addDragOverEvent);
-  });
+onMounted(() => {
+  document.addEventListener("dragover", addDragOverEvent);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("dragover", addDragOverEvent);
+});
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style lang="scss" scoped>
 @import '../src/styles/variables';
+@import '../node_modules/vue-multiselect/dist/vue-multiselect.css';
 
 .hide {
   display: none;
@@ -547,4 +596,24 @@ form {
   -webkit-columns: 120px;
   columns: 120px;
 }
+
+//colors
+$red: #E1332D;
+$white: #fff;
+$black: #000;
+
+.btn-hover {
+  background: $black;
+  border: 1px solid;
+  color: $white;
+  line-height: 1.4;
+  padding: .35em;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba($white, 1);
+    color: $red;
+  }
+}
+
 </style>
