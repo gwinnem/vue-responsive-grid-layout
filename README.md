@@ -1,5 +1,4 @@
 
-[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/BuZZ-dEE/uuid-generator-ts)
 [![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/vue-ts-responsive-grid-layout)](https://libraries.io/npm/vue-ts-responsive-grid-layout)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/vue-ts-responsive-grid-layout)](https://bundlephobia.com/result?p=vue-ts-responsive-grid-layout)
@@ -26,8 +25,8 @@ VUE 3 responsive grid layout is based on the original work by [JBaysolution's vu
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
 
 <br/>
-
-### New Features:
+ 
+### Features:
 * Prop in GridLayout for distributing GridItem's equally.
 * GridLayout now has slot for GridItem.
 * Prop for displaying grid lines in GridLayout.
@@ -38,9 +37,7 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Added tab navigation support.
 * Close button in GridItem for removing the GridItem from the GridLayout.
 * Added more events to GridLayout and GridItem.
-
-
-### Original Features:
+* Support for resize Bottom, Bottom Right and Right in GridIem.
 * Draggable widgets
 * Resizable widgets
 * Static widgets
@@ -61,7 +58,9 @@ This new and refactored component has more features, typesafe Emits, Props and a
 
 ## Changelog
 
-### v: 1.2.2 (2023-09-xx)
+### v: 1.2.3 (2023-xx-xx
+
+### v: 1.2.2 (2023-09-19
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
 * __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
   * __Right, Right Bottom and Bottom__ resize fixed.
@@ -71,9 +70,12 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * __Codebase__ Added badges to README file.
 * __Codebase__ Fixed outdated dependencies.
 
+Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this release.
+
+
 ### v: 1.2.1 (2023-05-07)
-* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks t0 [UTing1119](https://github.com/UTing1119)
-* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks t0 [UTing1119](https://github.com/UTing1119)
+* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks to [UTing1119](https://github.com/UTing1119)
+* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks to [UTing1119](https://github.com/UTing1119)
 
 ## Donate
 <a href="https://paypal.me/gwinnem/">
