@@ -19,6 +19,7 @@
     "grid",
     "dynamic-grid",
     "grid-layout",
+    "responsive-grid-layout",
     "dynamic-grid-layout",
     "layout",
     "resize",

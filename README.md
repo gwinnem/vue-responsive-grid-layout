@@ -61,6 +61,9 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Props and emits are typesafe.
 
 ## Changelog
+### v: 1.2.3 (2023-10-xx)
+* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19)
+
 
 ### v: 1.2.2 (2023-09-19)
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
