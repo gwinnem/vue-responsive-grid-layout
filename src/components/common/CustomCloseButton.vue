@@ -4,7 +4,6 @@
     type="button"
     @click="removeItem">
     <span class="icon-cross"></span>
-    <span class="visually-hidden">Close</span>
   </button>
 </template>
 
@@ -95,16 +94,5 @@
 
     // background: hsl(216, 100, 40%);
   }
-}
-
-// For screen readers.
-.visually-hidden {
-  border: 0 !important;
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px !important;
-  overflow: hidden;
-  padding: 0 !important;
-  position: absolute !important;
-  width: 1px !important;
 }
 </style>
