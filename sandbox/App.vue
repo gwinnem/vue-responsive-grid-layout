@@ -205,7 +205,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, nextTick, onBeforeUnmount, computed} from 'vue';
+import {ref, onMounted, nextTick, onBeforeUnmount, computed, Ref, UnwrapRef} from 'vue';
 import {testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
@@ -215,6 +215,7 @@ import {
 } from '@/core/helpers/utils';
 import {ILayoutItem} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
+import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
 
 const selected = ref('All');
 const options = ['All', 'Layout Updated', 'options'];
@@ -226,11 +227,11 @@ const options = ['All', 'Layout Updated', 'options'];
 // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
 
 const updateSelected = (val: any): void => {
-  if(val.length > 0 && val.includes('All')) {
+  if (val.length > 0 && val.includes('All')) {
     selected.value = 'All'
-    console.error(val[0]);
   }
 };
+
 const hideLayout = ref(true);
 const hideEventLog = ref(false);
 const hideDroppable = ref(true);
@@ -272,6 +273,8 @@ const colNumChanged = (value: number): void => {
   if (orgColNum !== value) {
     orgColNum = value;
     colNum.value = value;
+    debugger;
+    publishToEventLog(EGridLayoutEvent.COLUMNS_CHANGED, 'Columns changed to: ', value, 0);
   }
 };
 
@@ -292,8 +295,11 @@ const publishToEventLog = (i: number | string, msg: string, newX: number, newY: 
   if (eventsDiv.value)
     eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
 }
+
 const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'containerResizedEvent', newX, newY);
+  if (selected.value.includes('containerResizedEvent')) {
+    publishToEventLog(i, 'containerResizedEvent', newX, newY);
+  }
 };
 
 const dragEvent = (i: number | string, newX: number, newY: number): void => {
@@ -304,12 +310,31 @@ const draggedEvent = (i: number | string, newX: number, newY: number): void => {
   publishToEventLog(i, 'draggedEvent', newX, newY);
 };
 
+export interface IMovedData {
+  startI: number | string;
+  startMsg: string;
+  startX: number;
+  startY: number;
+}
+
+let moveData: any, IMovedData: Ref<UnwrapRef<null>>;
+
 const moveEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'moveEvent', newX, newY);
+  moveData = {
+    startI: i,
+    startMsg: 'Move start',
+    startX: newX,
+    startY: newY
+  };
+  publishToEventLog(i, 'Move Start: ', newX, newY);
 };
 
 const movedEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'movedEvent', newX, newY);
+  if ((selected.value.includes('All') || selected.value.includes('movedEvent')) && moveData.startI.toString() !== i.toString() && moveData.startX !== newX && moveData.startY !== newY) {
+    publishToEventLog(i, 'Moved', newX, newY);
+  } else {
+    publishToEventLog(i, 'Moved End', newX, newY);
+  }
 };
 
 const resizeEvent = (i: number | string, newX: number, newY: number): void => {
