@@ -12,6 +12,7 @@
       class="vue-grid-placeholder"
       :h="placeholder.h"
       :i="placeholder.i"
+      :move="startMoveItem"
       :show-close-button="showCloseButton"
       :use-border-radius="useBorderRadius"
       :w="placeholder.w"
@@ -191,6 +192,7 @@
     (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
     (e: EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint: string, layout: TLayout): void;
     (e: EGridLayoutEvent.COLUMNS_CHANGED, colNum: number): void;
+    (e: EGridLayoutEvent.ITEM_MOVE): void;
   }>();
   emit(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
 
@@ -503,7 +505,7 @@
       eventBus.emit(`updateWidth`, width.value);
       updateHeight();
       originalLayout.value = props.layout;
-      emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
+      // emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
     }
   };
 
