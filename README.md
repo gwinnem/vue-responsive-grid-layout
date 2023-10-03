@@ -1,13 +1,11 @@
 
-[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/BuZZ-dEE/uuid-generator-ts)
-[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/vue-ts-responsive-grid-layout)](https://libraries.io/npm/vue-ts-responsive-grid-layout)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/vue-ts-responsive-grid-layout)](https://bundlephobia.com/result?p=vue-ts-responsive-grid-layout)
 [![npm](https://img.shields.io/npm/v/vue-ts-responsive-grid-layout)](https://www.npmjs.com/package/vue-ts-responsive-grid-layout)
 [![NPM](https://img.shields.io/npm/l/vue-ts-responsive-grid-layout)](https://github.com/gwinnem/vue-ts-responsive-grid-layout/blob/master/LICENSE)
 
 </br>
-</br>
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/main/docs/Data%20Grid.svg" height="200" alt="logo">
 </p>
@@ -39,9 +37,6 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Close button in GridItem for removing the GridItem from the GridLayout.
 * Added more events to GridLayout and GridItem.
 * Support for resize Bottom, Bottom Right and Right in GridIem.
-
-
-### Original Features:
 * Draggable widgets
 * Resizable widgets
 * Static widgets
@@ -63,6 +58,7 @@ This new and refactored component has more features, typesafe Emits, Props and a
 ## Changelog
 ### v: 1.2.3 (2023-10-xx)
 * __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19)
+* __Fixed issue__ [Close button css is different than in the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20)
 
 
 ### v: 1.2.2 (2023-09-19)

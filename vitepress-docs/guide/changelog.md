@@ -6,7 +6,11 @@ title: Changelog
 
 # Changelog
 
-## v: 1.2.2 (2023.09.xx)
+### v: 1.2.3 (2023-10-xx)
+* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19)
+* __Fixed issue__ [Close button css is different than in the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20)
+
+## v: 1.2.2 (2023.09.19)
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5). Tnxs to [UTing1119](https://github.com/UTing1119)
 * __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
   * __Right, Right Bottom and Bottom__ resize fixed.
