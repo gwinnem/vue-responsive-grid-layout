@@ -15,6 +15,8 @@ title: Roadmap
 * __New Feature:__ Add native drag and drop to GridLayout.
 * __Codebase:__ Refactoring, so it is possible to unit test more of the sourcecode.
 * __Codebase:__ Implement new validators.
+* __New Feature:__ Implement RTL resize.
+* __New Feature:__ Implement resize from left side.
 * __Test:__ Add more unit tests.
 * __Test:__ Refactor layout validator so test is passing.
 * __Test:__ Add e2e tests.
