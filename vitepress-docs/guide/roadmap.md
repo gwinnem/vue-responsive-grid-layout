@@ -7,7 +7,6 @@ title: Roadmap
 # ROADMAP
 
 ## Upcoming updates and fixes
-* __New Feature__ Add resize from all corners and sides of the ***GridItem***.
 * __Examples:__ Add example app to CodeSandbox, so user's can test layouts.
 * __Examples:__ Add Multiple Grids.
 * __Examples:__ Add Responsive predefined layouts.
