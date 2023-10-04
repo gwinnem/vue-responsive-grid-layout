@@ -102,3 +102,4 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 ### References
 * [Vue Grid Layout](https://jbaysolutions.github.io/vue-grid-layout/guide/)
 * [Mini.css used in the sandbox](https://minicss.us/docs.htm#)
+* [Vue-Multiselect used in the sandbox](https://vue-multiselect.js.org/#sub-getting-started)
