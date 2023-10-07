@@ -20,3 +20,4 @@ title: Roadmap
 * __Test:__ Add more unit tests.
 * __Test:__ Refactor layout validator so test is passing.
 * __Test:__ Add e2e tests.
+* __Feature:__ Support for nuxt projects.
