@@ -6,7 +6,6 @@ title: Features
 
 # Features
 
-## New features:
 * VUE 3 with Typescript.
 * Vite used as dev server and bundler.
 * Vitepress used for documentation.
@@ -18,10 +17,6 @@ title: Features
 * New Test application, styled with [mini.css](https://minicss.us/).
 * Cursor styling.
 * Fixed mirrored layout so only the GridItems are rearranged.
-* Added new feature for distributing GridItems evenly.
-<br/><br/>
-
-## Original features:
 * Draggable widgets.
 * Resizable widgets.
 * Static widgets.
@@ -29,3 +24,5 @@ title: Features
 * Widgets may be added or removed without rebuilding grid.
 * Layout can be serialized and restored.
 * Responsive with predefined Layouts.
+* Grid items are distributed evenly.
+* Grid item is resizable from right, bottom right and bottom.
