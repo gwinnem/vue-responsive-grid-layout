@@ -2,6 +2,12 @@
 
 ## container-resized
 
+## drag-start
+Fired when a GridItems is being dragged.
+
+## drag-end
+Fired when a GridItem is finished dragging (GridItem is dropped into the GridLayout)
+
 ## item-move
 
 ## item-moved
@@ -61,10 +67,9 @@ layoutReadyEvent: function(newLayout: Layout): void {
 Emitted into the event bus, maybe get this and others into separate enum.
 
 
-## update:layout(Confirm that this is correct)
-Layout updated event
-
-Every time the layout has finished updating and positions of all grid-items are recalculated
+## layout-update
+Emitted every time the GridLayout is being updated.
+This will fire everytime the GridLayout is updated, the GridItems are dropped or resized in the GridLayout. 
 
 ```typescript
 layoutUpdatedEvent: function(newLayout: Layout): void {
@@ -72,3 +77,5 @@ layoutUpdatedEvent: function(newLayout: Layout): void {
 }
 ```
 
+## layout-updated
+Emitted when a GridItem is dropped or finished resizing and the GridLayout is updated.
