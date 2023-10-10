@@ -1,25 +1,26 @@
 # GridLayout VUE Events
 
+
+## breakpoint-changed
+Emitted when the break point is changed during a recalculation of the GridLayout.
+
+
+## changed-direction
+Emitted when the direction of the layout changes (RTL or LTR).
+
+
 ## container-resized
 
+
 ## drag-start
-Fired when a GridItems is being dragged.
+Emitted when a GridItems is being dragged.
+
 
 ## drag-end
-Fired when a GridItem is finished dragging (GridItem is dropped into the GridLayout)
-
-## item-move
-
-## item-moved
-
-## item-resize
-
-## item-resized
+Emitted when a GridItem is finished dragging (GridItem is dropped into the GridLayout)
 
 
 ## layout-before-mount
-Layout beforeMount event
-
 Emitted on the component beforeMount lifecycle hook
 
 ```typescript
@@ -29,9 +30,8 @@ layoutBeforeMountEvent: function(newLayout: Layout): void {
 ```
 
 ## layout-created
-Layout created event
-
 Emitted on the component created lifecycle hook
+
 
 ```typescript
 layoutCreatedEvent: function(newLayout: Layout): void {
@@ -40,9 +40,8 @@ layoutCreatedEvent: function(newLayout: Layout): void {
 ```
 
 ## layout-mounted
-Layout mounted event
-
 Emitted on the component mounted lifecycle hook
+
 
 ```typescript
 layoutMountedEvent: function(newLayout: Layout): void {
@@ -52,8 +51,6 @@ layoutMountedEvent: function(newLayout: Layout): void {
 
 
 ## layout-ready
-Layout ready event
-
 Emitted when all the operations on the mount hook finish
 
 ```typescript
@@ -71,11 +68,13 @@ Emitted into the event bus, maybe get this and others into separate enum.
 Emitted every time the GridLayout is being updated.
 This will fire everytime the GridLayout is updated, the GridItems are dropped or resized in the GridLayout. 
 
+
 ```typescript
 layoutUpdatedEvent: function(newLayout: Layout): void {
   console.log("Updated layout: ", newLayout);
 }
 ```
+
 
 ## layout-updated
 Emitted when a GridItem is dropped or finished resizing and the GridLayout is updated.
