@@ -34,8 +34,10 @@
     "vue-3",
     "composition-api",
     "vue-component-library",
+    "dashboard",
     "dashboard-layout",
-    "dashboard-responsive-layout"
+    "dashboard-responsive-layout",
+    "dynamic-dashboard"
   ],
   "main": "dist/vue-ts-responsive-grid-layout.umd.js",
   "module": "vue-ts-responsive-grid-layout.es.js",
