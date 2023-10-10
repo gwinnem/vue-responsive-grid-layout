@@ -156,7 +156,18 @@
                 :use-border-radius="useBorderRadius"
                 :use-css-transforms="true"
                 :vertical-compact="verticalCompact"
-                @columns-changed="colNumChanged">
+                @breakpoint-changed="onBreakpointChanged"
+                @changed-direction="onChangedDirection"
+                @columns-changed="onColNumChanged"
+                @container-resized="onContainerResized"
+                @drag-end="onDragEnd"
+                @drag-start="onDragStart"
+                @layout-before-mount="onLayoutBeforeMount"
+                @layout-created="onLayoutCreated"
+                @layout-mounted="onLayoutMounted"
+                @layout-ready="onLayoutReady"
+                @layout-updated="onLayoutUpdated"
+                @layout-update="onLayoutUpdate">
               <GridItem
                   v-for="item in testLayout"
                   :key="item.i"
@@ -213,7 +224,7 @@ import {
   getStatics,
   getFirstCollision,
 } from '@/core/helpers/utils';
-import {ILayoutItem} from "@/components/Grid/layout-definition";
+import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
 import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
 
@@ -268,15 +279,60 @@ const margin = computed(() => {
   return [marginLeftRight.value, marginTopBottom.value];
 });
 
+const onBreakpointChanged = (value: any): void => {
+  // TODO implement
+};
+
+const onChangedDirection = (value: any): void => {
+  // TODO implement
+};
+
+const onContainerResized = (value: any): void => {
+  // TODO implement
+};
+
+const onDragEnd = (value: any): void => {
+  // TODO implement
+};
+
+const onDragStart = (value: any): void => {
+  // TODO implement
+};
+
+const onLayoutBeforeMount = (value: any): void => {
+  // TODO implement
+};
+
+const onLayoutCreated = (value: any): void => {
+  // TODO implement
+};
+
+const onLayoutMounted = (value: any): void => {
+  // TODO implement
+};
+
+const onLayoutReady = (value: any): void => {
+  // TODO implement
+};
+
+const onLayoutUpdated = (value: any): void => {
+  // TODO implement
+};
+
+const onLayoutUpdate = (value: any): void => {
+  // TODO implement
+};
+
 let orgColNum = colNum.value;
-const colNumChanged = (value: number): void => {
+const onColNumChanged = (value: number): void => {
   if (orgColNum !== value) {
     orgColNum = value;
     colNum.value = value;
-    debugger;
     publishToEventLog(EGridLayoutEvent.COLUMNS_CHANGED, 'Columns changed to: ', value, 0);
   }
 };
+
+
 
 const removeGridItem = (id: string | number): void => {
   testLayout.value = testLayout.value.filter((item) => {
@@ -297,17 +353,21 @@ const publishToEventLog = (i: number | string, msg: string, newX: number, newY: 
 }
 
 const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
-  if (selected.value.includes('containerResizedEvent')) {
+  if (selected.value.includes('containerResizedEvent') || selected.value.includes('All')) {
     publishToEventLog(i, 'containerResizedEvent', newX, newY);
   }
 };
 
 const dragEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'dragEvent', newX, newY);
+  if (selected.value.includes('dragEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'dragEvent', newX, newY);
+  }
 };
 
 const draggedEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'draggedEvent', newX, newY);
+  if (selected.value.includes('draggedEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'draggedEvent', newX, newY);
+  }
 };
 
 export interface IMovedData {
