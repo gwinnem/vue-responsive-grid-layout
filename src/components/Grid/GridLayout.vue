@@ -12,7 +12,6 @@
       class="vue-grid-placeholder"
       :h="placeholder.h"
       :i="placeholder.i"
-      :move="startMoveItem"
       :show-close-button="showCloseButton"
       :use-border-radius="useBorderRadius"
       :w="placeholder.w"
@@ -21,19 +20,20 @@
   </div>
 </template>
 <script lang="ts">
-  import {
-    ref,
-    onMounted,
-    onBeforeUnmount,
-    provide,
-    onBeforeMount,
-    nextTick,
-    watch, computed,
-    defineComponent,
-    toRef,
-  } from 'vue';
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  provide,
+  ref,
+  toRef,
+  watch,
+} from 'vue';
 
-  export default defineComponent({
+export default defineComponent({
     name: `GridLayout`,
   });
 
@@ -188,11 +188,12 @@
     (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: TLayout): void;
     (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
     (e: EGridLayoutEvent.LAYOUT_UPDATED, layout: TLayout): void;
-    (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
     (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
     (e: EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint: string, layout: TLayout): void;
     (e: EGridLayoutEvent.COLUMNS_CHANGED, colNum: number): void;
-    (e: EGridLayoutEvent.ITEM_MOVE): void;
+    (e: EGridLayoutEvent.DRAG_START): void;
+    (e: EGridLayoutEvent.DRAG_END): void;
   }>();
   emit(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
 
@@ -246,6 +247,7 @@
     // new prop sync
     // noinspection TypeScriptValidateTypes
     originalLayout.value = layout;
+
     emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
 
     lastBreakpoint.value = newBreakpoint;
@@ -282,6 +284,7 @@
         }),
         {},
       );
+      emit(EGridLayoutEvent.DRAG_START);
     }
 
     if(eventName === EDragEvent.DRAG_MOVE || eventName === EDragEvent.DRAG_START) {
@@ -334,6 +337,7 @@
     if(eventName === EDragEvent.DRAG_END) {
       positionsBeforeDrag.value = undefined;
       originalLayout.value = layout;
+      emit(EGridLayoutEvent.DRAG_END);
       emit(EGridLayoutEvent.LAYOUT_UPDATED, layout);
     }
   };
@@ -575,7 +579,7 @@
       eventBus.emit(`updateWidth`, newVal);
       if(oldVal === null) {
         /*
-          If oldval == null is when the width has never been
+          If old val == null is when the width has never been
           set before. That only occurs when mounting is
           finished, and onWindowResize has been called and
           this.width has been changed the first time after it
