@@ -2,7 +2,7 @@
  * Events emitted by the GridLayout component
  */
 export enum EDragEvent {
-  DRAG_MOVE = `dragmove`,
-  DRAG_START = `dragstart`,
-  DRAG_END = `dragstart`
+  DRAG_MOVE = `dragMove`,
+  DRAG_START = `dragStart`,
+  DRAG_END = `dragEnd`
 }
