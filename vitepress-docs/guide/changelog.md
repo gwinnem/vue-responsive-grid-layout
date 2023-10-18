@@ -9,8 +9,12 @@ title: Changelog
 ### v: 1.2.3 (2023-10-xx)
 * __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19)
 * __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20)
-* __Feature__ Added event __drag-start__ to GridLayout.
 * __Feature__ Added event __drag-end__ to GridLayout.
+* __Feature__ Added event __drag-move__ to GridLayout.
+* __Feature__ Added event __drag-start__ to GridLayout.
+* __Codebase__ Renamed EGridLayoutEvent vale UPDATE_LAYOUT to LAYOUT_UPDATE.
+* __Codebase__ Removed file EDragEvents and updated GridLayout. Values are implemented in EGridLayoutEvent.
+* __Codebase__ Removed obsolete enum EMovingDirections.
 
 ## v: 1.2.2 (2023.09.19)
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5). Tnxs to [UTing1119](https://github.com/UTing1119)
