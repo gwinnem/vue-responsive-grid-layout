@@ -43,8 +43,12 @@ function getApiSidebar() {
           collapsed: false,
           items: [
             {
+              text: 'EGridLayoutEvent',
+              link: '/api/GridLayout-enums',
+            },
+            {
               text: 'EGridItemEvent',
-              link: '/api/enums',
+              link: '/api/GridItem-enums',
             },
           ],
         }
