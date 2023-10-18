@@ -23,10 +23,10 @@ export interface IColumns {
 export interface IGridLayoutProps {
   autoSize?: boolean;
   borderRadiusPx?: number;
-  breakPoints?: IBreakpoints;
+  breakpoints?: IBreakpoints;
   colNum?: number;
   cols?: IColumns;
-  enableEditMode?: boolean;
+  distributeEvenly?: boolean;
   horizontalShift?: boolean;
   isBounded?: boolean;
   isDraggable?: boolean;
@@ -41,7 +41,7 @@ export interface IGridLayoutProps {
   restoreOnDrag?: boolean;
   rowHeight?: number;
   showCloseButton?: boolean;
-  staticGridItemBackgroundColor?: string;
+  showGridLines?: boolean;
   transformScale?: number;
   useBorderRadius?: boolean;
   useCssTransforms?: boolean;
