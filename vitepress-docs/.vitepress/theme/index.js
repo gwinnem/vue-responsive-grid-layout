@@ -1,7 +1,6 @@
 import DefaultTheme from 'vitepress/theme';
 // import { useComponents } from './useComponents';
-// import './styles/index.css';
-//import { * } from '../../examples/01-example.vue';
+import './styles/index.css';
 
 export default {
   ...DefaultTheme,
