@@ -7,8 +7,8 @@ title: Changelog
 # Changelog
 
 ### v: 1.2.3 (2023-10-xx)
-* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19)
-* __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20)
+* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19). Tnxs to [SamGeems](https://github.com/SamGeens)
+* __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20).
 * __Feature__ Added event __drag-end__ to GridLayout.
 * __Feature__ Added event __drag-move__ to GridLayout.
 * __Feature__ Added event __drag-start__ to GridLayout.
