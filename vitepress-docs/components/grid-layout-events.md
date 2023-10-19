@@ -2,7 +2,7 @@
 
 
 ## breakpoint-changed
-Emitted when the break point is changed during a recalculation of the GridLayout.
+Emitted when the breakpoint is changed during a recalculation of the GridLayout.
 
 
 ## changed-direction
@@ -12,12 +12,16 @@ Emitted when the direction of the layout changes (RTL or LTR).
 ## container-resized
 
 
-## drag-start
-Emitted when a GridItems is being dragged.
-
-
-## drag-end
+## dragend
 Emitted when a GridItem is finished dragging (GridItem is dropped into the GridLayout)
+
+
+## dragmove
+Emitted when a dragged GridItem is being moved.
+
+
+## dragstart
+Emitted when a GridItem starts to being dragged.
 
 
 ## layout-before-mount
