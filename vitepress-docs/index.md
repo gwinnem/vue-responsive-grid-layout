@@ -17,8 +17,8 @@ hero:
 
 features:
   - icon: ⚡️
-    title: VITE
-    details: Feel the speed of Vite. Instant server start and lightning fast HMR that stays fast regardless of the app size.
+    title: Latest Release version
+    details: 1.2.3 Released 2023-10-23.
   - icon: 💥
     title: Responsiveness.
     details: With predefined layout's or automatically with predefined breakpoints.
@@ -27,5 +27,5 @@ features:
     details: Example showing howto Drag and Drop a GridItem.
   - icon: 📖
     title: Fully documented with examples.
-    details: Work in progress.
+    details: Constantly being updated for each release..
 ---
