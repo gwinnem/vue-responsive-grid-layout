@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/vue-ts-responsive-grid-layout)](https://www.npmjs.com/package/vue-ts-responsive-grid-layout)
 [![NPM](https://img.shields.io/npm/l/vue-ts-responsive-grid-layout)](https://github.com/gwinnem/vue-ts-responsive-grid-layout/blob/master/LICENSE)
 
-</br>
+<br/>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/main/docs/Data%20Grid.svg" height="200" alt="logo">
@@ -19,9 +19,24 @@
 ## What is vue-ts-responsive-grid-layout
 VUE 3 responsive grid layout is based on the original work by [JBaysolution's vue-grid-layout](https://github.com/jbaysolutions/vue-grid-layout).
 
-<br/>
 
 This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
+
+
+A proper App developed for testing purposes.
+
+Documentation website contains 13 examples. Will be updated when new features are added to the component.
+
+<br/>
+
+## Donate
+If you enjoyed this project — or just feeling generous, consider buying me a 🍺. Cheers!
+
+<br/>
+
+<a href="https://paypal.me/gwinnem/">
+    <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/dev/docs/paypal-images/blue.svg" height="40" alt="paypal">
+</a>
 
 <br/>
 
@@ -56,11 +71,20 @@ This new and refactored component has more features, typesafe Emits, Props and a
 * Props and emits are typesafe.
 
 ## Changelog
-### v: 1.2.3 (2023-10-xx)
-* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19)
-* __Fixed issue__ [Close button css is different than in the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20)
-* __Feature__ Added event __drag-start__ to GridLayout.
+
+### v: 1.2.3 (2023-10-21)
+* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19). Tnxs to [SamGeems](https://github.com/SamGeens)
+* __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20). Tnxs to [SamGeems](https://github.com/SamGeens)
 * __Feature__ Added event __drag-end__ to GridLayout.
+* __Feature__ Added event __drag-move__ to GridLayout.
+* __Feature__ Added event __drag-start__ to GridLayout.
+* __Codebase__ Renamed EGridLayoutEvent value UPDATE_LAYOUT to LAYOUT_UPDATE.
+* __Codebase__ Removed file EDragEvents and updated GridLayout. Values are implemented in EGridLayoutEvent.
+* __Codebase__ Added documentation to file DOM.ts
+* __Codebase__ Added new enum for drag events and refactored GridLayout to use new enum.
+* __Refactor__ Removed obsolete enum EMovingDirections.
+* __Demo App__ Added button for clearing the event log.
+* __Demo App__ Added Dropdown for filtering on events.
 
 ### v: 1.2.2 (2023-09-19)
 * __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
@@ -78,13 +102,6 @@ Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this
 ### v: 1.2.1 (2023-05-07)
 * --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks to [UTing1119](https://github.com/UTing1119)
 * --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks to [UTing1119](https://github.com/UTing1119)
-
-## Donate
-<a href="https://paypal.me/gwinnem/">
-    <img src="https://raw.githubusercontent.com/gwinnem/vue-responsive-grid-layout/dev/docs/paypal-images/blue.svg" height="40" alt="paypal">
-</a>
-
-If you enjoyed this project — or just feeling generous, consider buying me a beer. Cheers! :beers:
 
 
 ## Setting up vue-ts-responsive-grid-layout in your project
