@@ -62,9 +62,9 @@ export default defineComponent({
   } from '@/core/helpers/responsiveUtils';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
-  import { IBreakpoints, IColumns } from './grid-layout-props.interface';
+  import {IBreakpoints, IColumns, IGridLayoutProps} from './grid-layout-props.interface';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
-  import { EDragEvent } from '@/core/enums/EDragEvents';
+  import {EDragEvent} from "@/core/enums/EDragEvent";
 
   export interface IGridLayoutProps {
     autoSize?: boolean;
@@ -166,6 +166,8 @@ export default defineComponent({
   const colNum = toRef(props, 'colNum');
   const colNumResponsive = ref(props.colNum);
   const propsLayout = toRef(props, 'layout');
+
+  // eventbus
   const eventBus: Emitter<{
     changeDirection: boolean;
     compact: void;
@@ -184,16 +186,17 @@ export default defineComponent({
   provide(`eventBus`, eventBus);
 
   const emit = defineEmits<{
-    (e: EGridLayoutEvent.LAYOUT_CREATED, layout: TLayout): void;
-    (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: TLayout): void;
-    (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
-    (e: EGridLayoutEvent.LAYOUT_UPDATED, layout: TLayout): void;
-    (e: EGridLayoutEvent.UPDATE_LAYOUT, layout: TLayout): void;
-    (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
     (e: EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint: string, layout: TLayout): void;
     (e: EGridLayoutEvent.COLUMNS_CHANGED, colNum: number): void;
-    (e: EGridLayoutEvent.DRAG_START): void;
-    (e: EGridLayoutEvent.DRAG_END): void;
+    (e: EGridLayoutEvent.DRAG_END, itemId: string | number): void;
+    (e: EGridLayoutEvent.DRAG_MOVE, itemId: string | number): void;
+    (e: EGridLayoutEvent.DRAG_START, itemId: string | number): void;
+    (e: EGridLayoutEvent.LAYOUT_BEFORE_MOUNT, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_CREATED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_MOUNTED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_UPDATE, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_UPDATED, layout: TLayout): void;
+    (e: EGridLayoutEvent.LAYOUT_READY, layout: TLayout): void;
   }>();
   emit(EGridLayoutEvent.LAYOUT_CREATED, props.layout);
 
@@ -248,7 +251,7 @@ export default defineComponent({
     // noinspection TypeScriptValidateTypes
     originalLayout.value = layout;
 
-    emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
+    emit(EGridLayoutEvent.LAYOUT_UPDATE, layout);
 
     lastBreakpoint.value = newBreakpoint;
     eventBus.emit(`setColNum`, colsCompute);
@@ -271,8 +274,7 @@ export default defineComponent({
         y: 0,
       } as ILayoutItem;
     }
-
-    if(eventName === EDragEvent.DRAG_START && !props.verticalCompact) {
+    if(eventName === 'dragstart' && !props.verticalCompact) {
       // noinspection TypeScriptValidateTypes
       positionsBeforeDrag.value = props.layout.reduce(
         (result, { i, x: tmpX, y: tmpY }) => ({
@@ -284,7 +286,22 @@ export default defineComponent({
         }),
         {},
       );
-      emit(EGridLayoutEvent.DRAG_START);
+      emit(EGridLayoutEvent.DRAG_START, 1);
+    }
+
+    switch (eventName) {
+      case EDragEvent.DRAG_END: {
+        emit(EGridLayoutEvent.DRAG_END, id ?? 0);
+        break;
+      }
+      case EDragEvent.DRAG_MOVE: {
+        emit(EGridLayoutEvent.DRAG_MOVE, id ?? 0);
+        break;
+      }
+      case EDragEvent.DRAG_START: {
+        emit(EGridLayoutEvent.DRAG_START, id ?? 0);
+        break;
+      }
     }
 
     if(eventName === EDragEvent.DRAG_MOVE || eventName === EDragEvent.DRAG_START) {
@@ -311,7 +328,8 @@ export default defineComponent({
           isDragging.value = false;
         });
       }
-    } else {
+    }
+    else {
       nextTick(() => {
         isDragging.value = false;
       });
@@ -319,7 +337,7 @@ export default defineComponent({
 
     // Move the element to the dragged location.
     const layout = moveElement(props.layout, l, x as number, y as number, true, props.horizontalShift as boolean, props.preventCollision);
-    emit(EGridLayoutEvent.UPDATE_LAYOUT, layout);
+    emit(EGridLayoutEvent.LAYOUT_UPDATE, layout);
 
     if(props.restoreOnDrag) {
       // Do not compact items more than in layout before drag
@@ -334,10 +352,10 @@ export default defineComponent({
     // needed because vue can't detect changes on array element properties
     eventBus.emit(`compact`);
     updateHeight();
-    if(eventName === EDragEvent.DRAG_END) {
+    if(eventName !== undefined && eventName === EGridLayoutEvent.DRAG_END) {
       positionsBeforeDrag.value = undefined;
       originalLayout.value = layout;
-      emit(EGridLayoutEvent.DRAG_END);
+      emit(EGridLayoutEvent.DRAG_END,1);
       emit(EGridLayoutEvent.LAYOUT_UPDATED, layout);
     }
   };
@@ -615,7 +633,9 @@ export default defineComponent({
   });
 
   watch(() => props.colNum, val => {
+    // TODO remove eventBus
     eventBus.emit(`setColNum`, val);
+    emit(EGridLayoutEvent.COLUMNS_CHANGED, val);
     responsiveGridLayout();
   });
 
@@ -645,7 +665,7 @@ export default defineComponent({
 
   watch(() => props.responsive, val => {
     if(!val) {
-      emit(EGridLayoutEvent.UPDATE_LAYOUT, originalLayout.value || []);
+      emit(EGridLayoutEvent.LAYOUT_UPDATE, originalLayout.value || []);
       eventBus.emit(`setColNum`, props.colNum);
     }
     onWindowResize();
