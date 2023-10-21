@@ -5,12 +5,18 @@
         <form style="border-radius: 8px;">
           <fieldset>
             <legend>Test bench</legend>
+            <div class="row" style="display: none;">
+              <button
+                class="col-sm-2 primary small"
+                @click.prevent="resetLayout">
+                Reset Layout
+              </button>
+            </div>
             <div
                 v-if="!hideEventLog"
                 class="row">
               <button
-                  class="btn-hover col-sm-2"
-                  style="height: 43px; margin: 0 10px 0 0;"
+                class="col-sm-2 tertiary small"
                   @click.prevent="clearEventLog">
                 Clear Event Log
               </button>
@@ -160,8 +166,9 @@
                 @changed-direction="onChangedDirection"
                 @columns-changed="onColNumChanged"
                 @container-resized="onContainerResized"
-                @drag-end="onDragEnd"
-                @drag-start="onDragStart"
+                @dragend="onDragEnd"
+                @dragmove="onDragMove"
+                @dragstart="onDragStart"
                 @layout-before-mount="onLayoutBeforeMount"
                 @layout-created="onLayoutCreated"
                 @layout-mounted="onLayoutMounted"
@@ -193,8 +200,8 @@
                   @move="moveEvent"
                   @moved="movedEvent"
                   @remove-grid-item="removeGridItem"
-                  @resize="resizeEvent"
-                  @resized="resizedEvent">
+                  @resize="onResizeStartEvent"
+                  @resized="onResizeEndEvent">
                 <span class="text">
                   {{ itemTitle(item) }}
                 </span>
@@ -207,7 +214,7 @@
   </div>
   <footer>
     <p style="text-align: center">
-      Copyright © 2022-present Geirr Winnem
+      Copyright © 2022-{{getCurrentDate()}} Geirr Winnem
     </p>
     <p style="text-align: center">
       <a href="https://winnem.tech" target="_blank">winnem.tech</a>
@@ -226,17 +233,19 @@ import {
 } from '@/core/helpers/utils';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
-import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
-
-const selected = ref('All');
-const options = ['All', 'Layout Updated', 'options'];
-
+// import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
 // import DragItem from '@/components/Grid/DragItem.vue';
 
 // Used for testing the package before publishing to npm.
 // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
 
+const selected = ref('All');
+
+/**
+ * Removing all selected items in dropdown if All is selected
+ * @param {string}  val   The selected value
+ */
 const updateSelected = (val: any): void => {
   if (val.length > 0 && val.includes('All')) {
     selected.value = 'All'
@@ -275,28 +284,71 @@ const testLayout = ref(testData);
 const refLayout = ref();
 const mapCache = new Map();
 
+const getCurrentDate = (): number => {
+    const tmpDate = new Date(Date.now());
+    return tmpDate.getFullYear();
+}
+
+/**
+ * Computing the margin values
+ * @return {Array}  The new margin value.
+ */
 const margin = computed(() => {
   return [marginLeftRight.value, marginTopBottom.value];
 });
 
-const onBreakpointChanged = (value: any): void => {
-  // TODO implement
+const options = [
+    'All',
+    'breakpointChangedEvent',
+    'containerResizedEvent',
+    'dragStartEvent',
+    'dragMoveEvent',
+    'dragEndEvent',
+    'resizeStartEvent',
+    'resizeEndEvent'];
+
+// Event handlers
+const onBreakpointChanged = (oldValue: string): void => {
+    if (selected.value.includes('breakpointChangedEvent') || selected.value.includes('All')) {
+        publishStringToEventLog(`Layout breakpoint changed to: ${oldValue}`);
+    }
 };
 
-const onChangedDirection = (value: any): void => {
-  // TODO implement
+const onChangedDirection = (value: string): void => {
+    if (selected.value.includes('changedDirectionEvent') || selected.value.includes('All')) {
+        publishStringToEventLog(`Layout layout direction changed to: ${value}`);
+    }
+};
+
+let orgColNum = colNum.value;
+const onColNumChanged = (value: number): void => {
+    if (orgColNum !== value) {
+        orgColNum = value;
+        colNum.value = value;
+        publishStringToEventLog(`Columns changed to: ${value}`);
+    }
 };
 
 const onContainerResized = (value: any): void => {
   // TODO implement
 };
 
-const onDragEnd = (value: any): void => {
-  // TODO implement
+const onDragEnd = (itemId: string | number): void => {
+  if (selected.value.includes('dragEndEvent') || selected.value.includes('All')) {
+    publishStringToEventLog(`GridItem: ${itemId} Drag End`);
+  }
 };
 
-const onDragStart = (value: any): void => {
-  // TODO implement
+const onDragMove = (i: any, newX: number, newY: number): void => {
+  if (selected.value.includes('dragMoveEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'dragMoveEvent', newX, newY);
+  }
+};
+
+const onDragStart = (i: any, newX: number, newY: number): void => {
+  if (selected.value.includes('dragStartEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'dragStartEvent', newX, newY);
+  }
 };
 
 const onLayoutBeforeMount = (value: any): void => {
@@ -323,15 +375,6 @@ const onLayoutUpdate = (value: any): void => {
   // TODO implement
 };
 
-let orgColNum = colNum.value;
-const onColNumChanged = (value: number): void => {
-  if (orgColNum !== value) {
-    orgColNum = value;
-    colNum.value = value;
-    publishToEventLog(EGridLayoutEvent.COLUMNS_CHANGED, 'Columns changed to: ', value, 0);
-  }
-};
-
 
 
 const removeGridItem = (id: string | number): void => {
@@ -346,11 +389,24 @@ const clearEventLog = (): void => {
   eventsLog.value = [];
 };
 
+// TODO works only if the length of the layout items are changed
+const resetLayout = (): void => {
+  testLayout.value = testData;
+};
+
 const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
   eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
   if (eventsDiv.value)
     eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
 }
+
+const publishStringToEventLog = (message: string): void => {
+  eventsLog.value.push(message);
+  if (eventsDiv.value) {
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+  }
+};
+
 
 const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
   if (selected.value.includes('containerResizedEvent') || selected.value.includes('All')) {
@@ -369,13 +425,6 @@ const draggedEvent = (i: number | string, newX: number, newY: number): void => {
     publishToEventLog(i, 'draggedEvent', newX, newY);
   }
 };
-
-export interface IMovedData {
-  startI: number | string;
-  startMsg: string;
-  startX: number;
-  startY: number;
-}
 
 let moveData: any, IMovedData: Ref<UnwrapRef<null>>;
 
@@ -397,12 +446,16 @@ const movedEvent = (i: number | string, newX: number, newY: number): void => {
   }
 };
 
-const resizeEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'resizeEvent', newX, newY);
+const onResizeStartEvent = (i: number | string, newX: number, newY: number): void => {
+  if (selected.value.includes('resizeEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'resizeEvent', newX, newY);
+  }
 };
 
-const resizedEvent = (i: number | string, newX: number, newY: number): void => {
-  publishToEventLog(i, 'resizedEvent', newX, newY);
+const onResizeEndEvent = (i: number | string, newX: number, newY: number): void => {
+  if (selected.value.includes('resizedEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'resizedEvent', newX, newY);
+  }
 };
 
 const itemTitle = (item: ILayoutItem): string => {
