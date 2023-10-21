@@ -12,12 +12,6 @@
       <i class="icon icon-cross"></i>
       <span class="visually-hidden">Close</span>
     </button>
-    <span
-      v-if="resizableAndNotStatic"
-      ref="handle"
-      :class="resizableHandleClass">
-      <i class="icon icon-resize-se"></i>
-    </span>
     <slot :style="styleObj"></slot>
   </div>
 </template>
