@@ -18,7 +18,7 @@ hero:
 features:
   - icon: ⚡️
     title: Latest Release version
-    details: 1.2.3 Released 2023-10-23.
+    details: 1.2.4 Released 2023-10-23.
   - icon: 💥
     title: Responsiveness.
     details: With predefined layout's or automatically with predefined breakpoints.
