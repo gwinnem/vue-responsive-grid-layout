@@ -5,10 +5,10 @@
         <form style="border-radius: 8px;">
           <fieldset>
             <legend>Test bench</legend>
-            <div class="row" style="display: none;">
+            <div class="row hidden">
               <button
-                class="col-sm-2 primary small"
-                @click.prevent="resetLayout">
+                  class="col-sm-2 secondary small"
+                  @click.prevent="resetLayout">
                 Reset Layout
               </button>
             </div>
@@ -16,7 +16,7 @@
                 v-if="!hideEventLog"
                 class="row">
               <button
-                class="col-sm-2 tertiary small"
+                  class="col-sm-2 tertiary small"
                   @click.prevent="clearEventLog">
                 Clear Event Log
               </button>
@@ -240,8 +240,6 @@ import VueMultiselect from 'vue-multiselect';
 // import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
 // import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
 
-const selected = ref('All');
-
 /**
  * Removing all selected items in dropdown if All is selected
  * @param {string}  val   The selected value
@@ -280,13 +278,21 @@ const showGridLines = ref(false);
 const useBorderRadius = ref(false);
 const verticalCompact = ref(true);
 
-const testLayout = ref(testData);
+const testLayout = ref([...testData]);
+
+/**
+ * Ref to the html object.
+ */
 const refLayout = ref();
 const mapCache = new Map();
 
+/**
+ * Used to get the full year displayed in the footer.
+ * @return {number} The current year.
+ */
 const getCurrentDate = (): number => {
-    const tmpDate = new Date(Date.now());
-    return tmpDate.getFullYear();
+  const tmpDate = new Date(Date.now());
+  return tmpDate.getFullYear();
 }
 
 /**
@@ -297,40 +303,86 @@ const margin = computed(() => {
   return [marginLeftRight.value, marginTopBottom.value];
 });
 
+/**
+ * Values used in the select dropdown.
+ */
+const selected = ref([
+  'layoutReadyEvent'
+]);
+
+/**
+ * The events for the select dropdown.
+ */
 const options = [
-    'All',
-    'breakpointChangedEvent',
-    'containerResizedEvent',
-    'dragStartEvent',
-    'dragMoveEvent',
-    'dragEndEvent',
-    'resizeStartEvent',
-    'resizeEndEvent'];
+  'All',
+  'breakpointChangedEvent',
+  'changedDirectionEvent',
+  'colNumChangedEvent',
+  'containerResizedEvent',
+  'dragStartEvent',
+  'dragMoveEvent',
+  'dragEndEvent',
+  'layoutBeforeMountEvent',
+  'layoutCreatedEvent',
+  'layoutMountedEvent',
+  'layoutReadyEvent',
+  'layoutUpdateEvent',
+  'layoutUpdatedEvent',
+  'resizeStartEvent',
+  'resizeEndEvent'];
 
 // Event handlers
+const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
+  eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
+  if (eventsDiv.value)
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+}
+const publishStringToEventLog = (message: string, insertNewLine: boolean = false): void => {
+  if(insertNewLine) {
+    eventsLog.value.push('');
+  }
+
+  eventsLog.value.push(message);
+  if (eventsDiv.value) {
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+  }
+};
+const publishToEventLogWithNewLine = (firstLine: string, message: string): void => {
+  eventsLog.value.push(firstLine);
+  eventsLog.value.push('');
+  eventsLog.value.push(message);
+  if (eventsDiv.value) {
+    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
+  }
+};
+
 const onBreakpointChanged = (oldValue: string): void => {
-    if (selected.value.includes('breakpointChangedEvent') || selected.value.includes('All')) {
-        publishStringToEventLog(`Layout breakpoint changed to: ${oldValue}`);
-    }
+  if (selected.value.includes('breakpointChangedEvent') || selected.value.includes('All')) {
+    publishStringToEventLog(`Layout breakpoint changed to: ${oldValue}`);
+  }
 };
 
 const onChangedDirection = (value: string): void => {
-    if (selected.value.includes('changedDirectionEvent') || selected.value.includes('All')) {
-        publishStringToEventLog(`Layout layout direction changed to: ${value}`);
-    }
+  if (selected.value.includes('changedDirectionEvent') || selected.value.includes('All')) {
+    publishStringToEventLog(`Layout layout direction changed to: ${value}`);
+  }
 };
 
 let orgColNum = colNum.value;
 const onColNumChanged = (value: number): void => {
-    if (orgColNum !== value) {
-        orgColNum = value;
-        colNum.value = value;
-        publishStringToEventLog(`Columns changed to: ${value}`);
+  if (orgColNum !== value) {
+    orgColNum = value;
+    colNum.value = value;
+    if (selected.value.includes('colNumChangedEvent') || selected.value.includes('All')) {
+      publishStringToEventLog(`Columns changed to: ${value}`);
     }
+  }
 };
 
 const onContainerResized = (value: any): void => {
-  // TODO implement
+  if (selected.value.includes('containerResizedEvent') || selected.value.includes('All')) {
+    publishStringToEventLog(`Container changed to: ${value}`);
+  }
 };
 
 const onDragEnd = (itemId: string | number): void => {
@@ -351,28 +403,40 @@ const onDragStart = (i: any, newX: number, newY: number): void => {
   }
 };
 
-const onLayoutBeforeMount = (value: any): void => {
-  // TODO implement
+const onLayoutBeforeMount = (value: TLayout[]): void => {
+  if (selected.value.includes('layoutBeforeMountEvent') || selected.value.includes('All')) {
+    publishToEventLogWithNewLine('Layout before mount:', JSON.stringify(value));
+  }
 };
 
-const onLayoutCreated = (value: any): void => {
-  // TODO implement
+const onLayoutCreated = (value: TLayout[]): void => {
+  if (selected.value.includes('layoutCreatedEvent') || selected.value.includes('All')) {
+    publishToEventLogWithNewLine(`Layout created:`, JSON.stringify(value));
+  }
 };
 
-const onLayoutMounted = (value: any): void => {
-  // TODO implement
+const onLayoutMounted = (value: TLayout[]): void => {
+  if (selected.value.includes('layoutMountedEvent') || selected.value.includes('All')) {
+    publishToEventLogWithNewLine(`Layout mounted:`, JSON.stringify(value));
+  }
 };
 
-const onLayoutReady = (value: any): void => {
-  // TODO implement
+const onLayoutReady = (value: TLayout[]): void => {
+  if (selected.value.includes('layoutReadyEvent') || selected.value.includes('All')) {
+    publishToEventLogWithNewLine(`Layout ready:`, JSON.stringify(value));
+  }
 };
 
-const onLayoutUpdated = (value: any): void => {
-  // TODO implement
+const onLayoutUpdated = (value: TLayout[]): void => {
+  if (selected.value.includes('layoutUpdatedEvent') || selected.value.includes('All')) {
+    publishToEventLogWithNewLine(`Layout updated:`, JSON.stringify(value));
+  }
 };
 
-const onLayoutUpdate = (value: any): void => {
-  // TODO implement
+const onLayoutUpdate = (value: TLayout[]): void => {
+  if (selected.value.includes('layoutUpdateEvent') || selected.value.includes('All')) {
+    publishToEventLogWithNewLine(`Layout update:`, JSON.stringify(value));
+  }
 };
 
 
@@ -391,22 +455,11 @@ const clearEventLog = (): void => {
 
 // TODO works only if the length of the layout items are changed
 const resetLayout = (): void => {
-  testLayout.value = testData;
+  console.log(testData);
+  console.log(testLayout.value);
+  testLayout.value = null;
+  testLayout.value = [...testData];
 };
-
-const publishToEventLog = (i: number | string, msg: string, newX: number, newY: number): void => {
-  eventsLog.value.push(`${msg} i=${i}, X=${newX}, Y=${newY}`);
-  if (eventsDiv.value)
-    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
-}
-
-const publishStringToEventLog = (message: string): void => {
-  eventsLog.value.push(message);
-  if (eventsDiv.value) {
-    eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
-  }
-};
-
 
 const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
   if (selected.value.includes('containerResizedEvent') || selected.value.includes('All')) {
@@ -446,15 +499,15 @@ const movedEvent = (i: number | string, newX: number, newY: number): void => {
   }
 };
 
-const onResizeStartEvent = (i: number | string, newX: number, newY: number): void => {
-  if (selected.value.includes('resizeEvent') || selected.value.includes('All')) {
-    publishToEventLog(i, 'resizeEvent', newX, newY);
-  }
-};
-
 const onResizeEndEvent = (i: number | string, newX: number, newY: number): void => {
   if (selected.value.includes('resizedEvent') || selected.value.includes('All')) {
     publishToEventLog(i, 'resizedEvent', newX, newY);
+  }
+};
+
+const onResizeStartEvent = (i: number | string, newX: number, newY: number): void => {
+  if (selected.value.includes('resizeEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'resizeEvent', newX, newY);
   }
 };
 
@@ -627,6 +680,7 @@ function addDragOverEvent(e: DragEvent) {
 onMounted(() => {
   document.addEventListener("dragover", addDragOverEvent);
 });
+
 onBeforeUnmount(() => {
   document.removeEventListener("dragover", addDragOverEvent);
 });
