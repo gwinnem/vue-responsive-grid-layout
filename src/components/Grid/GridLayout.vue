@@ -212,6 +212,7 @@ export default defineComponent({
       height: containerHeight(),
     };
   };
+
   // finds or generates new layouts for set breakpoints
   const responsiveGridLayout = (): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
