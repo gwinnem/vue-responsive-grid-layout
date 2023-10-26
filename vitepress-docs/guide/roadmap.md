@@ -8,6 +8,7 @@ title: Roadmap
 # ROADMAP
 
 ## Upcoming updates and fixes
+* __New Feature__ Add possibility to set fixed width on a GridItem.
 * __Examples:__ Add example app to CodeSandbox, so user's can test layouts.
 * __Examples:__ Add Multiple Grids.
 * __Examples:__ Add Responsive predefined layouts.
@@ -21,4 +22,4 @@ title: Roadmap
 * __Test:__ Add more unit tests.
 * __Test:__ Refactor layout validator so test is passing.
 * __Test:__ Add e2e tests.
-* __Feature:__ Support for nuxt projects.
+* __New Feature:__ Support for nuxt projects.
