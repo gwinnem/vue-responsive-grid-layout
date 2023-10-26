@@ -8,7 +8,7 @@ export default defineConfig({
   description: 'Documentation for vue-responsive-grid-layout component',
   appearance: true,
   lastUpdated: true,
-  cleanUrls: 'without-subfolders',
+  cleanUrls: 'true',
 
   base: process.env.BASE || '/',
   head: [['link', {
