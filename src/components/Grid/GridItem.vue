@@ -360,18 +360,14 @@
         const cTop = clientRect.top / transformScale.value;
         const pTop = parentRect.top / transformScale.value;
 
-        //                        Add rtl support
         if(renderRtl.value) {
           newPosition.left = (cRight - pRight) * -1;
         } else {
           newPosition.left = cLeft - pLeft;
         }
         newPosition.top = cTop - pTop;
-        //                        console.log("### drag end => " + JSON.stringify(newPosition));
-        //                        console.log("### DROP: " + JSON.stringify(newPosition));
         dragging.value = undefined;
         isDragging.value = false;
-        // shouldUpdate = true;
         break;
       }
       case `dragmove`: {
@@ -392,9 +388,6 @@
           const rightBoundary = containerWidth.value - calcGridItemWH(props.w, colWidth, margin.value[0]);
           newPosition.left = clamp(newPosition.left, 0, rightBoundary);
         }
-        //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);
-        //                        console.log("### drag => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-        //                        console.log("### drag end => " + JSON.stringify(newPosition));
         dragging.value = newPosition as IGridItemPosition;
         break;
       }
@@ -439,6 +432,7 @@
 
   const calcPosition = (x: number, y: number, w: number, h: number): IGridItemPosition => {
     const colWidth = calcColWidth();
+
     // add rtl support
     let out;
     if(renderRtl.value) {
@@ -456,7 +450,7 @@
         height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
         left: Math.round(colWidth * x + (x + 1) * margin.value[0]),
         top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
-        // 0 * Infinity === NaN, which causes problems with resize constriants;
+        // 0 * Infinity === NaN, which causes problems with resize constraints;
         // Fix this if it occurs.
         // Note we do it here rather than later because Math.round(Infinity) causes deopt
         width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
@@ -484,7 +478,6 @@
       // @ts-ignore
       interactObj.value.draggable(opts);
 
-      /* this.interactObj.draggable({allowFrom: '.vue-draggable-handle'}); */
       if(!dragEventSet.value) {
         dragEventSet.value = true;
         interactObj.value.on(`dragstart dragmove dragend`, event => {
@@ -581,7 +574,8 @@
           handleResize(event);
         });
       }
-    } else {
+    }
+    else {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       interactObj.value.resizable({
@@ -748,7 +742,7 @@
       x: innerX.value,
       y: innerY.value,
     };
-    // console.log(`data`, data);
+
     eventBus.emit(`resizeEvent`, data);
   };
 
@@ -891,7 +885,7 @@
   watch(() => props.w, newVal => {
     innerW.value = newVal;
     createStyle();
-    // wthis.emitContainerResized();
+    // this.emitContainerResized();
   });
 
   watch(renderRtl, () => {
