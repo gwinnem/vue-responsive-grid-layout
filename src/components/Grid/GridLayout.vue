@@ -569,10 +569,8 @@ export default defineComponent({
       nextTick(() => {
         initResponsiveFeatures();
 
-        onWindowResize();
-
-        // self.width = self.$el.offsetWidth;
         addWindowEventListener(`resize`, onWindowResize);
+        onWindowResize();
 
         compactLayout(props.layout, props.verticalCompact);
 
