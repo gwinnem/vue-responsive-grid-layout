@@ -40,7 +40,7 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 
 <br/>
 
-### New Features:
+### Features:
 * Prop in GridLayout for distributing GridItem's equally.
 * GridLayout now has slot for GridItem.
 * Prop for displaying grid lines in GridLayout.
@@ -63,14 +63,18 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 * GridItem automatically resizes when content change(Useful when displaying charts).
 
 
-### Major refactorings
-* Converted code base to typescript.
-* Enforced proper coding style and type safety for typescript.
-* Using proper linting rules for vue, typescript and styles.
-* Component using script setup style syntax.
-* Props and emits are typesafe.
+### Testing:
+* __Unit tests__ [Using Vitest](https://vitest.dev/)
+* __Unit test console__ [Using Vitest UI](https://vitest.dev/guide/ui.html#vitest-ui)
+* __e2e tests__ [Using nightwatchjs](https://nightwatchjs.org/)
+
 
 ## Changelog
+
+
+### v: 1.2.5 (2023-10-27)
+* __Fixed Issue__ [GridItem heigth not calculated correct when resizing a GridItem](https://github.com/gwinnem/vue-responsive-grid-layout/issues/30)
+* __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
 
 
 ### v: 1.2.4 (2023-10-23)
@@ -119,6 +123,8 @@ Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this
 
 
 ### References
-* [Vue Grid Layout](https://jbaysolutions.github.io/vue-grid-layout/guide/)
 * [Mini.css used in the sandbox](https://minicss.us/docs.htm#)
 * [Vue-Multiselect used in the sandbox](https://vue-multiselect.js.org/#sub-getting-started)
+* [Vitest](https://vitest.dev/)
+* [Vitest UI](https://vitest.dev/guide/ui.html#vitest-ui)
+* [nightwatchjs](https://nightwatchjs.org/)
