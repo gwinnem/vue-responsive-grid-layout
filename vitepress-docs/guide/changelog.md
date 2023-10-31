@@ -7,6 +7,12 @@ title: Changelog
 
 # Changelog
 
+
+### v: 1.2.5 (2023-10-27)
+* __Fixed Issue__ [GridItem heigth not calculated correct when resizing a GridItem](https://github.com/gwinnem/vue-responsive-grid-layout/issues/30)
+* __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
+
+
 ### v: 1.2.4 (2023-10-23)
 * __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19). Tnxs to [SamGeems](https://github.com/SamGeens)
 * __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20). Tnxs to [SamGeems](https://github.com/SamGeens)
