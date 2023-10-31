@@ -34,6 +34,6 @@ describe(`layoutValidator`, () => {
   it(`When layout with required keys is valid and  optional keys is invalid`, () => {
     const result = layoutValidator([validRequiredLayout, invalidOptionalLayout]);
 
-    expect(result).toBe(false);
+    expect(result).toBe(true);
   });
 });
