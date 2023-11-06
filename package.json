@@ -63,7 +63,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "commit": "cz",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "build:all": "vite build && npm run build:types && npm pack",
     "build:only": "vite build",
     "build:types": "vue-tsc --project tsconfig.json --declaration --emitDeclarationOnly --outDir ./dist",
