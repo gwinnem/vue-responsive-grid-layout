@@ -197,7 +197,6 @@
 </script>
 
 <style lang='scss' scoped>
-
 .droppable-element {
   // background: #fdd;
   border: 1px solid black;

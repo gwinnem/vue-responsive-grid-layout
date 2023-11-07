@@ -703,7 +703,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables";
+@import '@/styles/variables';
 
 .vue-grid-layout {
   position: relative;
@@ -711,24 +711,15 @@ export default defineComponent({
 }
 
 .grid::before {
-  content: '';
-  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
-  background-image: linear-gradient($grid-line-color 1px, transparent 1px), linear-gradient(90deg, $grid-line-color 1px, transparent 1px);
-  height: calc(100% - 5px);
-  width: calc(100% + 5px);
-  position: absolute;
+  background-image:
+    linear-gradient($grid-line-color 1px, transparent 1px),
+    linear-gradient(90deg, $grid-line-color 1px, transparent 1px);
   background-repeat: repeat;
+  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
+  content: '';
+  height: calc(100% - 5px);
   margin: 5px;
-
-  //position: absolute;
-  //width: calc(100% - 5px);
-  //height: calc(100% - 5px);
-  //margin: 5px;
-  //content: '';
-  //background-image:
-  //  linear-gradient(to right,lightgrey 1px,transparent 1px),
-  //  linear-gradient(to bottom, lightgrey 1px, transparent 1px);
-  //background-repeat: repeat;
-  //background-size: calc(calc(100% - 5px) / 12) 30px;
+  position: absolute;
+  width: calc(100% + 5px);
 }
 </style>

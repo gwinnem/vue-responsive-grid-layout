@@ -1184,16 +1184,6 @@
     z-index: 3;
   }
 
-  //&.vue-draggable {
-  //  cursor: grab !important;
-  //}
-  //
-  //&.vue-draggable-dragging {
-  //  cursor: grabbing !important;
-  //  transition: none;
-  //  z-index: 3;
-  //}
-
   &.vue-grid-placeholder {
     background: $grid-item-placeholder-bg-color;
     opacity: $grid-item-placeholder-opacity;
@@ -1210,6 +1200,7 @@
     background-origin: content-box;
     background-position: bottom right;
     background-repeat: no-repeat;
+
     // background-color: red;
     bottom: -3px;
     box-sizing: border-box;
@@ -1270,7 +1261,8 @@
     width: 20px;
     z-index: 20;
 
-    & > .icon, .icon-resize-se {
+    & > .icon,
+    .icon-resize-se {
       box-sizing: border-box;
       display: inline-block;
       font-size: inherit;
