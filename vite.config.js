@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import * as path from 'path';
 import vue from '@vitejs/plugin-vue';
+import stylelint from 'vite-plugin-stylelint';
 
 export default defineConfig({
   build: {
@@ -27,6 +28,12 @@ export default defineConfig({
   define: { 'process.env': {} },
   plugins: [
     vue(),
+    stylelint({
+      fix: true,
+      include: [
+        'src/**/*.{css,scss,sass,vue}'
+      ],
+    }),
   ],
   resolve: {
     alias: {
@@ -34,7 +41,7 @@ export default defineConfig({
     },
   },
   server: {
-    open: true,
+    open: false,
     port: 9000,
   },
 });

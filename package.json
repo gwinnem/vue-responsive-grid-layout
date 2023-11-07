@@ -64,6 +64,8 @@
   "scripts": {
     "dev": "vite --host",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "commit": "cz",
+    "commit:init": "commitizen init cz-conventional-changelog --save-dev --save-exact",
     "build:all": "vite build && npm run build:types && npm pack",
     "build:only": "vite build",
     "build:types": "vue-tsc --project tsconfig.json --declaration --emitDeclarationOnly --outDir ./dist",
@@ -71,6 +73,7 @@
     "lint": "eslint \"src/**/*.{js,ts,vue}\" --color",
     "lint:fix": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
     "lint:style": "npx stylelint src/**/*.{scss,vue} --no-fix --color",
+    "lint:style-fix": "npx stylelint src/**/*.{scss,vue} --fix --color",
     "lint:markup": "vue-tsc -noEmit",
     "format": "prettier -w -u .",
     "test": "vitest",
@@ -137,6 +140,7 @@
     "vite": "3.2.7",
     "vite-plugin-dts": "^1.7.3",
     "vite-plugin-vue-markdown": "^0.22.2",
+    "vite-plugin-stylelint": "^5.2.0",
     "vitepress": "^1.0.0-alpha.45",
     "vitest": "^0.34.6",
     "vue": "^3.2.0",
@@ -168,7 +172,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "cz-emoji"
     }
   }
 }
