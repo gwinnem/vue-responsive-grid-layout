@@ -1,8 +1,0 @@
-{
-  "include": ["**/*.spec.ts"],
-  "compilerOptions": {
-    "target": "ES2018",
-    "lib": ["ESNext", "ESNext.AsyncIterable", "DOM", "es2019"],
-    "types": ["cypress"]
-  }
-}
