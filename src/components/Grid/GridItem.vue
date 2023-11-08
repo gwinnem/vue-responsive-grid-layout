@@ -247,13 +247,14 @@
     };
   });
 
+  // TODO Maybe reuse this for the isMirrored change prop
   // Helper for generating the correct css class for resizing a GridItem
-  const resizableHandleClass = computed(() => {
-    if(renderRtl.value) {
-      return `vue-resizable-handle vue-rtl-resizable-handle`;
-    }
-    return `vue-resizable-handle`;
-  });
+  // const resizableHandleClass = computed(() => {
+  //   if(renderRtl.value) {
+  //     return `vue-resizable-handle vue-rtl-resizable-handle`;
+  //   }
+  //   return `vue-resizable-handle`;
+  // });
 
   const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
     if(!Number.isFinite(gridUnits)) return gridUnits;
@@ -500,7 +501,7 @@
    * @param  {Boolean} autoSizeFlag  function autoSize identifier.
    * @return {ICalcWh} w, h as grid units.
    */
-  const calcWH = (height: number, width: number, autoSizeFlag = false): ICalcWh => {
+  const calcWH = (height: number, width: number, autoSizeFlag: boolean = false): ICalcWh => {
     const colWidth = calcColWidth();
 
     // width = colWidth * w - (margin * (w - 1))
@@ -574,8 +575,7 @@
           handleResize(event);
         });
       }
-    }
-    else {
+    } else {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       interactObj.value.resizable({
