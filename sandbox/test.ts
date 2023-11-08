@@ -55,7 +55,14 @@ export const testData: TLayout = [
     x: 0,
     y: 2
   },
-  { h: 1, i: 8, w: 1, x: 1, y: 1, isStatic: true },
+  {
+    i: 8,
+    h: 1,
+    w: 1,
+    x: 1,
+    y: 1,
+    isStatic: true
+  },
 
   // test 2
   // { h: 1, i: 1, w: 1, x: 0, y: 0 },
