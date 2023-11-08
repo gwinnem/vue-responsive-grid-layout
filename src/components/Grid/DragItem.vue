@@ -108,7 +108,7 @@
       try {
         refLayout.value.defaultGridItem.$el.style.display = "none";
       } catch(e) {
-        console.log(e);
+        console.error('refLayout error', e);
       }
       const el = mapCache.value.get("drop");
       if(!el) {
