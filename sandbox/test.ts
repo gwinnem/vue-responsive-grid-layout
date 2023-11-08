@@ -2,23 +2,69 @@ import { TLayout } from "../src/components/Grid/layout-definition";
 
 export const testData: TLayout = [
   // test 1
-  { h: 2, i: 1, w: 1, x: 0, y: 0 },
-  { h: 1, i: 2, w: 1, x: 1, y: 0 },
-  { h: 2, i: 3, w: 1, x: 2, y: 0 },
-  { h: 2, i: 4, w: 1, x: 3, y: 0, isStatic: true },
-  { h: 2, i: 5, w: 1, x: 4, y: 0 },
-  { h: 1, i: 6, w: 1, x: 5, y: 0, isStatic: true },
-  { h: 1, i: 7, w: 1, x: 0, y: 2 },
+  {
+    i: 1,
+    h: 2,
+    w: 1,
+    x: 0,
+    y: 0,
+    isDraggable: false,
+    isResizable: false,
+  },
+  {
+    i: 2,
+    h: 1,
+    w: 2,
+    x: 1,
+    y: 0
+  },
+  {
+    i: 3,
+    h: 2,
+    w: 1,
+    x: 2,
+    y: 1
+  },
+  {
+    i: 4,
+    h: 2,
+    w: 1,
+    x: 3,
+    y: 1,
+    isStatic: true
+  },
+  {
+    i: 5,
+    h: 2,
+    w: 1,
+    x: 4,
+    y: 0
+  },
+  {
+    i: 6,
+    h: 1,
+    w: 1,
+    x: 5,
+    y: 0,
+    isStatic: true
+  },
+  {
+    i: 7,
+    h: 3,
+    w: 1,
+    x: 0,
+    y: 2
+  },
   { h: 1, i: 8, w: 1, x: 1, y: 1, isStatic: true },
-  
+
   // test 2
-  // { h: 1, i: 1, w: 1, x: 0, y: 0 }, 
-  // { h: 1, i: 2, w: 1, x: 1, y: 0 }, 
-  // { h: 1, i: 3, w: 1, x: 2, y: 0 }, 
+  // { h: 1, i: 1, w: 1, x: 0, y: 0 },
+  // { h: 1, i: 2, w: 1, x: 1, y: 0 },
+  // { h: 1, i: 3, w: 1, x: 2, y: 0 },
   // { h: 1, i: 4, w: 1, x: 3, y: 0 },
-  // { h: 1, i: 5, w: 1, x: 4, y: 0 }, 
-  // { h: 1, i: 6, w: 1, x: 0, y: 0 }, 
-  // { h: 1, i: 7, w: 1, x: 1, y: 0 }, 
+  // { h: 1, i: 5, w: 1, x: 4, y: 0 },
+  // { h: 1, i: 6, w: 1, x: 0, y: 0 },
+  // { h: 1, i: 7, w: 1, x: 1, y: 0 },
   // { h: 1, i: 8, w: 1, x: 2, y: 0 },
 
   // test 3
@@ -36,12 +82,12 @@ export const testData: TLayout = [
   // { x:4, y:6, w:2, h:2, i:11 },
 
   // test 4
-  // { h: 1, i: 1, w: 1, x: 0, y: 0 }, 
-  // { h: 1, i: 2, w: 1, x: 1, y: 0 }, 
-  // { h: 1, i: 3, w: 1, x: 2, y: 0 }, 
+  // { h: 1, i: 1, w: 1, x: 0, y: 0 },
+  // { h: 1, i: 2, w: 1, x: 1, y: 0 },
+  // { h: 1, i: 3, w: 1, x: 2, y: 0 },
   // { h: 1, i: 4, w: 1, x: 3, y: 0 },
-  // { h: 1, i: 5, w: 2, x: 4, y: 0 }, 
-  // { h: 4, i: 6, w: 4, x: 0, y: 1 }, 
-  // { h: 2, i: 7, w: 2, x: 4, y: 1 }, 
+  // { h: 1, i: 5, w: 2, x: 4, y: 0 },
+  // { h: 4, i: 6, w: 4, x: 0, y: 1 },
+  // { h: 2, i: 7, w: 2, x: 4, y: 1 },
   // { h: 2, i: 8, w: 2, x: 4, y: 3 },
 ];
