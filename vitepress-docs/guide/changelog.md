@@ -8,9 +8,13 @@ title: Changelog
 # Changelog
 
 
-### v: 1.2.5 (2023-10-27)
+### v: 1.2.5 (2023-11-xx)
 * __Fixed Issue__ [GridItem heigth not calculated correct when resizing a GridItem](https://github.com/gwinnem/vue-responsive-grid-layout/issues/30)
 * __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
+* __Demo App__ Added inputs for Margins.
+* __Refactor__ Updated style for gridlines in GridLayout.vue.
+* __Config__ Added style linting to project.
+* __Config__ Updated scripts section in package.json.
 
 
 ### v: 1.2.4 (2023-10-23)
