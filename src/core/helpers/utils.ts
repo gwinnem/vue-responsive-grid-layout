@@ -4,7 +4,7 @@ import { ILayoutItem, TLayout } from '@/components/Grid/layout-definition';
 /**
  * Get all static elements.
  * @param  {Array} layout Array of layout objects.
- * @return {Array}        Array of static layout items..
+ * @return {Array}        Array of static layout items.
  */
 // eslint-disable-next-line no-undef
 export function getStatics(layout: TLayout): ILayoutItem[] {
