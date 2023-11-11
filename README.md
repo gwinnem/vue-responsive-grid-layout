@@ -75,6 +75,7 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 
 ### v: 1.2.5 (2023-10-27)
 * __Fixed Issue__ [GridItem heigth not calculated correct when resizing a GridItem](https://github.com/gwinnem/vue-responsive-grid-layout/issues/30)
+* __Fixed Issue__[editMode not working as expected](https://github.com/gwinnem/vue-responsive-grid-layout/issues/33)
 * __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
 * __Demo App__ Added inputs for Margins.
 * __Refactor__ Updated style for gridlines in GridLayout.vue.
