@@ -52,6 +52,7 @@
     ICalcXy,
     IGridItemPosition,
     IGridItemWidthHeight,
+    IInteractEdges,
   } from '@/core/interfaces/grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
@@ -583,14 +584,6 @@
       });
     }
   };
-
-  // Interfaces describing the resize interact edges.
-  interface IInteractEdges {
-    bottom: boolean;
-    left: boolean;
-    right: boolean;
-    top: boolean;
-  }
 
   let edges: IInteractEdges = {
     bottom: false,
