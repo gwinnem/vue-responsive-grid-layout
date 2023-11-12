@@ -14,6 +14,21 @@ export const calcGridColWidth = (positionParams: IPositionParameters): number =>
 };
 
 /**
+ * Calculation the GridItem's Width and height.
+ * @param   {Number}    gridUnits
+ * @param   {Number}    colOrRowSize
+ * @param   {Number}    marginPx
+ * @return  {Number}    The result of the calculation. If gridUnits is not infinite, it returns the gridUnits.
+ *                      Othervise the result is being calculated.
+ */
+export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
+  if(!Number.isFinite(gridUnits)) {
+    return gridUnits;
+  }
+  return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
+};
+
+/**
  * Calculate a GridItem width and height.
  *
  * @param  {IPositionParameters} positionParams Parameters of grid needed for coordinates calculations.

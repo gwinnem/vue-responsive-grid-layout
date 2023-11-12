@@ -56,6 +56,7 @@
   } from '@/core/interfaces/grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
+  import {calcGridItemWH} from "@/core/helpers/calculateUtils";
 
   export interface IGridItemProps {
     borderRadiusPx?: number;
@@ -256,11 +257,6 @@
   //   }
   //   return `vue-resizable-handle`;
   // });
-
-  const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
-    if(!Number.isFinite(gridUnits)) return gridUnits;
-    return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
-  };
 
   // Similar to _.clamp
   const clamp = (num: number, lowerBound: number, upperBound: number): number => {
