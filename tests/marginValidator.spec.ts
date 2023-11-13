@@ -11,6 +11,7 @@ export const marginValidatorPayload = {
 };
 
 describe(`marginValidator`, () => {
+
   it(`When margin are valid`, () => {
     const result = marginValidator(marginValidatorPayload.validMargin);
 
