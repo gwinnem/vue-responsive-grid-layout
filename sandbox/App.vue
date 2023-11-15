@@ -202,6 +202,7 @@
                   @remove-grid-item="removeGridItem"
                   @resize="onResizeStartEvent"
                   @resized="onResizeEndEvent">
+                <!-- Default slot content goes here. -->
                 <span class="text">
                   {{ itemTitle(item) }}
                 </span>
@@ -244,12 +245,15 @@ import VueMultiselect from 'vue-multiselect';
  * Removing all selected items in dropdown if All is selected
  * @param {string}  val   The selected value
  */
+
+// Model for select dropdown.
 const updateSelected = (val: any): void => {
   if (val.length > 0 && val.includes('All')) {
     selected.value = ['All'];
   }
 };
 
+// model values linked to input properties.
 const hideLayout = ref(true);
 const hideEventLog = ref(false);
 const hideDroppable = ref(true);
@@ -277,6 +281,7 @@ const showGridLines = ref(false);
 const useBorderRadius = ref(false);
 const verticalCompact = ref(true);
 
+// Model for the layout definition
 const testLayout = ref([...testData]);
 
 /**

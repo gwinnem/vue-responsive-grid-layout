@@ -1,8 +1,3 @@
-export enum EMovingDirections {
-  DOWN = `DOWN`,
-  LEFT = `LEFT`,
-  RIGHT = `RIGHT`,
-  UP = `UP`,
-}
+import {EMovingDirections} from "@/core/enums/EMovingDirections";
 
 export type TMovingDirection = keyof typeof EMovingDirections;

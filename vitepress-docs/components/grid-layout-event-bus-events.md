@@ -21,7 +21,6 @@
 
 
 ## setMaxRows
-* Emitted after the property maxRows has changed. Event has a payload with the new value of maxrows.
 
 
 ## setResizable

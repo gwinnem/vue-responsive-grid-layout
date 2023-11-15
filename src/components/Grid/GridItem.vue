@@ -35,7 +35,7 @@
     setTransform,
     setTransformRtl,
   } from '@/core/helpers/utils';
-  import { createCoreData, getControlPosition } from '@/core/helpers/draggableUtils';
+  import { createCoreData, offsetXYFromParentOf } from '@/core/helpers/draggableUtils';
   import { getColsFromBreakpoint } from '@/core/helpers/responsiveUtils';
   import '@interactjs/auto-start';
   import '@interactjs/auto-scroll';
@@ -56,7 +56,7 @@
   } from '@/core/interfaces/grid-item.interfaces';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import { TBreakpoints } from '@/components/Grid/layout-definition';
-  import {calcGridItemWH} from "@/core/helpers/calculateUtils";
+  import { calcColWidth, calcGridItemWH, clamp } from "@/core/helpers/calculateUtils";
 
   export interface IGridItemProps {
     borderRadiusPx?: number;
@@ -258,16 +258,6 @@
   //   return `vue-resizable-handle`;
   // });
 
-  // Similar to _.clamp
-  const clamp = (num: number, lowerBound: number, upperBound: number): number => {
-    return Math.max(Math.min(num, upperBound), lowerBound);
-  };
-
-  // Helper for generating column width
-  const calcColWidth = (): number => {
-    return (containerWidth.value - margin.value[0] * (cols.value + 1)) / cols.value;
-  };
-
   /**
    * Translate x and y coordinates from pixels to grid units.
    * @param  {Number} top  Top position (relative to parent) in pixels.
@@ -275,15 +265,8 @@
    * @return {ICalcXy}     x and y in grid units.
    */
   const calcXY = (top: number, left: number): ICalcXy => {
-    const colWidth = calcColWidth();
+    const colWidth = calcColWidth(containerWidth.value, margin.value[0], cols.value);
 
-    // left = colWidth * x + margin * (x + 1)
-    // l = cx + m(x+1)
-    // l = cx + mx + m
-    // l - m = cx + mx
-    // l - m = x(c + m)
-    // (l - m) / (c + m) = x
-    // x = (left - margin) / (coldWidth + margin)
     let x = Math.round((left - margin.value[0]) / (colWidth + margin.value[0]));
     let y = Math.round((top - margin.value[1]) / (rowHeight.value + margin.value[1]));
 
@@ -305,7 +288,7 @@
       return;
     }
 
-    const position = getControlPosition(event);
+    const position = offsetXYFromParentOf(event);
 
     const {
       x,
@@ -382,7 +365,7 @@
           const parentTg = tg.offsetParent as HTMLElement;
           const bottomBoundary = parentTg.clientHeight - calcGridItemWH(props.h, rowHeight.value, margin.value[1]);
           newPosition.top = clamp(newPosition.top, 0, bottomBoundary);
-          const colWidth = calcColWidth();
+          const colWidth = calcColWidth(containerWidth.value, margin.value[0], cols.value);
           const rightBoundary = containerWidth.value - calcGridItemWH(props.w, colWidth, margin.value[0]);
           newPosition.left = clamp(newPosition.left, 0, rightBoundary);
         }
@@ -429,7 +412,7 @@
   };
 
   const calcPosition = (x: number, y: number, w: number, h: number): IGridItemPosition => {
-    const colWidth = calcColWidth();
+    const colWidth = calcColWidth(containerWidth.value, margin.value[0], cols.value);
 
     // add rtl support
     let out;
@@ -499,7 +482,7 @@
    * @return {ICalcWh} w, h as grid units.
    */
   const calcWH = (height: number, width: number, autoSizeFlag: boolean = false): ICalcWh => {
-    const colWidth = calcColWidth();
+    const colWidth = calcColWidth(containerWidth.value, margin.value[0], cols.value);
 
     // width = colWidth * w - (margin * (w - 1))
     // ...
@@ -593,7 +576,7 @@
       return;
     }
     // Get the current drag point from the event. This is used as the offset.
-    const position = getControlPosition(event);
+    const position = offsetXYFromParentOf(event);
 
     const {
       x,

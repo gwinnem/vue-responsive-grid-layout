@@ -13,7 +13,7 @@ function isNum(num: number): boolean {
 }
 
 /**
- * Get from offsetParent
+ * Get {x, y} positions from event.
  * @param evt
  */
 export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
@@ -40,9 +40,9 @@ export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
  * Get {x, y} positions from event.
  * @param e
  */
-export function getControlPosition(e: MouseEvent): IPoint {
-  return offsetXYFromParentOf(e);
-}
+// export function getControlPosition(e: MouseEvent): IPoint {
+//   return offsetXYFromParentOf(e);
+// }
 
 export interface IDraggableCoreData {
   deltaX: number;

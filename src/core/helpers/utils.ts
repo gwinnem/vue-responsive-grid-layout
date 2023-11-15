@@ -1,5 +1,6 @@
-import { TMovingDirection, EMovingDirections } from '@/core/helpers/moving-directions';
+import { TMovingDirection } from '@/core/helpers/moving-directions';
 import { ILayoutItem, TLayout } from '@/components/Grid/layout-definition';
+import {EMovingDirections} from "@/core/enums/EMovingDirections";
 
 /**
  * Get all static elements.
