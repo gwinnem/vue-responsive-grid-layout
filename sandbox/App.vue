@@ -614,7 +614,7 @@ const drag = (e: DragEvent): void => {
     };
     if (mouseInGrid) {
       refLayout.value.dragEvent("dragstart", "drop", new_pos.x, new_pos.y, 2, 2);
-      DragPos.i = String(index);
+      DragPos.i = String(testLayout.value.length + 1);
       DragPos.x = testLayout.value[index].x;
       DragPos.y = testLayout.value[index].y;
       DragPos.w = 2;
