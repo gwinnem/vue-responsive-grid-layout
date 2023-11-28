@@ -92,7 +92,7 @@
     </div>
     <div class="row">
       <div
-          v-if="!hideDroppable"
+          v-if="!hideDroppable && enableEditMode"
           class="col-sm-2">
         <div
             class="droppable-element"
@@ -110,8 +110,8 @@
         </DragItem> -->
       </div>
       <div
-          v-if="!hideLayout"
-          class="col-sm-6">
+        v-if="!hideLayout"
+        class="col-sm-6">
         <div class="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div class="columns">
