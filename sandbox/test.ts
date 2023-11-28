@@ -53,7 +53,9 @@ export const testData: TLayout = [
     h: 3,
     w: 1,
     x: 0,
-    y: 2
+    y: 2,
+    isDraggable: false,
+    isResizable: false,
   },
   {
     i: 8,
