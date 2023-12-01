@@ -20,12 +20,12 @@ features:
     title: Latest Release version
     details: 1.2.4 Released 2023-10-23.
   - icon: 💥
-    title: Responsiveness.
+    title: Responsive Grid Layouts
     details: With predefined layout's or automatically with predefined breakpoints.
   - icon: 🔱
-    title: Drag and Drop
-    details: Example showing howto Drag and Drop a GridItem.
-  - icon: 📖
-    title: Fully documented with examples.
+    title: Draggable GridItems
+    details: Examples showing howto Drag and Drop a GridItem.
+  - icon: 🔱
+    title: Resizeable GridItems
     details: Constantly being updated for each release..
 ---
