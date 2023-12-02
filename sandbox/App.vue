@@ -63,12 +63,12 @@
             <input id="horizontalShift" v-model="horizontalShift" type="checkbox">
             <label for="isBounded">isBounded</label>
             <input id="isBounded" v-model="isBounded" type="checkbox">
-            <label for="isDraggable">isDraggable</label>
-            <input id="isDraggable" v-model="isDraggable" type="checkbox">
+            <label class="hide" for="isDraggable">isDraggable</label>
+            <input id="isDraggable" class="hide" v-model="isDraggable" type="checkbox">
             <label for="isMirrored">isMirrored</label>
             <input id="isMirrored" v-model="isMirrored" type="checkbox">
-            <label for="isResizable">isResizable</label>
-            <input id="isResizable" v-model="isResizable" type="checkbox">
+            <label class="hide" for="isResizable">isResizable</label>
+            <input id="isResizable" class="hide" v-model="isResizable" type="checkbox">
             <label for="isResponsive">isResponsive</label>
             <input id="isResponsive" v-model="isResponsive" type="checkbox">
             <br/>
@@ -271,7 +271,7 @@ const isResizable = ref(true);
 const isResponsive = ref(true);
 const marginLeftRight = ref(10);
 const marginTopBottom = ref(10);
-const maxRows = ref(40);
+const maxRows = ref(10);
 const preserveAspectRatio = ref(false);
 const preventCollision = ref(false);
 const rowHeight = ref(60);
