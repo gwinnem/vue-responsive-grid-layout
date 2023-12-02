@@ -1,141 +1,159 @@
-import {
-  cloneLayout,
-  compactLayout,
-  getFirstCollision,
-  getStatics,
-} from './utils';
-import {
-  ILayoutItem,
-  TBreakpoint,
-  TBreakpoints,
-  TLayout,
-  TResponsiveLayout,
-} from '@/components/Grid/layout-definition';
+import {cloneLayout, compactLayout, getFirstCollision, getStatics,} from './utils';
+import {ILayoutItem, TBreakpoint, TBreakpoints, TLayout, TResponsiveLayout,} from '@/components/Grid/layout-definition';
+import {IColumns} from "@/components/Grid/grid-layout-props.interface";
 
 /**
  * Given breakpoints, return an array of breakpoints sorted by width. This is usually
  * e.g. ['xxs', 'xs', 'sm', ...]
  *
- * @param  {Object} breakpoints Key/value pair of breakpoint names to widths.
- * @return {Array}              Sorted breakpoints.
+ * @param  {TBreakpoints}   breakpoints   Key/value a pair of breakpoint names to widths.
+ * @return {TBreakpoint[]}                Sorted breakpoints.
  */
 export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpoint[] => {
-  const keys: string[] = Object.keys(breakpoints);
-  return keys.sort((a, b) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return breakpoints[a] - breakpoints[b];
-  });
+    const keys: string[] = Object.keys(breakpoints);
+    if (keys.length === 0) {
+        throw new Error('Invalid parameter breakPoints');
+    }
+    return keys.sort((a, b) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return breakpoints[a] - breakpoints[b];
+    });
 };
 
 /**
  * Given a width, find the highest breakpoint that matches is valid for it (width > breakpoint).
  *
- * @param  {Object} breakpoints Breakpoints object (e.g. {lg: 1200, md: 960, ...})
- * @param  {Number} width Screen width.
- * @return {String}       Highest breakpoint that is less than width.
+ * @param  {TBreakpoints} breakpoints Breakpoints object (e.g. {lg: 1200, md: 960, ...})
+ * @param  {Number}       width       Window width.
+ * @return {TBreakpoint}              Highest breakpoint that is less than width.
+ * @throws {Error}                    Invalid width. Must be greater or equal 0
  */
 export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number): TBreakpoint => {
-  const sorted = sortBreakpoints(breakpoints);
-  let matching = sorted[0];
-  for(let i = 1, len = sorted.length; i < len; i++) {
-    const breakpointName = sorted[i];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if(width > breakpoints[breakpointName]) matching = breakpointName;
-  }
-  return matching;
+    if (width < 0) {
+        throw new Error('Width Must be greater or equal 0');
+    }
+
+    if (!breakpoints) {
+        throw new Error('Invalid param breakpoints');
+    }
+
+    const sortedBreakpoints = sortBreakpoints(breakpoints);
+    let matchingBreakpoint = sortedBreakpoints[0];
+
+    sortedBreakpoints.forEach((breakpoint, index): void => {
+        const breakpointName = sortedBreakpoints[index];
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (width > breakpoints[breakpointName]) {
+            matchingBreakpoint = breakpointName;
+        }
+    });
+
+    return matchingBreakpoint;
 };
 
 /**
  * Given a breakpoint, get the # of cols set for it.
- * @param  {String} breakpoint Breakpoint name.
- * @param  {Object} cols       Map of breakpoints to cols.
- * @return {Number}            Number of cols.
+ *
+ * @param  {TBreakpoint}  breakpoint  Breakpoint.
+ * @param  {IColumns}     cols        Map of breakpoints to cols.
+ * @return {Number}                   Number of cols.
+ * @throws {Error}                    Column not found
  */
-export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: TBreakpoints): number => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if(!cols[breakpoint]) {
-    throw new Error(
-      `VueResponsiveGridLayout: \`cols\` entry for breakpoint ${breakpoint} is missing!`,
-    );
-  }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return cols[breakpoint];
+export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: IColumns): number => {
+    if(!breakpoint) {
+        throw new Error('Param breakpoint is empty');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (!cols[breakpoint]) {
+        throw new Error(`Breakpoint not found`);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return cols[breakpoint];
 };
 
-const moveToCorrectPlace = (l:ILayoutItem, bounds: { cols: number }, staticItem: ILayoutItem[]):void => {
-  if(l.x + l.w > bounds.cols) {
-    l.x = 0;
-    l.y += 1;
-  }
-  // eslint-disable-next-line no-cond-assign
-  while (getFirstCollision(staticItem, l)) {
-    l.x += l.w;
-    // move x to next place which might be able to contain it
-    if(l.x + l.w > bounds.cols) {
-      // if this width is out of layout
-      l.y += 1; // move y to next y
-      l.x = 0; // start x from 0
+/**
+ *
+ * @param l
+ * @param {ILayoutItem}     bounds
+ * @param {ILayoutItem[]}   staticItem
+ */
+const moveToCorrectPlace = (l: ILayoutItem, bounds: { cols: number }, staticItem: ILayoutItem[]): void => {
+    if (l.x + l.w > bounds.cols) {
+        l.x = 0;
+        l.y += 1;
     }
-  }
+    // eslint-disable-next-line no-cond-assign
+    while (getFirstCollision(staticItem, l)) {
+        l.x += l.w;
+        // move x to next place which might be able to contain it
+        if (l.x + l.w > bounds.cols) {
+            // if this width is out of layout
+            l.y += 1; // move y to next y
+            l.x = 0; // start x from 0
+        }
+    }
 };
 
 /**
  * Given a layout, make sure all elements fit within its bounds.
  *
- * @param  {Array}  layout             Layout array.
- * @param  {Number}  bounds            Number of columns.
- * @param  {Boolean} distributeEvenly  Enforces that a grid item is moved all the way to left/right when there is available space for it
+ * @param     {TLayout}  layout             Layout array.
+ * @param     {Number}  bounds              Number of columns.
+ * @param     {Boolean} distributeEvenly    Enforces that a grid item is moved all the way to left/right when there is available space for it
+ * @returns   {TLayout}
  */
 export function correctBounds(layout: TLayout, bounds: { cols: number }, distributeEvenly: boolean): TLayout {
-  const collidesWith = getStatics(layout);
-  const staticItem = getStatics(layout);
-  for(let i = 0, len = staticItem.length; i < len; i++) {
-    // move static item first
-    // try not move their y
-    while (staticItem[i].x + staticItem[i].w > bounds.cols || getFirstCollision(staticItem, staticItem[i])) {
-      staticItem[i].x -= 1;
+    const collidesWith = getStatics(layout);
+    const staticItem = getStatics(layout);
+    for (let i = 0, len = staticItem.length; i < len; i++) {
+        // move static item first
+        // try not move their y
+        while (staticItem[i].x + staticItem[i].w > bounds.cols || getFirstCollision(staticItem, staticItem[i])) {
+            staticItem[i].x -= 1;
+        }
     }
-  }
-  for(let i = 0, len = layout.length; i < len; i++) {
-    const l = layout[i];
+    for (let i = 0, len = layout.length; i < len; i++) {
+        const l = layout[i];
 
-    if(distributeEvenly) {
-      // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
-      // it's not static and it's out of layout
-      if(!collidesWith.includes(l) && l.x + l.w > bounds.cols) {
-        moveToCorrectPlace(l, bounds, collidesWith);
-      }
-    } else if(!distributeEvenly) {
-      // Overflows right, move item to the left
-      if(l.x + l.w > bounds.cols) {
-        l.x = bounds.cols - l.w;
-      }
-    }
-    // Overflows left
-    // TODO experiment to get a layout where this is the case, 01.04.2023, this is not being triggered..
-    if(l.x < 0) {
-      l.x = 0;
-      // this will cause incorrect width when drag item from outside
-      // l.w = bounds.cols;
-    }
+        if (distributeEvenly) {
+            // Fix for issue: https://github.com/gwinnem/vue-responsive-grid-layout/issues/2
+            // it's not static, and it's out of layout
+            if (!collidesWith.includes(l) && l.x + l.w > bounds.cols) {
+                moveToCorrectPlace(l, bounds, collidesWith);
+            }
+        } else if (!distributeEvenly) {
+            // Overflows right, move item to the left
+            if (l.x + l.w > bounds.cols) {
+                l.x = bounds.cols - l.w;
+            }
+        }
+        // Overflows left
+        // TODO experiment to get a layout where this is the case, 01.04.2023, this is not being triggered..
+        if (l.x < 0) {
+            l.x = 0;
+            // this will cause incorrect width when drag item from outside
+            // l.w = bounds.cols;
+        }
 
-    if(!l.isStatic) {
-      collidesWith.push(l);
+        if (!l.isStatic) {
+            collidesWith.push(l);
+        }
+        // this will cause the item which is real static be moved
+        // else {
+        //   // If this is static and collides with other statics, we must move it down.
+        //   // We have to do something nicer than just letting them overlap.
+        //   while (getFirstCollision(collidesWith, l)) {
+        //     l.y++;
+        //   }
+        // }
     }
-    // this will cause the item which is real static be moved
-    // else {
-    //   // If this is static and collides with other statics, we must move it down.
-    //   // We have to do something nicer than just letting them overlap.
-    //   while (getFirstCollision(collidesWith, l)) {
-    //     l.y++;
-    //   }
-    // }
-  }
-  return layout;
+    return layout;
 }
 
 /**
@@ -144,7 +162,7 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
  * This finds the layout above the new one and generates from it, if it exists.
  *
  * @param  {TLayout}       orgLayout         Original layout.
- * @param  {Object}        layouts           Existing layouts.
+ * @param  {TLayout}       layouts           Existing layouts.
  * @param  {TBreakpoints}  breakpoints       All breakpoints.
  * @param  {TBreakpoint}   breakpoint        New breakpoint.
  * @param  {TBreakpoint}   lastBreakpoint    Last breakpoint (for fallback).
@@ -154,19 +172,19 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
  * @return {TLayout}                         New layout.
  */
 export const findOrGenerateResponsiveLayout = (
-  orgLayout: TLayout,
-  layouts: TResponsiveLayout,
-  breakpoints: TBreakpoints,
-  breakpoint: TBreakpoint,
-  lastBreakpoint: TBreakpoint,
-  cols: number,
-  verticalCompact: boolean,
-  distributeEvenly: boolean,
+    orgLayout: TLayout,
+    layouts: TResponsiveLayout,
+    breakpoints: TBreakpoints,
+    breakpoint: TBreakpoint,
+    lastBreakpoint: TBreakpoint,
+    cols: number,
+    verticalCompact: boolean,
+    distributeEvenly: boolean,
 ): TLayout => {
-  // we cant return the layouts[breakpoints] directly because we dunno whether user change the layout or not
+    // we cant return the layouts[breakpoints] directly because we don't know whether user change the layout or not
 
-  // Find or generate the next layout
-  const layout = cloneLayout(orgLayout || []);
+    // Find or generate the next layout
+    const layout = cloneLayout(orgLayout || []);
 
-  return compactLayout(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
+    return compactLayout(correctBounds(layout, {cols}, distributeEvenly), verticalCompact);
 };
