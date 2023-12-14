@@ -698,7 +698,7 @@ export default defineComponent({
     if(!props.rowHeight) {
       return `0`;
     }
-    return `${props.rowHeight + 10}px`;
+    return `${props.rowHeight + props.margin[1]}px`;
   });
 </script>
 
@@ -710,16 +710,36 @@ export default defineComponent({
   transition: height 200ms ease;
 }
 
-.grid::before {
+/*.grid::before {
   background-image:
     linear-gradient($grid-line-color 1px, transparent 1px),
     linear-gradient(90deg, $grid-line-color 1px, transparent 1px);
   background-repeat: repeat;
-  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
+  background-size: calc(calc(100% + 10px) / v-bind(colNum)) v-bind(rowHeightPx);
   content: '';
-  height: calc(100% - 5px);
-  margin: 5px;
+  height: calc(100% - 10px);
+  // margin: 5px;
   position: absolute;
-  width: calc(100% + 5px);
+  width: calc(100% + 10px);
+}*/
+
+.grid::before {
+  content: '';
+  background-size: calc(calc(100% - 10px) / 6) 70px;
+  background-image: linear-gradient(
+          to right,
+          $grid-line-color 1px,
+          transparent 1px
+  ),
+  linear-gradient(
+          to bottom,
+          $grid-line-color 1px,
+          transparent 1px
+  );
+  height: calc(100% - 5px);
+  width: calc(100% - 5px);
+  position: absolute;
+  background-repeat: repeat;
+  margin:5px;
 }
 </style>
