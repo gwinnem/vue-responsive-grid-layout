@@ -35,15 +35,15 @@
             </div>
             <hr/>
             <label for="rowHeight">Row Height(px)</label>
-            <input id="rowHeight" v-model="rowHeight" type="number"/>
+            <input id="rowHeight" v-model="rowHeight" type="number" @change="onRowHeightChange"/>
             <label for="colNum">Max Columns</label>
-            <input id="colNum" v-model="colNum" type="number"/>
+            <input id="colNum" v-model="colNum" type="number" @change="onColNumChange"/>
             <label for="maxRows">Max Rows</label>
-            <input id="maxRows" v-model="maxRows" type="number"/>
+            <input id="maxRows" v-model="maxRows" type="number" @change="onMaxRowsChange"/>
             <label class="" for="mtb">Margin Top / Bottom</label>
-            <input id="mtb" v-model="marginTopBottom" class="" type="number"/>
+            <input id="mtb" v-model="marginTopBottom" class="" type="number" @change="onMarginTopBottomChange"/>
             <label class="" for="mlr">Margin Left / Right</label>
-            <input id="mlr" v-model="marginLeftRight" class="" type="number"/>
+            <input id="mlr" v-model="marginLeftRight" class="" type="number" @change="onMarginLeftRightChange"/>
             <label class="hide" for="borderRadius">Border Radius</label>
             <input id="borderRadius" v-model="borderRadiusPx" class="hide" type="number"/>
             <label for="hideLayout">Hide Layout</label>
@@ -283,6 +283,36 @@ const verticalCompact = ref(true);
 
 // Model for the layout definition
 const testLayout = ref([...testData]);
+
+const onRowHeightChange = (): void => {
+  if(rowHeight.value < 1) {
+    rowHeight.value = 1;
+  }
+};
+
+const onColNumChange = (): void => {
+  if(colNum.value < 1) {
+    colNum.value = 1;
+  }
+};
+
+const onMaxRowsChange = (): void => {
+  if(maxRows.value < 1) {
+    maxRows.value = 1;
+  }
+};
+
+const onMarginTopBottomChange = (): void => {
+  if(marginTopBottom.value < 1) {
+    marginTopBottom.value = 1;
+  }
+};
+
+const onMarginLeftRightChange = (): void => {
+  if(marginLeftRight.value < 1) {
+    marginLeftRight.value = 1;
+  }
+};
 
 /**
  * Ref to the html object.
