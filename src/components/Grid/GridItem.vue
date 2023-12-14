@@ -573,7 +573,7 @@ let edges: IInteractEdges = {
 };
 
 const handleResize = (event: MouseEvent): void => {
-  if (props.isStatic || !props.enableEditMode) {
+  if (props.isStatic || !props.enableEditMode || props.isResizable === false) {
     return;
   }
   // Get the current drag point from the event. This is used as the offset.
