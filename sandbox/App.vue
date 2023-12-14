@@ -545,8 +545,16 @@ const onResizeStartEvent = (i: number | string, newX: number, newY: number): voi
 const itemTitle = (item: ILayoutItem): string => {
   let result = item.i;
   if (item.isStatic) {
-    result += " - Static";
+    result += " - isStatic";
   }
+  if(!item.isStatic && (item.isResizable || item.isResizable === undefined)) {
+    result += " - isResizeable";
+  }
+
+  if(!item.isStatic && (item.isDraggable || item.isDraggable === undefined)) {
+    result += " - isDraggable";
+  }
+
   return <string>result;
 };
 
