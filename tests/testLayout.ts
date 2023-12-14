@@ -1,6 +1,6 @@
-import { TLayout } from "../src/components/Grid/layout-definition";
+import { TLayout } from "../src/components";
 
-export const testData: TLayout = [
+export const testLayoutOne: TLayout = [
   // test 1
   {
     i: 1,
