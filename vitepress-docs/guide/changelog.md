@@ -8,7 +8,7 @@ title: Changelog
 # Changelog
 
 
-### v: 1.2.5 (2023-11-xx)
+### v: 1.2.5 (2023-12-14)
 * __Fixed Issue__ [editMode not working as expected](https://github.com/gwinnem/vue-responsive-grid-layout/issues/33)
 * __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
 * __Demo App__ Added inputs for Margins.
@@ -16,6 +16,8 @@ title: Changelog
 * __Config__ Added style linting to project.
 * __Config__ Updated scripts section in package.json.
 * __Demo App__ Fixed index value when dropping a new GridItem onto the layout. This only works when index is a numeric value.
+* __Demo App__ Added checks so number input can not have less than 1.
+* __Tests__ Added more unit tests and refactored code so it is easier to test.
 
 
 ### v: 1.2.4 (2023-10-23)
