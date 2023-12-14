@@ -104,7 +104,6 @@ describe(`getColsFromBreakpoint tests`, () => {
     });
 
     it(`Should throw error when breakpoint is empty`, () => {
-        debugger;
         expect(() => getColsFromBreakpoint(``, columns)).toThrowError('Param breakpoint is empty');
     });
 
