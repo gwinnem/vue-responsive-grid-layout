@@ -324,7 +324,10 @@ const handleDrag = (event: MouseEvent): void => {
       break;
     }
     case `dragend`: {
-      if (!isDragging.value) return;
+      if (!isDragging.value) {
+        return;
+      }
+
       const tg = event.target as HTMLElement;
       const parentTg = tg.offsetParent as HTMLElement;
       const parentRect = parentTg.getBoundingClientRect();
@@ -417,7 +420,7 @@ const calcPosition = (x: number, y: number, w: number, h: number): IGridItemPosi
       height: h === Infinity ? h : Math.round(rowHeight.value * h + Math.max(0, h - 1) * margin.value[1]),
       right: Math.round(colWidth * x + (x + 1) * margin.value[0]),
       top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
-      // 0 * Infinity === NaN, which causes problems with resize constriants;
+      // 0 * Infinity === NaN, which causes problems with resize constraints;
       // Fix this if it occurs.
       // Note we do it here rather than later because Math.round(Infinity) causes deopt
       width: w === Infinity ? w : Math.round(colWidth * w + Math.max(0, w - 1) * margin.value[0]),
