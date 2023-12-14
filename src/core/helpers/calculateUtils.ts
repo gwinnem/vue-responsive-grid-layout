@@ -26,7 +26,7 @@ export const clamp = (num: number, lowerBound: number, upperBound: number): numb
  * @param   {Number}    colOrRowSize
  * @param   {Number}    marginPx
  * @return  {Number}    The result of the calculation. If gridUnits is not infinite, it returns the gridUnits.
- *                      Otherwise the result is being calculated.
+ *                      Otherwise, the result is being calculated.
  */
 export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
     if(gridUnits <= 0) {
