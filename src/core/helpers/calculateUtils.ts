@@ -70,7 +70,7 @@ export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx
 /**
  * Calculating the Column width.
  * @param   {Number}    containerWidth      The width of the GridLayout container
- * @param   {Number}    marginLeftRight     Left snd Right margin value.
+ * @param   {Number}    marginLeftRight     Left and Right margin value.
  * @param   {Number}    cols                Number of columns defined in the layout.
  * @return  {Number}                        The new column width.
  */
