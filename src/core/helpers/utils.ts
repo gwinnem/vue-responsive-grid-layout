@@ -1,4 +1,4 @@
-import { TMovingDirection } from '@/core/helpers/moving-directions';
+import { TMovingDirection } from '@/core/types/moving-directions';
 import { ILayoutItem, TLayout } from '@/components/Grid/layout-definition';
 import {EMovingDirections} from "@/core/enums/EMovingDirections";
 
