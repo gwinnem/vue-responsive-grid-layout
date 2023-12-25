@@ -70,9 +70,12 @@ export function collides(l1: ILayoutItem, l2: ILayoutItem): boolean {
  * @throws {Error}                  Empty layout.
  */
 export function getFirstCollision(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem | undefined {
-  if(layout.length < 1) {
-    throw new Error('Empty layout');
-  }
+  // if layout doesnt have static item it will cause error
+  // cannot drag or do anything
+
+  // if(layout.length < 1) {
+  //   throw new Error('Empty layout');
+  // }
 
   for(let i = 0, len = layout.length; i < len; i++) {
     if(collides(layout[i], layoutItem)) {
