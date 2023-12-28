@@ -33,7 +33,7 @@
                   style="width: 50%" @update:model-value="updateSelected">
               </VueMultiselect>
             </div>
-            <hr/>
+            <br/>
             <label for="rowHeight">Row Height(px)</label>
             <input id="rowHeight" v-model="rowHeight" type="number" @change="onRowHeightChange"/>
             <label for="colNum">Max Columns</label>
@@ -46,6 +46,7 @@
             <input id="mlr" v-model="marginLeftRight" class="" type="number" @change="onMarginLeftRightChange"/>
             <label class="hide" for="borderRadius">Border Radius</label>
             <input id="borderRadius" v-model="borderRadiusPx" class="hide" type="number"/>
+            <br/>
             <label for="hideLayout">Hide Layout</label>
             <input id="hideLayout" v-model="hideLayout" type="checkbox">
             <label for="hideEventLog">Hide Event Log</label>
@@ -86,6 +87,7 @@
             <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox">
             <label for="verticalCompact">verticalCompact</label>
             <input id="verticalCompact" v-model="verticalCompact" type="checkbox">
+            <br/>
           </fieldset>
         </form>
       </div>
