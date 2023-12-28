@@ -3,9 +3,9 @@
  */
 export enum EGridLayoutEvent {
   BREAKPOINT_CHANGED = `breakpoint-changed`,
-  CHANGED_DIRECTION = `changed-direction`,
+  // TODO Unused CHANGED_DIRECTION = `changed-direction`,
   COLUMNS_CHANGED = `columns-changed`,
-  CONTAINER_RESIZED = `container-resized`,
+  // TODO Unused CONTAINER_RESIZED = `container-resized`,
   DRAG_END = `dragend`,
   DRAG_MOVE= `dragmove`,
   DRAG_START = `dragstart`,
