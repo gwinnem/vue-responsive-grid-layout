@@ -55,6 +55,7 @@ import {
 import {IEventsData} from '@/core/interfaces/eventBus.interfaces';
 import {calcColWidth, calcGridItemWH, clamp} from "@/core/helpers/calculateUtils";
 
+// TODO Find out why this interface has to be inside this file.
 export interface IGridItemProps {
   borderRadiusPx?: number;
   dragAllowFrom?: string | null;
@@ -223,6 +224,7 @@ const isAndroid = computed(() => {
   return navigator.userAgent.toLowerCase().indexOf(`android`) !== -1;
 });
 
+// TODO Do some magic here for the resizing functionalities.
 const renderRtl = computed(() => {
   return thisLayout?.isMirrored ? !rtl.value : rtl.value;
 });
@@ -239,7 +241,7 @@ const classObj = computed(() => {
     resizing: isResizing.value,
     "vue-draggable": draggableAndNotStatic.value,
     "vue-draggable-dragging": isDragging.value,
-    "vue-resizable": resizableAndNotStatic.value,
+    "vue-resizable": resizableAndNotStatic.value, // TODO check if this is obsolete
     "vue-static": props.isStatic,
     "vue-use-radius": props.useBorderRadius,
   };
@@ -260,7 +262,7 @@ const classObj = computed(() => {
  * @param  {Number} left Left position (relative to parent) in pixels.
  * @return {ICalcXy}     x and y in grid units.
  */
-const calcXY = (top: number, left: number): ICalcXy => {
+const calcGridXY = (top: number, left: number): ICalcXy => {
   const colWidth = calcColWidth(containerWidth.value, margin.value[0], cols.value);
 
   let x = Math.round((left - margin.value[0]) / (colWidth + margin.value[0]));
@@ -379,10 +381,10 @@ const handleDrag = (event: MouseEvent): void => {
   // Get new XY
   let pos: ICalcXy;
   if (renderRtl.value) {
-    pos = calcXY(newPosition.top, newPosition.left);
+    pos = calcGridXY(newPosition.top, newPosition.left);
   } else {
     // TODO Change to newPosition.left to right
-    pos = calcXY(newPosition.top, newPosition.left);
+    pos = calcGridXY(newPosition.top, newPosition.left);
   }
 
   lastX.value = x;
@@ -504,6 +506,10 @@ const calcWH = (height: number, width: number, autoSizeFlag: boolean = false): I
 };
 
 const tryMakeResizable = (): void => {
+  // if(!props.isResizable) {
+  //   return;
+  // }
+
   if (interactObj.value === undefined) {
     interactObj.value = interact(gridItem.value);
   }
@@ -560,7 +566,7 @@ const tryMakeResizable = (): void => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     interactObj.value.resizable({
-      enabled: false,
+      enabled: true,
     });
   }
 };
@@ -731,7 +737,7 @@ const createStyle = (): void => {
 
   if (isDragging.value) {
     pos.top = dragging.value?.top as number;
-    //                    Add rtl support
+    // TODO Add rtl support
     if (renderRtl.value) {
       pos.right = dragging.value?.left as number;
     } else {
@@ -1067,7 +1073,7 @@ function autoSize(): void {
 
 defineExpose({
   autoSize,
-  calcXY,
+  calcXY: calcGridXY,
   dragging,
   ...props,
 });
@@ -1169,105 +1175,106 @@ defineExpose({
     user-select: none;
   }
 
-  & > .vue-resizable-handle {
-    background-origin: content-box;
-    background-position: bottom right;
-    background-repeat: no-repeat;
-
-    // background-color: red;
-    bottom: -3px;
-    box-sizing: border-box;
-    cursor: se-resize;
-    height: 15px;
-    padding: 0 3px 3px 0;
-    position: absolute;
-    right: -3px;
-    width: 15px;
-    z-index: 20;
-
-    & > .icon {
-      box-sizing: border-box;
-      display: inline-block;
-      font-size: inherit;
-      font-style: normal;
-      height: 1em;
-      position: relative;
-      text-indent: -9999px;
-      vertical-align: middle;
-      width: 1em;
-
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      &.icon-resize-se {
-        &::before {
-          //  border: 3px solid black;
-          border-bottom: 0;
-          border-right: 0;
-          height: .65em;
-          transform: translate(-75%, -50%) rotate(180deg);
-          width: .65em;
-        }
-      }
-    }
-  }
-
-  & > .vue-rtl-resizable-handle {
-    background-origin: content-box;
-    background-position: bottom right;
-    background-repeat: no-repeat;
-    bottom: 5px;
-    box-sizing: border-box;
-    cursor: sw-resize;
-    height: 20px;
-    left: 0;
-    margin: 0 3px 2px 5px;
-    position: absolute;
-    right: auto;
-    width: 20px;
-    z-index: 20;
-
-    & > .icon,
-    .icon-resize-se {
-      box-sizing: border-box;
-      display: inline-block;
-      font-size: inherit;
-      font-style: normal;
-      height: 1em;
-      position: relative;
-      text-indent: -9999px;
-      vertical-align: middle;
-      width: 1em;
-
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      &.icon-resize-se {
-        &::before {
-          //  border: 3px solid black;
-          border-bottom: 0;
-          border-right: 0;
-          height: .65em;
-          transform: translate(-75%, -50%) rotate(270deg);
-          width: .65em;
-        }
-      }
-    }
-  }
+  // TODO Remove code
+  //& > .vue-resizable-handle {
+  //  background-origin: content-box;
+  //  background-position: bottom right;
+  //  background-repeat: no-repeat;
+  //
+  //  // background-color: red;
+  //  bottom: -3px;
+  //  box-sizing: border-box;
+  //  cursor: se-resize;
+  //  height: 15px;
+  //  padding: 0 3px 3px 0;
+  //  position: absolute;
+  //  right: -3px;
+  //  width: 15px;
+  //  z-index: 20;
+  //
+  //  & > .icon {
+  //    box-sizing: border-box;
+  //    display: inline-block;
+  //    font-size: inherit;
+  //    font-style: normal;
+  //    height: 1em;
+  //    position: relative;
+  //    text-indent: -9999px;
+  //    vertical-align: middle;
+  //    width: 1em;
+  //
+  //    &::before,
+  //    &::after {
+  //      content: '';
+  //      display: block;
+  //      left: 50%;
+  //      position: absolute;
+  //      top: 50%;
+  //      transform: translate(-50%, -50%);
+  //    }
+  //
+  //    &.icon-resize-se {
+  //      &::before {
+  //        //  border: 3px solid black;
+  //        border-bottom: 0;
+  //        border-right: 0;
+  //        height: .65em;
+  //        transform: translate(-75%, -50%) rotate(180deg);
+  //        width: .65em;
+  //      }
+  //    }
+  //  }
+  //}
+  //
+  //& > .vue-rtl-resizable-handle {
+  //  background-origin: content-box;
+  //  background-position: bottom right;
+  //  background-repeat: no-repeat;
+  //  bottom: 5px;
+  //  box-sizing: border-box;
+  //  cursor: sw-resize;
+  //  height: 20px;
+  //  left: 0;
+  //  margin: 0 3px 2px 5px;
+  //  position: absolute;
+  //  right: auto;
+  //  width: 20px;
+  //  z-index: 20;
+  //
+  //  & > .icon,
+  //  .icon-resize-se {
+  //    box-sizing: border-box;
+  //    display: inline-block;
+  //    font-size: inherit;
+  //    font-style: normal;
+  //    height: 1em;
+  //    position: relative;
+  //    text-indent: -9999px;
+  //    vertical-align: middle;
+  //    width: 1em;
+  //
+  //    &::before,
+  //    &::after {
+  //      content: '';
+  //      display: block;
+  //      left: 50%;
+  //      position: absolute;
+  //      top: 50%;
+  //      transform: translate(-50%, -50%);
+  //    }
+  //
+  //    &.icon-resize-se {
+  //      &::before {
+  //        //  border: 3px solid black;
+  //        border-bottom: 0;
+  //        border-right: 0;
+  //        height: .65em;
+  //        transform: translate(-75%, -50%) rotate(270deg);
+  //        width: .65em;
+  //      }
+  //    }
+  //  }
+  //}
 
   &.render-rtl {
     & > .btn-close {
