@@ -8,6 +8,10 @@ title: Changelog
 # Changelog
 
 
+### v: 1.2.6 (2023-12-28
+* __Fixed Issue__ Problem if layout doesnt have static item [PullRequest](https://github.com/gwinnem/vue-responsive-grid-layout/pull/47)
+
+
 ### v: 1.2.5 (2023-12-14)
 * __Fixed Issue__ [editMode not working as expected](https://github.com/gwinnem/vue-responsive-grid-layout/issues/33)
 * __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
