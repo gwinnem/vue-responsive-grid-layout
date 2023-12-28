@@ -65,6 +65,7 @@ export default defineComponent({
   import {IBreakpoints, IColumns, IGridLayoutProps} from './grid-layout-props.interface';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
   import {EDragEvent} from "@/core/enums/EDragEvent";
+  import {EResizeEvent} from "@/core/enums/EResizeEvents";
 
   export interface IGridLayoutProps {
     autoSize?: boolean;
@@ -412,7 +413,7 @@ export default defineComponent({
       l.h = internalH;
     }
 
-    if(eventName === `resizestart` || eventName === `resizemove`) {
+    if(eventName === EResizeEvent.RESIZE_START || eventName === EResizeEvent.RESIZE_MOVE) {
       placeholder.value.i = id as string | number;
       placeholder.value.x = x as number;
       placeholder.value.y = y as number;
@@ -432,7 +433,7 @@ export default defineComponent({
     eventBus.emit(`compact`);
     updateHeight();
 
-    if(eventName === `resizeend`) {
+    if(eventName === EResizeEvent.RESIZE_END) {
       originalLayout.value = props.layout;
       emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
     }
