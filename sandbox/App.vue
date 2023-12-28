@@ -30,7 +30,7 @@
                   deselect-label="Remove me"
                   placeholder="Select events to log"
                   select-label="Select me"
-                  style="width: 50%" @update:model-value="updateSelected">
+                  style="width: 50%" @update="updateSelected">
               </VueMultiselect>
             </div>
             <hr/>

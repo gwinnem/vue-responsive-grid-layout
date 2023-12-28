@@ -1,1 +1,0 @@
-# Responsive with predefined layouts.
