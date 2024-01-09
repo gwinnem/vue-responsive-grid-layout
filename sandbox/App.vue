@@ -7,30 +7,30 @@
             <legend>Test bench</legend>
             <div class="row hidden">
               <button
-                  class="col-sm-2 secondary small"
-                  @click.prevent="resetLayout">
+                class="col-sm-2 secondary small"
+                @click.prevent="resetLayout">
                 Reset Layout
               </button>
             </div>
             <div
-                v-if="!hideEventLog"
-                class="row">
+              v-if="!hideEventLog"
+              class="row">
               <button
-                  class="col-sm-2 tertiary small"
-                  @click.prevent="clearEventLog">
+                class="col-sm-2 tertiary small"
+                @click.prevent="clearEventLog">
                 Clear Event Log
               </button>
               <VueMultiselect
-                  v-model="selected"
-                  :hide-selected="false"
-                  :multiple="true"
-                  :taggable="true"
-                  :options="options"
-                  class="col-sm-9"
-                  deselect-label="Remove me"
-                  placeholder="Select events to log"
-                  select-label="Select me"
-                  style="width: 50%" @update="updateSelected">
+                v-model="selected"
+                :hide-selected="false"
+                :multiple="true"
+                :taggable="true"
+                :options="options"
+                class="col-sm-9"
+                deselect-label="Remove me"
+                placeholder="Select events to log"
+                select-label="Select me"
+                style="width: 50%" @update="updateSelected">
               </VueMultiselect>
             </div>
             <hr/>
@@ -92,13 +92,13 @@
     </div>
     <div class="row">
       <div
-          v-if="!hideDroppable && enableEditMode"
-          class="col-sm-2">
+        v-if="!hideDroppable && enableEditMode"
+        class="col-sm-2">
         <div
-            class="droppable-element"
-            draggable="true"
-            @drag="drag"
-            @dragend="dragend">
+          class="droppable-element"
+          draggable="true"
+          @drag="drag"
+          @dragend="dragend">
           Droppable Element (Drag me!)
         </div>
         <!-- <DragItem
@@ -122,14 +122,14 @@
         </div>
       </div>
       <div
-          v-if="!hideEventLog"
-          class="col-sm-4">
+        v-if="!hideEventLog"
+        class="col-sm-4">
         <div
-            ref="eventsDiv"
-            class="eventsJSON">
+          ref="eventsDiv"
+          class="eventsJSON">
           <div
-              v-for="event in eventsLog"
-              :key="event">
+            v-for="event in eventsLog"
+            :key="event">
             {{ event }}
           </div>
         </div>
@@ -141,67 +141,67 @@
         <div class="layout">
           <div id="content">
             <GridLayout
-                ref="refLayout"
-                v-model:layout="testLayout"
-                :auto-size="autoResizeGridLayout"
-                :col-num="colNum"
-                :distribute-evenly="distributeEvenly"
-                :horizontal-shift="horizontalShift"
-                :is-bounded="isBounded"
-                :is-draggable="isDraggable"
-                :is-mirrored="isMirrored"
-                :is-resizable="isResizable"
-                :margin="margin"
-                :max-rows="maxRows"
-                :prevent-collision="preventCollision"
-                :responsive="isResponsive"
-                :restore-on-drag="restoreOnDrag"
-                :row-height="rowHeight"
-                :show-close-button="showCloseButton"
-                :show-grid-lines="showGridLines"
-                :use-border-radius="useBorderRadius"
-                :use-css-transforms="true"
-                :vertical-compact="verticalCompact"
-                @breakpoint-changed="onBreakpointChanged"
-                @changed-direction="onChangedDirection"
-                @columns-changed="onColNumChanged"
-                @container-resized="onContainerResized"
-                @dragend="onDragEnd"
-                @dragmove="onDragMove"
-                @dragstart="onDragStart"
-                @layout-before-mount="onLayoutBeforeMount"
-                @layout-created="onLayoutCreated"
-                @layout-mounted="onLayoutMounted"
-                @layout-ready="onLayoutReady"
-                @layout-updated="onLayoutUpdated"
-                @layout-update="onLayoutUpdate">
+              ref="refLayout"
+              v-model:layout="testLayout"
+              :auto-size="autoResizeGridLayout"
+              :col-num="colNum"
+              :distribute-evenly="distributeEvenly"
+              :horizontal-shift="horizontalShift"
+              :is-bounded="isBounded"
+              :is-draggable="isDraggable"
+              :is-mirrored="isMirrored"
+              :is-resizable="isResizable"
+              :margin="margin"
+              :max-rows="maxRows"
+              :prevent-collision="preventCollision"
+              :responsive="isResponsive"
+              :restore-on-drag="restoreOnDrag"
+              :row-height="rowHeight"
+              :show-close-button="showCloseButton"
+              :show-grid-lines="showGridLines"
+              :use-border-radius="useBorderRadius"
+              :use-css-transforms="true"
+              :vertical-compact="verticalCompact"
+              @breakpoint-changed="onBreakpointChanged"
+              @changed-direction="onChangedDirection"
+              @columns-changed="onColNumChanged"
+              @container-resized="onContainerResized"
+              @dragend="onDragEnd"
+              @dragmove="onDragMove"
+              @dragstart="onDragStart"
+              @layout-before-mount="onLayoutBeforeMount"
+              @layout-created="onLayoutCreated"
+              @layout-mounted="onLayoutMounted"
+              @layout-ready="onLayoutReady"
+              @layout-updated="onLayoutUpdated"
+              @layout-update="onLayoutUpdate">
               <GridItem
-                  v-for="item in testLayout"
-                  :key="item.i"
-                  :ref="el => setChildRef(el)"
-                  :enable-edit-mode="enableEditMode"
-                  :h="item.h"
-                  :i="item.i"
-                  :is-draggable="item.isDraggable"
-                  :is-resizable="item.isResizable"
-                  :isStatic="item.isStatic"
-                  :min-h="item.minH"
-                  :min-w="item.minW"
-                  :preserve-aspect-ratio="preserveAspectRatio"
-                  :show-close-button="showCloseButton"
-                  :use-border-radius="useBorderRadius"
-                  :w="item.w"
-                  :x="item.x"
-                  :y="item.y"
-                  class="test"
-                  @container-resized="containerResizedEvent"
-                  @drag="dragEvent"
-                  @dragged="draggedEvent"
-                  @move="moveEvent"
-                  @moved="movedEvent"
-                  @remove-grid-item="removeGridItem"
-                  @resize="onResizeStartEvent"
-                  @resized="onResizeEndEvent">
+                v-for="item in testLayout"
+                :key="item.i"
+                :ref="el => setChildRef(el)"
+                :enable-edit-mode="enableEditMode"
+                :h="item.h"
+                :i="item.i"
+                :is-draggable="item.isDraggable"
+                :is-resizable="item.isResizable"
+                :isStatic="item.isStatic"
+                :min-h="item.minH"
+                :min-w="item.minW"
+                :preserve-aspect-ratio="preserveAspectRatio"
+                :show-close-button="showCloseButton"
+                :use-border-radius="useBorderRadius"
+                :w="item.w"
+                :x="item.x"
+                :y="item.y"
+                class="test"
+                @container-resized="containerResizedEvent"
+                @drag="dragEvent"
+                @dragged="draggedEvent"
+                @move="moveEvent"
+                @moved="movedEvent"
+                @remove-grid-item="removeGridItem"
+                @resize="onResizeStartEvent"
+                @resized="onResizeEndEvent">
                 <!-- Default slot content goes here. -->
                 <span class="text">
                   {{ itemTitle(item) }}
@@ -215,7 +215,7 @@
   </div>
   <footer>
     <p style="text-align: center">
-      Copyright © 2022-{{getCurrentDate()}} Geirr Winnem
+      Copyright © 2022-{{ getCurrentDate() }} Geirr Winnem
     </p>
     <p style="text-align: center">
       <a href="https://winnem.tech" target="_blank">winnem.tech</a>
@@ -225,7 +225,7 @@
 
 <script lang="ts" setup>
 import {ref, onMounted, nextTick, onBeforeUnmount, computed, Ref, UnwrapRef} from 'vue';
-import {testData} from './test';
+import {testDataOne} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
 import {
@@ -282,34 +282,34 @@ const useBorderRadius = ref(false);
 const verticalCompact = ref(true);
 
 // Model for the layout definition
-const testLayout = ref([...testData]);
+const testLayout = ref([...testDataOne]);
 
 const onRowHeightChange = (): void => {
-  if(rowHeight.value < 1) {
+  if (rowHeight.value < 1) {
     rowHeight.value = 1;
   }
 };
 
 const onColNumChange = (): void => {
-  if(colNum.value < 1) {
+  if (colNum.value < 1) {
     colNum.value = 1;
   }
 };
 
 const onMaxRowsChange = (): void => {
-  if(maxRows.value < 1) {
+  if (maxRows.value < 1) {
     maxRows.value = 1;
   }
 };
 
 const onMarginTopBottomChange = (): void => {
-  if(marginTopBottom.value < 1) {
+  if (marginTopBottom.value < 1) {
     marginTopBottom.value = 1;
   }
 };
 
 const onMarginLeftRightChange = (): void => {
-  if(marginLeftRight.value < 1) {
+  if (marginLeftRight.value < 1) {
     marginLeftRight.value = 1;
   }
 };
@@ -372,7 +372,7 @@ const publishToEventLog = (i: number | string, msg: string, newX: number, newY: 
     eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
 }
 const publishStringToEventLog = (message: string, insertNewLine: boolean = false): void => {
-  if(insertNewLine) {
+  if (insertNewLine) {
     eventsLog.value.push('');
   }
 
@@ -474,7 +474,6 @@ const onLayoutUpdate = (value: TLayout[]): void => {
 };
 
 
-
 const removeGridItem = (id: string | number): void => {
   testLayout.value = testLayout.value.filter((item) => {
     return item.i !== id;
@@ -489,7 +488,7 @@ const clearEventLog = (): void => {
 
 const resetLayout = (): void => {
   testLayout.value = [];
-  testLayout.value = [...testData];
+  testLayout.value = [...testDataOne];
 };
 
 const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
@@ -592,8 +591,8 @@ const drag = (e: DragEvent): void => {
   const parentRect = t.getBoundingClientRect();
   let mouseInGrid = false;
   if (
-      ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
-      ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
+    ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
+    ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
     mouseInGrid = true;
   }
   if (mouseInGrid && testLayout.value.findIndex(item => item.i === "drop") === -1) {
@@ -663,10 +662,10 @@ function dragend() {
   let parentRect = t.getBoundingClientRect();
   let mouseInGrid = false;
   if (
-      mouseXY.x > parentRect.left
-      && mouseXY.x < parentRect.right
-      && mouseXY.y > parentRect.top
-      && mouseXY.y < parentRect.bottom
+    mouseXY.x > parentRect.left
+    && mouseXY.x < parentRect.right
+    && mouseXY.y > parentRect.top
+    && mouseXY.y < parentRect.bottom
   ) {
     mouseInGrid = true;
   }
