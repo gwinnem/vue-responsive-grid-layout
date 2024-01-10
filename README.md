@@ -73,7 +73,12 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 
 ## Changelog
 
-### v: 1.2.6 (2023-12-28 
+
+### v: 1.2.7 (2024-01-10)
+* __Fixed Issue__ [option "responsive" not working](https://github.com/gwinnem/vue-responsive-grid-layout/issues/51). Tnxs to [T0miii](https://github.com/T0miii)
+
+
+### v: 1.2.6 (2023-12-28) 
 * __Fixed Issue__ Problem if layout doesnt have static item [PullRequest](https://github.com/gwinnem/vue-responsive-grid-layout/pull/47)
 
 

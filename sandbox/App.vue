@@ -7,30 +7,31 @@
             <legend>Test bench</legend>
             <div class="row hidden">
               <button
-                class="col-sm-2 secondary small"
-                @click.prevent="resetLayout">
+                  class="col-sm-2 secondary small"
+                  @click.prevent="resetLayout">
                 Reset Layout
               </button>
             </div>
             <div
-              v-if="!hideEventLog"
-              class="row">
+                v-if="!hideEventLog"
+                class="row">
               <button
-                class="col-sm-2 tertiary small"
-                @click.prevent="clearEventLog">
+                  class="col-sm-2 tertiary small"
+                  @click.prevent="clearEventLog">
                 Clear Event Log
               </button>
               <VueMultiselect
-                v-model="selected"
-                :hide-selected="false"
-                :multiple="true"
-                :taggable="true"
-                :options="options"
-                class="col-sm-9"
-                deselect-label="Remove me"
-                placeholder="Select events to log"
-                select-label="Select me"
-                style="width: 50%" @update="updateSelected">
+                  v-model="selected"
+                  :hide-selected="false"
+                  :multiple="true"
+                  :taggable="true"
+                  :options="options"
+                  class="col-sm-9"
+                  deselect-label="Remove me"
+                  placeholder="Select events to log"
+                  select-label="Select me"
+                  style="width: 50%"
+                  @change="updateSelected">
               </VueMultiselect>
             </div>
             <hr/>
@@ -92,13 +93,13 @@
     </div>
     <div class="row">
       <div
-        v-if="!hideDroppable && enableEditMode"
-        class="col-sm-2">
+          v-if="!hideDroppable && enableEditMode"
+          class="col-sm-2">
         <div
-          class="droppable-element"
-          draggable="true"
-          @drag="drag"
-          @dragend="dragend">
+            class="droppable-element"
+            draggable="true"
+            @drag="drag"
+            @dragend="dragend">
           Droppable Element (Drag me!)
         </div>
         <!-- <DragItem
@@ -110,26 +111,26 @@
         </DragItem> -->
       </div>
       <div
-        v-if="!hideLayout"
-        class="col-sm-6">
+          v-if="!hideLayout"
+          class="col-sm-6">
         <div class="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div class="columns">
             <div v-for="item in testLayout">
-              <b>{{ item.i }}</b>: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
+              <b>{{ item.i }}</b>: [{{ item }}]
             </div>
           </div>
         </div>
       </div>
       <div
-        v-if="!hideEventLog"
-        class="col-sm-4">
+          v-if="!hideEventLog"
+          class="col-sm-4">
         <div
-          ref="eventsDiv"
-          class="eventsJSON">
+            ref="eventsDiv"
+            class="eventsJSON">
           <div
-            v-for="event in eventsLog"
-            :key="event">
+              v-for="event in eventsLog"
+              :key="event">
             {{ event }}
           </div>
         </div>
@@ -141,67 +142,67 @@
         <div class="layout">
           <div id="content">
             <GridLayout
-              ref="refLayout"
-              v-model:layout="testLayout"
-              :auto-size="autoResizeGridLayout"
-              :col-num="colNum"
-              :distribute-evenly="distributeEvenly"
-              :horizontal-shift="horizontalShift"
-              :is-bounded="isBounded"
-              :is-draggable="isDraggable"
-              :is-mirrored="isMirrored"
-              :is-resizable="isResizable"
-              :margin="margin"
-              :max-rows="maxRows"
-              :prevent-collision="preventCollision"
-              :responsive="isResponsive"
-              :restore-on-drag="restoreOnDrag"
-              :row-height="rowHeight"
-              :show-close-button="showCloseButton"
-              :show-grid-lines="showGridLines"
-              :use-border-radius="useBorderRadius"
-              :use-css-transforms="true"
-              :vertical-compact="verticalCompact"
-              @breakpoint-changed="onBreakpointChanged"
-              @changed-direction="onChangedDirection"
-              @columns-changed="onColNumChanged"
-              @container-resized="onContainerResized"
-              @dragend="onDragEnd"
-              @dragmove="onDragMove"
-              @dragstart="onDragStart"
-              @layout-before-mount="onLayoutBeforeMount"
-              @layout-created="onLayoutCreated"
-              @layout-mounted="onLayoutMounted"
-              @layout-ready="onLayoutReady"
-              @layout-updated="onLayoutUpdated"
-              @layout-update="onLayoutUpdate">
-              <GridItem
-                v-for="item in testLayout"
-                :key="item.i"
-                :ref="el => setChildRef(el)"
-                :enable-edit-mode="enableEditMode"
-                :h="item.h"
-                :i="item.i"
-                :is-draggable="item.isDraggable"
-                :is-resizable="item.isResizable"
-                :isStatic="item.isStatic"
-                :min-h="item.minH"
-                :min-w="item.minW"
-                :preserve-aspect-ratio="preserveAspectRatio"
+                ref="refLayout"
+                v-model:layout="testLayout"
+                :auto-size="autoResizeGridLayout"
+                :col-num="colNum"
+                :distribute-evenly="distributeEvenly"
+                :horizontal-shift="horizontalShift"
+                :is-bounded="isBounded"
+                :is-draggable="isDraggable"
+                :is-mirrored="isMirrored"
+                :is-resizable="isResizable"
+                :margin="margin"
+                :max-rows="maxRows"
+                :prevent-collision="preventCollision"
+                :responsive="isResponsive"
+                :restore-on-drag="restoreOnDrag"
+                :row-height="rowHeight"
                 :show-close-button="showCloseButton"
+                :show-grid-lines="showGridLines"
                 :use-border-radius="useBorderRadius"
-                :w="item.w"
-                :x="item.x"
-                :y="item.y"
-                class="test"
-                @container-resized="containerResizedEvent"
-                @drag="dragEvent"
-                @dragged="draggedEvent"
-                @move="moveEvent"
-                @moved="movedEvent"
-                @remove-grid-item="removeGridItem"
-                @resize="onResizeStartEvent"
-                @resized="onResizeEndEvent">
+                :use-css-transforms="true"
+                :vertical-compact="verticalCompact"
+                @breakpoint-changed="onBreakpointChanged"
+                @changed-direction="onChangedDirection"
+                @columns-changed="onColNumChanged"
+                @container-resized="onContainerResized"
+                @dragend="onDragEnd"
+                @dragmove="onDragMove"
+                @dragstart="onDragStart"
+                @layout-before-mount="onLayoutBeforeMount"
+                @layout-created="onLayoutCreated"
+                @layout-mounted="onLayoutMounted"
+                @layout-ready="onLayoutReady"
+                @layout-updated="onLayoutUpdated"
+                @layout-update="onLayoutUpdate">
+              <GridItem
+                  v-for="item in testLayout"
+                  :key="item.i"
+                  :ref="el => setChildRef(el)"
+                  :enable-edit-mode="enableEditMode"
+                  :h="item.h"
+                  :i="item.i"
+                  :is-draggable="item.isDraggable"
+                  :is-resizable="item.isResizable"
+                  :isStatic="item.isStatic"
+                  :min-h="item.minH"
+                  :min-w="item.minW"
+                  :preserve-aspect-ratio="preserveAspectRatio"
+                  :show-close-button="showCloseButton"
+                  :use-border-radius="useBorderRadius"
+                  :w="item.w"
+                  :x="item.x"
+                  :y="item.y"
+                  class="test"
+                  @container-resized="containerResizedEvent"
+                  @drag="dragEvent"
+                  @dragged="draggedEvent"
+                  @move="moveEvent"
+                  @moved="movedEvent"
+                  @remove-grid-item="removeGridItem"
+                  @resize="onResizeStartEvent"
+                  @resized="onResizeEndEvent">
                 <!-- Default slot content goes here. -->
                 <span class="text">
                   {{ itemTitle(item) }}
@@ -224,14 +225,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, nextTick, onBeforeUnmount, computed, Ref, UnwrapRef} from 'vue';
-import {testDataOne} from './test';
+import {computed, nextTick, onBeforeUnmount, onMounted, ref, Ref, UnwrapRef} from 'vue';
+import {testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
+import {getFirstCollision, getStatics,} from '@/core/helpers/utils';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
-import {getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
-import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
 // import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
 // import DragItem from '@/components/Grid/DragItem.vue';
 
@@ -245,7 +245,9 @@ import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
  */
 
 // Model for select dropdown.
-const updateSelected = (val: any): void => {
+const updateSelected = (val: string[]): void => {
+  debugger;
+  console.error(val);
   if (val.length > 0 && val.includes('All')) {
     selected.value = ['All'];
   }
@@ -280,7 +282,7 @@ const useBorderRadius = ref(false);
 const verticalCompact = ref(true);
 
 // Model for the layout definition
-const testLayout = ref([...testDataOne]);
+const testLayout = ref([...testData]);
 
 const onRowHeightChange = (): void => {
   if (rowHeight.value < 1) {
@@ -486,7 +488,7 @@ const clearEventLog = (): void => {
 
 const resetLayout = (): void => {
   testLayout.value = [];
-  testLayout.value = [...testDataOne];
+  testLayout.value = [...testData];
 };
 
 const containerResizedEvent = (i: number | string, newX: number, newY: number): void => {
@@ -589,8 +591,8 @@ const drag = (e: DragEvent): void => {
   const parentRect = t.getBoundingClientRect();
   let mouseInGrid = false;
   if (
-    ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
-    ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
+      ((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) &&
+      ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
     mouseInGrid = true;
   }
   if (mouseInGrid && testLayout.value.findIndex(item => item.i === "drop") === -1) {
@@ -620,7 +622,7 @@ const drag = (e: DragEvent): void => {
 
     let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
 
-    const static_item = getAllStaticGridItems(testLayout.value)
+    const static_item = getStatics(testLayout.value)
     if (getFirstCollision(static_item, {
       i: `index`,
       h: 2,
@@ -660,16 +662,16 @@ function dragend() {
   let parentRect = t.getBoundingClientRect();
   let mouseInGrid = false;
   if (
-    mouseXY.x > parentRect.left
-    && mouseXY.x < parentRect.right
-    && mouseXY.y > parentRect.top
-    && mouseXY.y < parentRect.bottom
+      mouseXY.x > parentRect.left
+      && mouseXY.x < parentRect.right
+      && mouseXY.y > parentRect.top
+      && mouseXY.y < parentRect.bottom
   ) {
     mouseInGrid = true;
   }
 
   if (mouseInGrid) {
-    const static_item = getAllStaticGridItems(testLayout.value)
+    const static_item = getStatics(testLayout.value)
     if (getFirstCollision(static_item, {
       i: `index`,
       h: 2,
