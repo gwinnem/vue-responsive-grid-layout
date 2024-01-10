@@ -14,5 +14,5 @@ export enum EGridLayoutEvent {
   LAYOUT_MOUNTED = `layout-mounted`,
   LAYOUT_READY = `layout-ready`,
   LAYOUT_UPDATED = `layout-updated`,
-  LAYOUT_UPDATE = `layout-update`,
+  LAYOUT_UPDATE = `update:layout`,
 }
