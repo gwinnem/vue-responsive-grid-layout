@@ -2,16 +2,16 @@
 // @ts-nocheck
 import { describe, expect, it } from 'vitest';
 import { testLayoutOne } from '/tests/testLayout'
-import {getFirstCollision, getStatics} from "../src/core/helpers/utils";
-import {sortBreakpoints} from "../src/core/helpers/responsiveUtils";
+import {getAllStaticGridItems} from "../src/core/common/helpers/gridIemTypeHelpers";
+
 
 describe(`getStatics`, () => {
   it(`Should return 3 GridItems from the testLayout.`, () => {
-    const result = getStatics(testLayoutOne).length === 3;
+    const result = getAllStaticGridItems(testLayoutOne).length === 3;
     expect(result).toBe(true);
   });
 
   it(`Should throw error when testLayout is [].`, () => {
-    expect(() => getStatics([])).toThrowError('Empty layout not allowed');
+    expect(() => getAllStaticGridItems([])).toThrowError('Empty layout not allowed');
   });
 });

@@ -1,36 +1,8 @@
-import { TMovingDirection } from '@/core/helpers/moving-directions';
-import { ILayoutItem, TLayout } from '@/components/Grid/layout-definition';
-import {EMovingDirections} from "@/core/enums/EMovingDirections";
-
-/**
- * Get all static elements.
- * @param  {Array} layout Array of layout objects.
- * @return {Array}        Array of static layout items.
- * @throws {String}       Empty layout not allowed.
- */
-// eslint-disable-next-line no-undef
-export function getStatics(layout: TLayout): ILayoutItem[] {
-  if(layout.length === 0) {
-    throw new Error('Empty layout not allowed');
-  }
-  return layout.filter(l => l.isStatic);
-}
-
-/**
- * Return the bottom coordinate of the layout.
- *
- * @param  {Array} layout Layout array.
- * @return {Number}       Bottom coordinate.
- */
-export function bottom(layout: TLayout): number {
-  let max = 0;
-  let bottomY;
-  for(let i = 0, len = layout.length; i < len; i++) {
-    bottomY = layout[i].y + layout[i].h;
-    if(bottomY > max) max = bottomY;
-  }
-  return max;
-}
+import {ILayoutItem, TLayout} from '@/components/Grid/layout-definition';
+import {EMovingDirections} from "@/core/common/enums/EMovingDirections";
+import {getAllCollisions, getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
+import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
+import {TMovingDirection} from "@/core/common/types/TMovingDirections";
 
 // Fast path to cloning, since this is monomorphic
 export function cloneLayoutItem(layoutItem: ILayoutItem): ILayoutItem {
@@ -43,46 +15,6 @@ export function cloneLayout(layout: TLayout): TLayout {
     newLayout[i] = cloneLayoutItem(layout[i]);
   }
   return newLayout;
-}
-
-/**
- * Given two layout items, check if they collide.
- *
- * @return {Boolean}   True if colliding.
- */
-export function collides(l1: ILayoutItem, l2: ILayoutItem): boolean {
-  if(l1 === l2) return false; // same element
-  if(l1.x + l1.w <= l2.x) return false; // l1 is left of l2
-  if(l1.x >= l2.x + l2.w) return false; // l1 is right of l2
-  if(l1.y + l1.h <= l2.y) return false; // l1 is above l2
-  if(l1.y >= l2.y + l2.h) return false; // l1 is below l2
-  return true; // boxes overlap
-}
-
-/**
- * Returns the first item this layout collides with.
- * It doesn't appear to matter which order we approach this from, although
- * perhaps that is the wrong thing to do.
- *
- * @param  {TLayout}     layout     The entire grid layout.
- * @param  {ILayoutItem} layoutItem Layout item.
- * @return {ILayoutItem|undefined}  A colliding layout item, or undefined.
- * @throws {Error}                  Empty layout.
- */
-export function getFirstCollision(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem | undefined {
-  // if layout doesnt have static item it will cause error
-  // cannot drag or do anything
-
-  // if(layout.length < 1) {
-  //   throw new Error('Empty layout');
-  // }
-
-  for(let i = 0, len = layout.length; i < len; i++) {
-    if(collides(layout[i], layoutItem)) {
-      return layout[i];
-    }
-  }
-  return undefined;
 }
 
 /**
@@ -148,7 +80,7 @@ export function compactItem(
  */
 export function compactLayout(layout: TLayout, verticalCompact: boolean, minPositions?: any): TLayout {
   // Statics go in the compareWith array right away so items flow around them.
-  const compareWith = getStatics(layout);
+  const compareWith = getAllStaticGridItems(layout);
   // We go through the items by row and column.
   const sorted = sortLayoutItemsByRowCol(layout);
   // Holding for new items.
@@ -192,10 +124,6 @@ export function getLayoutItem(
     }
   }
   return undefined;
-}
-
-export function getAllCollisions(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem[] {
-  return layout.filter(l => collides(l, layoutItem));
 }
 
 /**

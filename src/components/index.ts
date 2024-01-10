@@ -8,7 +8,7 @@ import {
   TResponsiveLayout,
 } from './Grid/layout-definition';
 
-import { EGridItemEvent } from '../core/enums/EGridItemEvents';
+import { EGridItemEvent } from '@/core/griditem/enums/EGridItemEvents';
 
 export {
   CustomCloseButton,

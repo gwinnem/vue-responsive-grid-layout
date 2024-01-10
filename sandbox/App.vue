@@ -228,12 +228,10 @@ import {ref, onMounted, nextTick, onBeforeUnmount, computed, Ref, UnwrapRef} fro
 import {testDataOne} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
-import {
-  getStatics,
-  getFirstCollision,
-} from '@/core/helpers/utils';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
+import {getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
+import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
 // import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
 // import DragItem from '@/components/Grid/DragItem.vue';
 
@@ -622,7 +620,7 @@ const drag = (e: DragEvent): void => {
 
     let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
 
-    const static_item = getStatics(testLayout.value)
+    const static_item = getAllStaticGridItems(testLayout.value)
     if (getFirstCollision(static_item, {
       i: `index`,
       h: 2,
@@ -671,7 +669,7 @@ function dragend() {
   }
 
   if (mouseInGrid) {
-    const static_item = getStatics(testLayout.value)
+    const static_item = getAllStaticGridItems(testLayout.value)
     if (getFirstCollision(static_item, {
       i: `index`,
       h: 2,

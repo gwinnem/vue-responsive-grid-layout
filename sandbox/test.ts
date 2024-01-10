@@ -1,4 +1,4 @@
-import {TLayout} from "../src/components/Grid/layout-definition";
+import {TLayout} from '@/components/Grid/layout-definition';
 
 export const testData: TLayout = [
   // test 1
@@ -123,6 +123,7 @@ export const testDataOne: TLayout = [
     w: 1,
     x: 2,
     y: 0,
+    isStatic: true,
   },
   {
     i: 4,
