@@ -30,7 +30,8 @@
                   deselect-label="Remove me"
                   placeholder="Select events to log"
                   select-label="Select me"
-                  style="width: 50%" @update="updateSelected">
+                  style="width: 50%"
+                  @change="updateSelected">
               </VueMultiselect>
             </div>
             <hr/>
@@ -110,13 +111,13 @@
         </DragItem> -->
       </div>
       <div
-        v-if="!hideLayout"
-        class="col-sm-6">
+          v-if="!hideLayout"
+          class="col-sm-6">
         <div class="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div class="columns">
             <div v-for="item in testLayout">
-              <b>{{ item.i }}</b>: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
+              <b>{{ item.i }}</b>: [{{ item }}]
             </div>
           </div>
         </div>
@@ -215,7 +216,7 @@
   </div>
   <footer>
     <p style="text-align: center">
-      Copyright © 2022-{{getCurrentDate()}} Geirr Winnem
+      Copyright © 2022-{{ getCurrentDate() }} Geirr Winnem
     </p>
     <p style="text-align: center">
       <a href="https://winnem.tech" target="_blank">winnem.tech</a>
@@ -224,14 +225,11 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, nextTick, onBeforeUnmount, computed, Ref, UnwrapRef} from 'vue';
+import {computed, nextTick, onBeforeUnmount, onMounted, ref, Ref, UnwrapRef} from 'vue';
 import {testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
-import {
-  getStatics,
-  getFirstCollision,
-} from '@/core/helpers/utils';
+import {getFirstCollision, getStatics,} from '@/core/helpers/utils';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
 // import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
@@ -247,7 +245,9 @@ import VueMultiselect from 'vue-multiselect';
  */
 
 // Model for select dropdown.
-const updateSelected = (val: any): void => {
+const updateSelected = (val: string[]): void => {
+  debugger;
+  console.error(val);
   if (val.length > 0 && val.includes('All')) {
     selected.value = ['All'];
   }
@@ -285,31 +285,31 @@ const verticalCompact = ref(true);
 const testLayout = ref([...testData]);
 
 const onRowHeightChange = (): void => {
-  if(rowHeight.value < 1) {
+  if (rowHeight.value < 1) {
     rowHeight.value = 1;
   }
 };
 
 const onColNumChange = (): void => {
-  if(colNum.value < 1) {
+  if (colNum.value < 1) {
     colNum.value = 1;
   }
 };
 
 const onMaxRowsChange = (): void => {
-  if(maxRows.value < 1) {
+  if (maxRows.value < 1) {
     maxRows.value = 1;
   }
 };
 
 const onMarginTopBottomChange = (): void => {
-  if(marginTopBottom.value < 1) {
+  if (marginTopBottom.value < 1) {
     marginTopBottom.value = 1;
   }
 };
 
 const onMarginLeftRightChange = (): void => {
-  if(marginLeftRight.value < 1) {
+  if (marginLeftRight.value < 1) {
     marginLeftRight.value = 1;
   }
 };
@@ -372,7 +372,7 @@ const publishToEventLog = (i: number | string, msg: string, newX: number, newY: 
     eventsDiv.value.scrollTop = eventsDiv.value.scrollHeight;
 }
 const publishStringToEventLog = (message: string, insertNewLine: boolean = false): void => {
-  if(insertNewLine) {
+  if (insertNewLine) {
     eventsLog.value.push('');
   }
 
@@ -472,7 +472,6 @@ const onLayoutUpdate = (value: TLayout[]): void => {
     publishToEventLogWithNewLine(`Layout update:`, JSON.stringify(value));
   }
 };
-
 
 
 const removeGridItem = (id: string | number): void => {
