@@ -18,7 +18,7 @@ hero:
 features:
   - icon: ⚡️
     title: Latest Release version
-    details: 1.2.6 Released 2023-12-28.
+    details: 1.2.7 Released 2024-01-10.
   - icon: 💥
     title: Responsive Grid Layouts
     details: With predefined layout's or automatically with predefined breakpoints.
