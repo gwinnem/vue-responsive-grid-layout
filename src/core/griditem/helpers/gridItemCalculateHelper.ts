@@ -1,3 +1,5 @@
+import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
+
 // Similar to _.clamp from lodash.
 export const clamp = (num: number, lowerBound: number, upperBound: number): number => {
     return Math.max(Math.min(num, upperBound), lowerBound);
@@ -13,15 +15,15 @@ export const clamp = (num: number, lowerBound: number, upperBound: number): numb
  */
 export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
     if (gridUnits <= 0) {
-        throw new Error(`Invalid gridUnits passed`);
+        throw new Error(ErrorMsg.INVALID_GRID_UNITS);
     }
 
     if (colOrRowSize <= 0) {
-        throw new Error(`Invalid colOrRowSize passed`);
+        throw new Error(ErrorMsg.INVALID_COL_OR_ROW_SIZE);
     }
 
     if (marginPx < 1) {
-        throw new Error(`Invalid marginPx passed`);
+        throw new Error(ErrorMsg.INVALID_MARGIN);
     }
 
     if (!Number.isFinite(gridUnits)) {
@@ -39,15 +41,15 @@ export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx
  */
 export const calcColWidth = (containerWidth: number, marginLeftRight: number, cols: number): number => {
     if (containerWidth < 1) {
-        throw new Error(`Invalid containerWidth passed`);
+        throw new Error(ErrorMsg.INVALID_CONTAINER_WIDTH);
     }
 
     if (marginLeftRight < 1) {
-        throw new Error(`Invalid marginLeftRight passed`);
+        throw new Error(ErrorMsg.INVALID_MARGIN_LEFT_RIGHT);
     }
 
     if (cols < 1) {
-        throw new Error(`Invalid cols passed`);
+        throw new Error(ErrorMsg.INVALID_COLUMNS);
     }
 
     return (containerWidth - marginLeftRight * (cols + 1)) / cols;

@@ -45,7 +45,10 @@
     "**/*.spec.ts",
     "/dist",
     "node_modules",
-    "*.tgz"
+    "*.tgz",
+    "vitepress-docs/*",
+    "tests/*",
+    "sandbox/*"
   ],
   "include": ["src/**/*.ts", "src/**/*.vue", "./**/*.vue"],
   "references": [],

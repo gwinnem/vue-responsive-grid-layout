@@ -3,6 +3,7 @@
 import {describe, expect, it} from 'vitest';
 import {getBottomYCoordinate} from "../src/core/gridlayout/helpers/gridLayoutHelper";
 import {TLayout} from "../src/components";
+import {ErrorMsg} from "../src/core/common/enums/ErrorMessages";
 
 const l1: TLayout = [
     {
@@ -23,11 +24,11 @@ const l1: TLayout = [
 
 describe(`getBottomYCoordinate`, () => {
     it(`Should throw error when layout is undefined`, () => {
-        expect(() => getBottomYCoordinate()).toThrowError(`Invalid parameter values`);
+        expect(() => getBottomYCoordinate()).toThrowError(ErrorMsg.INVALID_LAYOUT);
     });
 
     it(`Should throw error when layout is empty`, () => {
-        expect(() => getBottomYCoordinate([])).toThrowError(`Invalid parameter values`);
+        expect(() => getBottomYCoordinate([])).toThrowError(ErrorMsg.INVALID_LAYOUT);
     });
 
     it(`Should return 2 for the l1 layout`, () => {

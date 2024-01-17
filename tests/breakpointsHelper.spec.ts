@@ -7,6 +7,7 @@ import {
   getColsFromBreakpoint,
   sortBreakpoints
 } from "../src/core/common/helpers/breakpointsHelper";
+import {ErrorMsg} from "../src/core/common/enums/ErrorMessages";
 
 const breakpoints: IBreakpoints = {
   // eslint-disable-next-line vue/sort-keys
@@ -55,7 +56,7 @@ describe(`sortBreakpoints tests`, () => {
   });
 
   it(`Empty Breakpoint array throws error`, () => {
-    expect(() => sortBreakpoints([])).toThrowError('Invalid parameter breakPoints');
+    expect(() => sortBreakpoints([])).toThrowError(ErrorMsg.INVALID_BREAKPOINT);
   });
 
   it(`Returned Breakpoint array has correct length`, () => {
@@ -83,10 +84,10 @@ describe(`getBreakpointFromWidth tests`, () => {
   });
 
   it(`Invalid width should throw error`, () => {
-    expect(() => getBreakpointFromWidth(breakpoints, -99)).toThrowError('Width Must be greater or equal 0');
+    expect(() => getBreakpointFromWidth(breakpoints, -99)).toThrowError(ErrorMsg.INVALID_WIDTH);
   });
   it(`Empty breakpoints should throw error`, () => {
-    expect(() => getBreakpointFromWidth([], 99)).toThrowError('Invalid parameter breakPoints');
+    expect(() => getBreakpointFromWidth([], 99)).toThrowError(ErrorMsg.INVALID_BREAKPOINT);
   });
 });
 
@@ -104,11 +105,11 @@ const columns: IColumns = {
 
 describe(`getColsFromBreakpoint tests`, () => {
   it(`Should throw error when breakpoint is not found`, () => {
-    expect(() => getColsFromBreakpoint('invalid', columns)).toThrowError('Breakpoint not found');
+    expect(() => getColsFromBreakpoint('invalid', columns)).toThrowError(ErrorMsg.INVALID_BREAKPOINT_NOT_FOUND);
   });
 
   it(`Should throw error when breakpoint is empty`, () => {
-    expect(() => getColsFromBreakpoint(``, columns)).toThrowError('Param breakpoint is empty');
+    expect(() => getColsFromBreakpoint(``, columns)).toThrowError(ErrorMsg.INVALID_BREAKPOINT);
   });
 
   it(`Should return 'columns.sm' for breakpoint sm`, () => {

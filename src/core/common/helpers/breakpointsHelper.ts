@@ -1,5 +1,6 @@
 import {TBreakpoint, TBreakpoints} from "@/components/Grid/layout-definition";
 import {IColumns} from "@/components/Grid/grid-layout-props.interface";
+import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
 
 /**
  * Given breakpoints, return an array of breakpoints sorted by width. This is usually
@@ -11,7 +12,7 @@ import {IColumns} from "@/components/Grid/grid-layout-props.interface";
 export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpoint[] => {
   const keys: string[] = Object.keys(breakpoints);
   if (keys.length === 0) {
-    throw new Error('Invalid parameter breakPoints');
+    throw new Error(ErrorMsg.INVALID_BREAKPOINT);
   }
   return keys.sort((a, b) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -30,11 +31,11 @@ export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpoint[] => {
  */
 export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number): TBreakpoint => {
   if (width < 0) {
-    throw new Error('Width Must be greater or equal 0');
+    throw new Error(ErrorMsg.INVALID_WIDTH);
   }
 
   if (!breakpoints) {
-    throw new Error('Invalid param breakpoints');
+    throw new Error(ErrorMsg.INVALID_BREAKPOINT);
   }
 
   const sortedBreakpoints = sortBreakpoints(breakpoints);
@@ -61,13 +62,13 @@ export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number)
  */
 export const getColsFromBreakpoint = (breakpoint: TBreakpoint, cols: IColumns): number => {
   if (!breakpoint) {
-    throw new Error('Param breakpoint is empty');
+    throw new Error(ErrorMsg.INVALID_BREAKPOINT);
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (!cols[breakpoint]) {
-    throw new Error(`Breakpoint not found`);
+    throw new Error(ErrorMsg.INVALID_BREAKPOINT_NOT_FOUND);
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

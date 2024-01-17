@@ -47,8 +47,6 @@ export default defineComponent({
   import {
     compactLayout,
     getLayoutItem,
-    moveElement,
-    validateLayout,
     cloneLayout,
 
 
@@ -63,6 +61,9 @@ export default defineComponent({
   import {getAllCollisions, getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
   import {getBottomYCoordinate} from "@/core/gridlayout/helpers/gridLayoutHelper";
   import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
+  import {moveElement} from "@/core/gridlayout/helpers/moveHelper";
+  import {layoutValidator} from "@/core/validators/layout-validator";
+  import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
 
   export interface IGridLayoutProps {
     autoSize?: boolean;
@@ -561,8 +562,10 @@ export default defineComponent({
   onMounted(() => {
     emit(EGridLayoutEvent.LAYOUT_MOUNTED, props.layout);
     nextTick(() => {
-      validateLayout(props.layout);
-
+      const valid = layoutValidator(props.layout);
+      if(!valid) {
+        throw new Error(ErrorMsg.INVALID_LAYOUT_VALIDATED);
+      }
       originalLayout.value = props.layout;
       nextTick(() => {
         initResponsiveFeatures();

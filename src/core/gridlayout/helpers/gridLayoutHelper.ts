@@ -1,4 +1,5 @@
 import {TLayout} from "@/components";
+import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
 
 /**
  * Return the bottom coordinate of the layout.
@@ -8,7 +9,7 @@ import {TLayout} from "@/components";
  */
 export function getBottomYCoordinate(layout: TLayout): number {
     if(layout === undefined || layout.length === 0){
-        throw new Error(`Invalid parameter values`);
+        throw new Error(ErrorMsg.INVALID_LAYOUT);
     }
     let max = 0;
     let bottomY;

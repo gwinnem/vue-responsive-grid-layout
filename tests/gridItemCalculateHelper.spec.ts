@@ -2,6 +2,7 @@
 // @ts-nocheck
 import {describe, expect, it} from 'vitest';
 import {calcColWidth, calcGridItemWH, clamp} from "../src/core/griditem/helpers/gridItemCalculateHelper";
+import {ErrorMsg} from "../src/core/common/enums/ErrorMessages";
 
 describe(`clamp tests`, () => {
   it(`clamp successful`, () => {
@@ -10,18 +11,18 @@ describe(`clamp tests`, () => {
 });
 
 describe(`calcGridItemWH tests`, () => {
-  it(`gridUnits is NaN`, () => {
+  it(`Should allow gridUnits to be NaN`, () => {
     const gridUnits = NaN;
     const calculatedValue = calcGridItemWH(gridUnits, 1, 1);
     expect(calculatedValue).toBe(gridUnits);
   });
 
-  it(`gridUnits is Null`, () => {
-    expect(() => calcGridItemWH(null, 1, 1)).toThrowError(new Error(`Invalid gridUnits passed`));
+  it(`Should throw an error if gridUnits is Null`, () => {
+    expect(() => calcGridItemWH(null, 1, 1)).toThrowError(new Error(ErrorMsg.INVALID_GRID_UNITS));
   });
 
   it(`gridUnits is 0 or negative`, () => {
-    expect(() => calcGridItemWH(0, 1, 1)).toThrowError(new Error(`Invalid gridUnits passed`));
+    expect(() => calcGridItemWH(0, 1, 1)).toThrowError(new Error(ErrorMsg.INVALID_GRID_UNITS));
   });
 
   it(`gridUnits is valid`, () => {
@@ -31,25 +32,25 @@ describe(`calcGridItemWH tests`, () => {
   });
 
   it(`colOrRowSize is 0 or negative`, () => {
-    expect(() => calcGridItemWH(1, 0, 1)).toThrowError(new Error(`Invalid colOrRowSize passed`));
+    expect(() => calcGridItemWH(1, 0, 1)).toThrowError(new Error(ErrorMsg.INVALID_COL_OR_ROW_SIZE));
   });
 
   it(`marginPx is 0 or negative`, () => {
-    expect(() => calcGridItemWH(1, 1, 0)).toThrowError(new Error(`Invalid marginPx passed`));
+    expect(() => calcGridItemWH(1, 1, 0)).toThrowError(new Error(ErrorMsg.INVALID_MARGIN));
   });
 });
 
 describe(`calcColWidth tests`, () => {
   it(`containerWidth is less than 1`, () => {
-    expect(() => calcColWidth(0, 1, 1)).toThrowError(new Error(`Invalid containerWidth passed`));
+    expect(() => calcColWidth(0, 1, 1)).toThrowError(new Error(ErrorMsg.INVALID_CONTAINER_WIDTH));
   });
 
   it(`marginLeftRight is less than 1`, () => {
-    expect(() => calcColWidth(1, 0, 1)).toThrowError(new Error(`Invalid marginLeftRight passed`));
+    expect(() => calcColWidth(1, 0, 1)).toThrowError(new Error(ErrorMsg.INVALID_MARGIN_LEFT_RIGHT));
   });
 
   it(`cols is less than 1`, () => {
-    expect(() => calcColWidth(1, 1, 0)).toThrowError(new Error(`Invalid cols passed`));
+    expect(() => calcColWidth(1, 1, 0)).toThrowError(new Error(ErrorMsg.INVALID_COLUMNS));
   });
 
   it(`Parameters are valid`, () => {

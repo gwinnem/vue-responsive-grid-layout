@@ -1,64 +1,76 @@
 import {describe, expect, it} from 'vitest';
+import {moveElement, moveToCorrectPlace} from "../src/core/gridlayout/helpers/moveHelper";
+import {ErrorMsg} from "../src/core/common/enums/ErrorMessages";
 import {TLayout} from "../src/components";
-import {getAllNonStaticGridItems, getAllStaticGridItems} from "../src/core/common/helpers/gridIemTypeHelpers";
 
 const testDataOne: TLayout = [
-    // test 1
-    {
-        i: 1,
-        h: 2,
-        w: 1,
-        x: 0,
-        y: 0,
-    },
-    {
-        i: 2,
-        h: 2,
-        w: 1,
-        x: 1,
-        y: 0,
-    },
-    {
-        i: 3,
-        h: 2,
-        w: 1,
-        x: 2,
-        y: 0,
-        isStatic: true,
-    },
-    {
-        i: 4,
-        h: 2,
-        w: 1,
-        x: 3,
-        y: 0,
-    },
-    {
-        i: 5,
-        h: 2,
-        w: 1,
-        x: 4,
-        y: 0,
-    },
-    {
-        i: 6,
-        h: 2,
-        w: 1,
-        x: 5,
-        y: 0,
-    }
+  {
+    i: 1,
+    h: 2,
+    w: 1,
+    x: 0,
+    y: 0,
+  },
+  {
+    i: 2,
+    h: 2,
+    w: 1,
+    x: 1,
+    y: 0,
+  },
+  {
+    i: 3,
+    h: 2,
+    w: 1,
+    x: 2,
+    y: 0,
+    isStatic: true,
+  },
+  {
+    i: 4,
+    h: 2,
+    w: 1,
+    x: 3,
+    y: 0,
+  },
+  {
+    i: 5,
+    h: 2,
+    w: 1,
+    x: 4,
+    y: 0,
+  },
+  {
+    i: 6,
+    h: 2,
+    w: 1,
+    x: 5,
+    y: 0,
+  }
 ];
+
 describe(`moveToCorrectPlace`, () => {
-    it(`Should return layout`, () => {
-        const tmpStaticItems = getAllStaticGridItems(testDataOne);
-        const tmpNonStaticItems = getAllNonStaticGridItems(testDataOne);
+  // it(`Should throw an error if parameter layoutItem is undefined`, () => {
+  //   expect(() => moveToCorrectPlace(emptyLayoutItem, {cols: 3}, [testDataOne[0]]))
+  //     .toThrow(ErrorMsg.INVALID_LAYOUT_ITEM);
+  // });
 
-        expect(tmpNonStaticItems.length).toBe(5);
-        expect(tmpStaticItems.length).toBe(10);
+  it(`Should throw an error if parameter bounds is less than 1`, () => {
+    expect(() => moveToCorrectPlace(testDataOne[0], {cols: 0}, [testDataOne[0]]))
+      .toThrow(ErrorMsg.INVALID_BOUNDS);
+  });
+});
 
-        // const cols = 6;
-        // const gridItem = tmpStaticItems[0];
 
+describe(`moveElement`, () => {
 
-    });
+  it(`Should throw an error if parameter x is less than 0`, () => {
+    expect(() => moveElement( testDataOne, testDataOne[0], -1, 0, true, true, true))
+      .toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
+
+  it(`Should throw an error if parameter y is less than 0`, () => {
+    expect(() => moveElement(testDataOne, testDataOne[0], 1, -1, true, true, true))
+      .toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
 });

@@ -1,4 +1,5 @@
 import {ILayoutItem, TLayout} from "@/components";
+import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
 
 /**
  * Get all static elements.
@@ -9,7 +10,7 @@ import {ILayoutItem, TLayout} from "@/components";
 // eslint-disable-next-line no-undef
 export function getAllStaticGridItems(layout: TLayout): ILayoutItem[] {
     if (layout.length === 0) {
-        throw new Error('Empty layout not allowed');
+        throw new Error(ErrorMsg.INVALID_EMPTY_LAYOUT);
     }
     return layout.filter(l => l.isStatic);
 }
@@ -23,7 +24,7 @@ export function getAllStaticGridItems(layout: TLayout): ILayoutItem[] {
 // eslint-disable-next-line no-undef
 export function getAllNonStaticGridItems(layout: TLayout): ILayoutItem[] {
     if (layout.length === 0) {
-        throw new Error('Empty layout not allowed');
+        throw new Error(ErrorMsg.INVALID_EMPTY_LAYOUT);
     }
     return layout.filter(l => !l.isStatic);
 }
