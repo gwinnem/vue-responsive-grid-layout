@@ -20,20 +20,20 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onBeforeMount,
-  onBeforeUnmount,
-  onMounted,
-  provide,
-  ref,
-  toRef,
-  watch,
-} from 'vue';
+  import {
+    computed,
+    defineComponent,
+    nextTick,
+    onBeforeMount,
+    onBeforeUnmount,
+    onMounted,
+    provide,
+    ref,
+    toRef,
+    watch,
+  } from 'vue';
 
-export default defineComponent({
+  export default defineComponent({
     name: `GridLayout`,
   });
 
@@ -62,9 +62,9 @@ export default defineComponent({
   } from '@/core/helpers/responsiveUtils';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
-  import {IBreakpoints, IColumns, IGridLayoutProps} from './grid-layout-props.interface';
+  import { IBreakpoints, IColumns, IGridLayoutProps } from './grid-layout-props.interface';
   import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
-  import {EDragEvent} from "@/core/enums/EDragEvent";
+  import { EDragEvent } from '@/core/enums/EDragEvent';
 
   export interface IGridLayoutProps {
     autoSize?: boolean;
@@ -214,7 +214,7 @@ export default defineComponent({
   };
 
   // finds or generates new layouts for set breakpoints
-  const responsiveGridLayout = (): void => {
+  const responsiveGridLayout = (windowResize = false): void => {
     const newBreakpoint = getBreakpointFromWidth(props.breakpoints, width.value as number);
     const newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
     // responsive cols
@@ -224,6 +224,14 @@ export default defineComponent({
     // max is colNum which is set by user
     if(colNum.value < colNumResponsive.value) {
       colsCompute = colNum.value;
+    }
+
+    if(windowResize && layouts.value[newBreakpoint]) {
+      originalLayout.value = layouts.value[newBreakpoint];
+      emit(EGridLayoutEvent.LAYOUT_UPDATE, layouts.value[newBreakpoint]);
+      lastBreakpoint.value = newBreakpoint;
+      eventBus.emit(`setColNum`, colsCompute);
+      return;
     }
 
     if(lastBreakpoint.value != null && !layouts.value[lastBreakpoint.value]) {
@@ -250,10 +258,9 @@ export default defineComponent({
 
     // new prop sync
     // noinspection TypeScriptValidateTypes
+
     originalLayout.value = layout;
-
     emit(EGridLayoutEvent.LAYOUT_UPDATE, layout);
-
     lastBreakpoint.value = newBreakpoint;
     eventBus.emit(`setColNum`, colsCompute);
   };
@@ -290,7 +297,7 @@ export default defineComponent({
       emit(EGridLayoutEvent.DRAG_START, 1);
     }
 
-    switch (eventName) {
+    switch(eventName) {
       case EDragEvent.DRAG_END: {
         emit(EGridLayoutEvent.DRAG_END, id ?? 0);
         break;
@@ -329,8 +336,7 @@ export default defineComponent({
           isDragging.value = false;
         });
       }
-    }
-    else {
+    } else {
       nextTick(() => {
         isDragging.value = false;
       });
@@ -356,7 +362,7 @@ export default defineComponent({
     if(eventName !== undefined && eventName === EGridLayoutEvent.DRAG_END) {
       positionsBeforeDrag.value = undefined;
       originalLayout.value = layout;
-      emit(EGridLayoutEvent.DRAG_END,1);
+      emit(EGridLayoutEvent.DRAG_END, 1);
       emit(EGridLayoutEvent.LAYOUT_UPDATED, layout);
     }
   };
@@ -541,7 +547,7 @@ export default defineComponent({
     }
 
     if(props.responsive) {
-      responsiveGridLayout();
+      responsiveGridLayout(true);
     }
     eventBus.emit(`resizeEvent`);
   };

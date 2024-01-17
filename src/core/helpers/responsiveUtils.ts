@@ -188,27 +188,8 @@ export const findOrGenerateResponsiveLayout = (
   distributeEvenly: boolean,
 ): TLayout => {
   // we cant return the layouts[breakpoints] directly because we don't know whether user change the layout or not
-  if(breakpoint && layouts[breakpoint as keyof typeof layouts] && !distributeEvenly) {
-    return cloneLayout(layouts[breakpoint as keyof typeof layouts]!);
-  }
   // Find or generate the next layout
-  let layout = cloneLayout(orgLayout || []);
-
-  const breakpointsSorted = sortBreakpoints(breakpoints);
-  const breakpointsAbove = breakpointsSorted.slice(breakpointsSorted.indexOf(breakpoint));
-  for(let i = 0, len = breakpointsAbove.length; i < len; i++) {
-    const b = breakpointsAbove[i];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if(layouts[b]) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      layout = layouts[b];
-      break;
-    }
-  }
-
-  // Find or generate the next layout
+  const layout = cloneLayout(orgLayout || []);
 
   return compactLayout(correctBounds(layout, { cols }, distributeEvenly), verticalCompact);
 };
