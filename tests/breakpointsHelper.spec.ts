@@ -71,6 +71,10 @@ describe(`sortBreakpoints tests`, () => {
 });
 
 describe(`getBreakpointFromWidth tests`, () => {
+  it('Should throw error when no breakpoint is passed', () => {
+    expect(() => getBreakpointFromWidth([], 1200)).toThrowError(ErrorMsg.INVALID_BREAKPOINT);
+  });
+
   it(`Correct Breakpoint is returned 1500 = xl`, () => {
     expect(getBreakpointFromWidth(breakpoints, 1500) === `xl`).toBeTruthy();
   });
