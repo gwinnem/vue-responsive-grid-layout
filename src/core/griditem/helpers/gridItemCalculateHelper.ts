@@ -41,7 +41,7 @@ export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx
  */
 export const calcColWidth = (containerWidth: number, marginLeftRight: number, cols: number): number => {
     if (containerWidth < 1) {
-        throw new Error(ErrorMsg.INVALID_CONTAINER_WIDTH);
+        throw new Error(ErrorMsg.INVALID_PARAM_CONTAINER_WIDTH);
     }
 
     if (marginLeftRight < 1) {

@@ -42,7 +42,7 @@ describe(`calcGridItemWH tests`, () => {
 
 describe(`calcColWidth tests`, () => {
   it(`containerWidth is less than 1`, () => {
-    expect(() => calcColWidth(0, 1, 1)).toThrowError(new Error(ErrorMsg.INVALID_CONTAINER_WIDTH));
+    expect(() => calcColWidth(0, 1, 1)).toThrowError(new Error(ErrorMsg.INVALID_PARAM_CONTAINER_WIDTH));
   });
 
   it(`marginLeftRight is less than 1`, () => {
