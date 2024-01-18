@@ -65,12 +65,38 @@ describe(`moveToCorrectPlace`, () => {
 describe(`moveElement`, () => {
 
   it(`Should throw an error if parameter x is less than 0`, () => {
-    expect(() => moveElement( testDataOne, testDataOne[0], -1, 0, true, true, true))
+    expect(() => moveElement(testDataOne, testDataOne[0], -1, 0, true, true, true))
       .toThrowError(ErrorMsg.INVALID_PARAMS);
   });
 
   it(`Should throw an error if parameter y is less than 0`, () => {
     expect(() => moveElement(testDataOne, testDataOne[0], 1, -1, true, true, true))
       .toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
+
+  it('Should return the passed in layout when item isStatic', () => {
+    const result = moveElement(testDataOne,{
+      isStatic: true,
+      i: 1,
+      x: 1,
+      y: 1,
+      w: 1,
+      h: 1
+    }, 0,0,false,false,false);
+
+    expect(testDataOne).toMatchObject(result);
+  });
+
+  it('Should return', () => {
+    const result = moveElement(testDataOne,{
+      isStatic: false,
+      i: 1,
+      x: 0,
+      y: 1,
+      w: 1,
+      h: 1
+    }, 0,0,false,true,false);
+
+    expect(testDataOne).toMatchObject(result);
   });
 });
