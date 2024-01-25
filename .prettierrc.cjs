@@ -10,6 +10,7 @@
   "printWidth": 120,
   "endOfLine": "auto",
   "vueIndentScriptAndStyle": true,
+  "bracketSpacing": false,
   "overrides": [
     {
       "files": [
