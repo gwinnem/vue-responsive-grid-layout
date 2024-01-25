@@ -2,7 +2,8 @@ import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
 
 // Similar to _.clamp from lodash.
 export const clamp = (num: number, lowerBound: number, upperBound: number): number => {
-    return Math.max(Math.min(num, upperBound), lowerBound);
+  const res = Math.max(Math.min(num, upperBound), lowerBound);
+  return res;
 };
 
 /**
@@ -14,22 +15,22 @@ export const clamp = (num: number, lowerBound: number, upperBound: number): numb
  *                      Otherwise, the result is being calculated.
  */
 export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx: number): number => {
-    if (gridUnits <= 0) {
-        throw new Error(ErrorMsg.INVALID_GRID_UNITS);
-    }
+  if (gridUnits <= 0) {
+    throw new Error(ErrorMsg.INVALID_GRID_UNITS);
+  }
 
-    if (colOrRowSize <= 0) {
-        throw new Error(ErrorMsg.INVALID_COL_OR_ROW_SIZE);
-    }
+  if (colOrRowSize <= 0) {
+    throw new Error(ErrorMsg.INVALID_COL_OR_ROW_SIZE);
+  }
 
-    if (marginPx < 1) {
-        throw new Error(ErrorMsg.INVALID_MARGIN);
-    }
+  if (marginPx < 1) {
+    throw new Error(ErrorMsg.INVALID_MARGIN);
+  }
 
-    if (!Number.isFinite(gridUnits)) {
-        return gridUnits;
-    }
-    return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
+  if (!Number.isFinite(gridUnits)) {
+    return gridUnits;
+  }
+  return Math.round(colOrRowSize * gridUnits + Math.max(0, gridUnits - 1) * marginPx);
 };
 
 /**
@@ -40,17 +41,17 @@ export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx
  * @return  {Number}                        The new column width.
  */
 export const calcColWidth = (containerWidth: number, marginLeftRight: number, cols: number): number => {
-    if (containerWidth < 1) {
-        throw new Error(ErrorMsg.INVALID_PARAM_CONTAINER_WIDTH);
-    }
+  if (containerWidth < 1) {
+    throw new Error(ErrorMsg.INVALID_PARAM_CONTAINER_WIDTH);
+  }
 
-    if (marginLeftRight < 1) {
-        throw new Error(ErrorMsg.INVALID_MARGIN_LEFT_RIGHT);
-    }
+  if (marginLeftRight < 1) {
+    throw new Error(ErrorMsg.INVALID_MARGIN_LEFT_RIGHT);
+  }
 
-    if (cols < 1) {
-        throw new Error(ErrorMsg.INVALID_COLUMNS);
-    }
+  if (cols < 1) {
+    throw new Error(ErrorMsg.INVALID_COLUMNS);
+  }
 
-    return (containerWidth - marginLeftRight * (cols + 1)) / cols;
+  return (containerWidth - marginLeftRight * (cols + 1)) / cols;
 };
