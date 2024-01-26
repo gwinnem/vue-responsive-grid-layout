@@ -4,7 +4,9 @@
     "src/**/__tests__/*",
     "src/**/*.cy.ts",
     "**/*.spec.ts",
-    "vitepress-docs",,
+    "vitepress-docs/*",
+    "tests/*",
+    "sandbox/",
     "/dist",
     "node_modules/*",
     "*.tgz"
