@@ -229,15 +229,10 @@ import {computed, nextTick, onBeforeUnmount, onMounted, ref, Ref, UnwrapRef} fro
 import {testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
-import {getFirstCollision, getStatics,} from '@/core/helpers/utils';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
-// import {EGridLayoutEvent} from "@/core/enums/EGridLayoutEvents";
-// import DragItem from '@/components/Grid/DragItem.vue';
-
-// Used for testing the package before publishing to npm.
-// import '../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
-// import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
+import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
+import {getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
 
 /**
  * Removing all selected items in dropdown if All is selected
@@ -522,10 +517,16 @@ const moveEvent = (i: number | string, newX: number, newY: number): void => {
 };
 
 const movedEvent = (i: number | string, newX: number, newY: number): void => {
-  if ((selected.value.includes('All') || selected.value.includes('movedEvent')) && moveData.startI.toString() !== i.toString() && moveData.startX !== newX && moveData.startY !== newY) {
+  if (
+      (selected.value.includes('All') || selected.value.includes('movedEvent'))
+      && moveData.startI.toString() !== i.toString()
+      && moveData.startX !== newX
+      && moveData.startY !== newY
+  )
+  {
     publishToEventLog(i, 'Moved', newX, newY);
   } else {
-    publishToEventLog(i, 'Moved End', newX, newY);
+    publishToEventLog(i, 'Move End', newX, newY);
   }
 };
 
@@ -617,12 +618,12 @@ const drag = (e: DragEvent): void => {
     try {
       refLayout.value.$refs.refsLayout.children[index].style.display = "none"
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
 
     let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
 
-    const static_item = getStatics(testLayout.value)
+    const static_item = getAllStaticGridItems(testLayout.value)
     if (getFirstCollision(static_item, {
       i: `index`,
       h: 2,
@@ -671,7 +672,7 @@ function dragend() {
   }
 
   if (mouseInGrid) {
-    const static_item = getStatics(testLayout.value)
+    const static_item = getAllStaticGridItems(testLayout.value)
     if (getFirstCollision(static_item, {
       i: `index`,
       h: 2,

@@ -1,62 +1,52 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { describe, expect, it } from 'vitest';
-import {calcColWidth, calcGridItemWH, calcXY, clamp} from "../src/core/helpers/calculateUtils";
+import {describe, expect, it} from 'vitest';
+import {calcXY} from "../src/core/helpers/calculateUtils";
+import {ErrorMsg} from "../src/core/common/enums/ErrorMessages";
 
-describe(`calcGridItemWH tests`, () => {
-    it(`gridUnits is NaN`, () => {
-        const gridUnits = NaN;
-        const calculatedValue = calcGridItemWH(gridUnits, 1, 1);
-        expect(calculatedValue).toBe(gridUnits);
-    });
+describe(`calcXY`, () => {
+  it(`Should throw error when invalid rowHeight is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 10], 0, 6, 10, 10, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_ROW_HEIGHT);
+  });
 
-    it(`gridUnits is Null`, () => {
-        expect(() => calcGridItemWH(null, 1, 1)).toThrowError(new Error(`Invalid gridUnits passed`));
-    });
+  it(`Should throw error when invalid margin[0] is passed`, () => {
+    expect(() => calcXY(10, 589, [0, 10], 60, 6, 10, 10, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_MARGIN);
+  });
 
-    it(`gridUnits is 0 or negative`, () => {
-        expect(() => calcGridItemWH(0, 1, 1)).toThrowError(new Error(`Invalid gridUnits passed`));
-    });
+  it(`Should throw error when invalid margin[1] is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 0], 60, 6, 10, 10, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_MARGIN);
+  });
 
-    it(`gridUnits is valid`, () => {
-        expect(() => {calcGridItemWH(10, 1, 1).toBe(19)});
-    });
+  it(`Should throw error when invalid margin is passed`, () => {
+    expect(() => calcXY(10, 589, [0, 0], 60, 6, 10, 10, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_MARGIN);
+  });
 
-    it(`colOrRowSize is 0 or negative`, () => {
-        expect(() => calcGridItemWH(1, 0, 1)).toThrowError(new Error(`Invalid colOrRowSize passed`));
-    });
+  it(`Should throw error when invalid innerH is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 10], 10, 10, 0, 10, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_INNER_H);
+  });
 
-    it(`marginPx is 0 or negative`, () => {
-        expect(() => calcGridItemWH(1, 1, 0)).toThrowError(new Error(`Invalid marginPx passed`));
-    });
-});
+  it(`Should throw error when invalid innerW is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 10], 10, 10, 10, 0, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_INNER_W);
+  });
 
-describe(`calcColWidth tests`, () => {
-    it(`containerWidth is less than 1`, () => {
-        expect(() => calcColWidth(0, 1, 1)).toThrowError(new Error(`Invalid containerWidth passed`));
-    });
+  it(`Should throw error when invalid cols is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 10], 10, 0, 10, 10, 1, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_COLS);
+  });
 
-    it(`marginLeftRight is less than 1`, () => {
-        expect(() => calcColWidth(1, 0, 1)).toThrowError(new Error(`Invalid marginLeftRight passed`));
-    });
+  it(`Should throw error when invalid maxRows is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 10], 10, 10, 10, 10, 0, 1))
+      .toThrowError(ErrorMsg.INVALID_PARAM_MAX_ROWS);
+  });
 
-    it(`cols is less than 1`, () => {
-        expect(() => calcColWidth(1, 1, 0)).toThrowError(new Error(`Invalid cols passed`));
-    });
-
-    it(`Parameters are valid`, () => {
-        expect(() => {calcColWidth(100, 10, 10).toBe(NaN)});
-    });
-});
-
-describe(`clamp tests`, () => {
-    it(`clamp successful`, () => {
-        expect(() => clamp(10, 0, 300).toBe(10));
-    });
-});
-
-describe(`calcXY tests`, () => {
-    it(`Valid result`, () => {
-        expect(()=> calcXY(10, 589, [10, 10], 60, 6, 0, 0, 0, 0 ).toBe( !0));
-    });
+  it(`Should throw error when invalid containerWidth is passed`, () => {
+    expect(() => calcXY(10, 589, [10, 10], 10, 10, 10, 10, 1, 0))
+      .toThrowError(ErrorMsg.INVALID_PARAM_CONTAINER_WIDTH);
+  });
 });

@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { EGridItemEvent } from '@/core/enums/EGridItemEvents';
+  import { EGridItemEvent } from '@/core/griditem/enums/EGridItemEvents';
 
   export interface IProps {
     i: string | number;

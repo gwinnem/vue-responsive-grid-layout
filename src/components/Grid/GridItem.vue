@@ -34,7 +34,6 @@ import {
   setTransformRtl,
 } from '@/core/helpers/utils';
 import {createCoreData, offsetXYFromParentOf} from '@/core/helpers/draggableUtils';
-import {getColsFromBreakpoint} from '@/core/helpers/responsiveUtils';
 import '@interactjs/auto-start';
 import '@interactjs/auto-scroll';
 import '@interactjs/actions/drag';
@@ -43,17 +42,18 @@ import '@interactjs/modifiers';
 import '@interactjs/dev-tools';
 import useCurrentInstance from '@/hooks/useInstance';
 import {IColumns, IGridLayoutProps} from './grid-layout-props.interface';
-import {ILayoutData} from '@/core/interfaces/layout-data.interface';
-import {EGridItemEvent} from '@/core/enums/EGridItemEvents';
+import {ILayoutData} from '@/core/gridlayout/interfaces/layout-data.interface';
+import {EGridItemEvent} from '@/core/griditem/enums/EGridItemEvents';
 import {
   ICalcWh,
   ICalcXy,
   IGridItemPosition,
   IGridItemWidthHeight,
   IInteractEdges,
-} from '@/core/interfaces/grid-item.interfaces';
-import {IEventsData} from '@/core/interfaces/eventBus.interfaces';
-import {calcColWidth, calcGridItemWH, clamp} from "@/core/helpers/calculateUtils";
+} from '@/core/griditem/interfaces/grid-item.interfaces';
+import {IEventsData} from '@/core/common/interfaces/eventBus.interfaces';
+import {getColsFromBreakpoint} from "@/core/common/helpers/breakpointsHelper";
+import {calcColWidth, calcGridItemWH, clamp} from "@/core/griditem/helpers/gridItemCalculateHelper";
 
 export interface IGridItemProps {
   borderRadiusPx?: number;

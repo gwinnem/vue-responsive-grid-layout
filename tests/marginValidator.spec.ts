@@ -13,26 +13,18 @@ export const marginValidatorPayload = {
 describe(`marginValidator`, () => {
 
   it(`When margin are valid`, () => {
-    const result = marginValidator(marginValidatorPayload.validMargin);
-
-    expect(result).toBe(true);
+    expect(marginValidator(marginValidatorPayload.validMargin)).toBe(true);
   });
 
   it(`When margin are invalid 1`, () => {
-    const result = marginValidator(marginValidatorPayload.invalidMargin1);
-
-    expect(result).toBe(false);
+    expect(marginValidator(marginValidatorPayload.invalidMargin1)).toBe(false);
   });
 
   it(`When margin are invalid 2`, () => {
-    const result = marginValidator(marginValidatorPayload.invalidMargin2);
-
-    expect(result).toBe(false);
+    expect(marginValidator(marginValidatorPayload.invalidMargin2)).toBe(false);
   });
 
   it(`When margin are invalid 3`, () => {
-    const result = marginValidator(marginValidatorPayload.invalidMargin3);
-
-    expect(result).toBe(false);
+    expect(marginValidator(marginValidatorPayload.invalidMargin3)).toBe(false);
   });
 });

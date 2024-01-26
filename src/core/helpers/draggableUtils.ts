@@ -1,7 +1,4 @@
-export interface IPoint {
-  x: number;
-  y: number;
-}
+import {IPoint} from "@/core/helpers/IPoint";
 
 /**
  * Checking if the number is a real number and not NaN.
@@ -35,14 +32,6 @@ export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
     y,
   };
 }
-
-/**
- * Get {x, y} positions from event.
- * @param e
- */
-// export function getControlPosition(e: MouseEvent): IPoint {
-//   return offsetXYFromParentOf(e);
-// }
 
 export interface IDraggableCoreData {
   deltaX: number;

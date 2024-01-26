@@ -42,29 +42,28 @@ export default defineComponent({
   import mitt, { Emitter, EventType } from 'mitt';
   import elementResizeDetectorMaker from 'element-resize-detector';
   import { ILayoutItem, TLayout } from '@/components';
-  import { IPlaceholder } from '@/core/interfaces/layout-data.interface';
+  import { IPlaceholder } from '@/core/gridlayout/interfaces/layout-data.interface';
   import GridItem from './GridItem.vue';
   import {
-    bottom,
     compactLayout,
     getLayoutItem,
-    moveElement,
-    validateLayout,
     cloneLayout,
-    getAllCollisions,
-    getStatics,
-    getFirstCollision,
+
+
   } from '@/core/helpers/utils';
-  import {
-    getBreakpointFromWidth,
-    getColsFromBreakpoint,
-    findOrGenerateResponsiveLayout,
-  } from '@/core/helpers/responsiveUtils';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
-  import { EGridLayoutEvent } from '@/core/enums/EGridLayoutEvents';
+  import { EGridLayoutEvent } from '@/core/gridlayout/enums/EGridLayoutEvents';
   import {IBreakpoints, IColumns, IGridLayoutProps} from './grid-layout-props.interface';
-  import { IEventsData } from '@/core/interfaces/eventBus.interfaces';
-  import {EDragEvent} from "@/core/enums/EDragEvent";
+  import { IEventsData } from '@/core/common/interfaces/eventBus.interfaces';
+  import {EDragEvent} from "@/core/gridlayout/enums/EDragEvent";
+  import {getBreakpointFromWidth, getColsFromBreakpoint} from "@/core/common/helpers/breakpointsHelper";
+  import {findOrGenerateResponsiveLayout} from "@/core/gridlayout/helpers/responsiveHelper";
+  import {getAllCollisions, getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
+  import {getBottomYCoordinate} from "@/core/gridlayout/helpers/gridLayoutHelper";
+  import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
+  import {moveElement} from "@/core/gridlayout/helpers/moveHelper";
+  import {layoutValidator} from "@/core/validators/layout-validator";
+  import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
 
   export interface IGridLayoutProps {
     autoSize?: boolean;
@@ -204,7 +203,7 @@ export default defineComponent({
     if(!props.autoSize) {
       return ``;
     }
-    return `${bottom(props.layout) * (props.rowHeight + props.margin[1]) + props.margin[1]}px`;
+    return `${getBottomYCoordinate(props.layout) * (props.rowHeight + props.margin[1]) + props.margin[1]}px`;
   };
 
   const updateHeight = (): void => {
@@ -312,7 +311,7 @@ export default defineComponent({
       placeholder.value.w = w as number;
       placeholder.value.h = h as number;
 
-      const staticItem = getStatics(propsLayout.value);
+      const staticItem = getAllStaticGridItems(propsLayout.value);
       if(getFirstCollision(staticItem, {
         i: `index`,
         h: placeholder.value.h,
@@ -563,8 +562,10 @@ export default defineComponent({
   onMounted(() => {
     emit(EGridLayoutEvent.LAYOUT_MOUNTED, props.layout);
     nextTick(() => {
-      validateLayout(props.layout);
-
+      const valid = layoutValidator(props.layout);
+      if(!valid) {
+        throw new Error(ErrorMsg.INVALID_LAYOUT_VALIDATED);
+      }
       originalLayout.value = props.layout;
       nextTick(() => {
         initResponsiveFeatures();
