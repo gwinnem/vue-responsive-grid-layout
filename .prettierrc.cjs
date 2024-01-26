@@ -1,5 +1,5 @@
 {
-  "useTabs": false,
+  "useTabs": true,
   "tabWidth": 2,
   "semi": true,
   "singleQuote": true,
@@ -10,9 +10,12 @@
   "printWidth": 120,
   "endOfLine": "auto",
   "vueIndentScriptAndStyle": true,
+  "bracketSpacing": false,
   "overrides": [
     {
-      "files": ["*.json"],
+      "files": [
+        "*.json"
+      ],
       "options": {
         "printWidth": 80
       }
