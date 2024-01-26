@@ -74,6 +74,10 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 ## Changelog
 
 
+### v: 1.2.8 (2024-01-25)
+* __Fixed Issue__ [Unexpected Behavior when dragging items](https://github.com/gwinnem/vue-responsive-grid-layout/issues/54) Tnxs to [T0miii](https://github.com/T0miii)
+
+
 ### v: 1.2.7 (2024-01-10)
 * __Fixed Issue__ [option "responsive" not working](https://github.com/gwinnem/vue-responsive-grid-layout/issues/51). Tnxs to [T0miii](https://github.com/T0miii)
 
