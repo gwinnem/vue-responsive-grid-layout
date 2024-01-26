@@ -1,4 +1,4 @@
-import { TLayout } from "../src/components/Grid/layout-definition";
+import {TLayout} from '@/components/Grid/layout-definition';
 
 export const testData: TLayout = [
   // test 1
@@ -100,3 +100,112 @@ export const testData: TLayout = [
   // { h: 2, i: 7, w: 2, x: 4, y: 1 },
   // { h: 2, i: 8, w: 2, x: 4, y: 3 },
 ];
+
+export const testDataOne: TLayout = [
+  // test 1
+  {
+    i: 1,
+    h: 2,
+    w: 1,
+    x: 0,
+    y: 0,
+  },
+  {
+    i: 2,
+    h: 2,
+    w: 1,
+    x: 1,
+    y: 0,
+  },
+  {
+    i: 3,
+    h: 2,
+    w: 1,
+    x: 2,
+    y: 0,
+    isStatic: true,
+  },
+  {
+    i: 4,
+    h: 2,
+    w: 1,
+    x: 3,
+    y: 0,
+  },
+  {
+    i: 5,
+    h: 2,
+    w: 1,
+    x: 4,
+    y: 0,
+  },
+  {
+    i: 6,
+    h: 2,
+    w: 1,
+    x: 5,
+    y: 0,
+  }
+]
+
+export const testDataThree = [
+  {
+    "name": "TaskOpener",
+    "widgetId": "taskopener-0",
+    "i": "0",
+    "x": 0,
+    "y": 0,
+    "w": 1,
+    "h": 3,
+    "collapsed": false,
+    "isResizable": false,
+    "moved": false
+  },
+  {
+    "name": "PostTask",
+    "widgetId": "posttask-1",
+    "i": "1",
+    "x": 0,
+    "y": 8,
+    "w": 1,
+    "h": 8,
+    "collapsed": false,
+    "moved": false,
+    "_h": 8
+  },
+  {
+    "i": "6",
+    "x": 0,
+    "y": 3,
+    "w": 1,
+    "h": 2,
+    "name": "CaseManager",
+    "widgetId": "casemanager-5",
+    "collapsed": true,
+    "moved": false,
+    "_h": 8
+  },
+  {
+    "i": "8",
+    "x": 0,
+    "y": 5,
+    "w": 1,
+    "h": 3,
+    "name": "CaseManager",
+    "widgetId": "casemanager-7",
+    "collapsed": true,
+    "_h": 8,
+    "moved": false
+  },
+  {
+    "i": "9",
+    "x": 0,
+    "y": 16,
+    "name": "AddWidget",
+    "widgetId": "addwidget",
+    "w": 1,
+    "h": 2,
+    "isResizable": false,
+    "moved": false
+  }
+]
