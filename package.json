@@ -62,7 +62,8 @@
     "url": "https://github.com/gwinnem/vue-responsive-grid-layout/issues"
   },
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
+    "coverage": "vitest run --coverage",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "commit": "cz",
     "commit:init": "commitizen init cz-conventional-changelog --save-dev --save-exact",
@@ -135,7 +136,7 @@
     "ttypescript": "^1.5.15",
     "typescript": "^4.9.3",
     "unplugin-vue-markdown": "^0.24.3",
-    "vite": "3.2.7",
+    "vite": "^3.0.0",
     "vite-plugin-dts": "^1.7.3",
     "vite-plugin-vue-markdown": "^0.22.2",
     "vitepress": "^1.0.0-alpha.45",
