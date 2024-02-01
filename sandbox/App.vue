@@ -226,7 +226,7 @@
 
 <script lang="ts" setup>
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, Ref, UnwrapRef} from 'vue';
-import {testData} from './test';
+import {testDataOne as testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
@@ -241,8 +241,8 @@ import {getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
 
 // Model for select dropdown.
 const updateSelected = (val: string[]): void => {
-  debugger;
-  console.error(val);
+  // debugger;
+  // console.error(val);
   if (val.length > 0 && val.includes('All')) {
     selected.value = ['All'];
   }
@@ -255,7 +255,7 @@ const hideDroppable = ref(true);
 
 const autoResizeGridLayout = ref(true);
 const borderRadiusPx = ref(8);
-const colNum = ref(6);
+const colNum = ref(8);
 const distributeEvenly = ref(true);
 const enableEditMode = ref(true);
 const horizontalShift = ref(true);
