@@ -123,7 +123,7 @@ export const testDataOne: TLayout = [
     w: 1,
     x: 2,
     y: 0,
-    isStatic: true,
+    isStatic: false,
   },
   {
     i: 4,
@@ -144,6 +144,20 @@ export const testDataOne: TLayout = [
     h: 2,
     w: 1,
     x: 5,
+    y: 0,
+  },
+  {
+    i: 7,
+    h: 2,
+    w: 1,
+    x: 6,
+    y: 0,
+  },
+  {
+    i: 8,
+    h: 2,
+    w: 1,
+    x: 7,
     y: 0,
   }
 ]
