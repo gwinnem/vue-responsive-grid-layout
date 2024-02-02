@@ -3,6 +3,7 @@ import {getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
 import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
 import {ITopLeftStyle, ITopRightStyle, ITransformStyle} from "@/core/common/interfaces/transformStyle.interfaces";
 import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
+import {sortLayoutItemsByRowCol} from "@/core/gridlayout/helpers/sortHelper";
 
 // Fast path to cloning, since this is monomorphic
 export function cloneLayoutItem(layoutItem: ILayoutItem): ILayoutItem {
@@ -17,27 +18,6 @@ export function cloneLayout(layout: TLayout): TLayout {
     return newLayout;
 }
 
-/**
- * Get layout items sorted from top left to right and down.
- *
- * @param  {TLayout} layout  Array of layout objects.
- * @return {TLayout}        Layout, sorted static items first.
- */
-export function sortLayoutItemsByRowCol(layout: TLayout): TLayout {
-    const a: ILayoutItem[] = [];
-    return a.concat(layout)
-        .sort((itemA, itemB) => {
-            if (itemA.y === itemB.y && itemA.x === itemB.x) {
-                return 0;
-            }
-
-            if (itemA.y > itemB.y || (itemA.y === itemB.y && itemA.x > itemB.x)) {
-                return 1;
-            }
-
-            return -1;
-        });
-}
 
 /**
  * Compact a GridItem in the layout.

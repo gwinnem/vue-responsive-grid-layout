@@ -49,8 +49,7 @@ export function getAllCollisions(layout: TLayout, layoutItem: ILayoutItem): ILay
 export function getFirstCollision(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem | undefined {
 
   if(layout === undefined || layout.length === 0 || layoutItem === undefined) {
-    debugger;
-    throw new Error(ErrorMsg.INVALID_PARAMS);
+    return undefined;
   }
 
   // if layout doesnt have static item it will cause error

@@ -18,9 +18,14 @@ export function correctBounds(layout: TLayout, bounds: { cols: number }, distrib
     // move static item first
     // try not move their y
     while (staticItem[i].x + staticItem[i].w > bounds.cols || getFirstCollision(staticItem, staticItem[i])) {
+      if(staticItem[i].x <= 0) {
+        // Can not move the item more than to position 0 on x-axis.
+      }
+      // Moving to the left
       staticItem[i].x -= 1;
     }
   }
+
   for (let i = 0, len = layout.length; i < len; i++) {
     const l = layout[i];
 

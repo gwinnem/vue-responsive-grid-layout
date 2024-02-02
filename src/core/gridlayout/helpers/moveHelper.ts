@@ -1,9 +1,9 @@
 import {getAllCollisions, getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
 import {ILayoutItem, TLayout} from "@/components";
 import {EMovingDirections} from "@/core/common/enums/EMovingDirections";
-import {sortLayoutItemsByRowCol} from "@/core/helpers/utils";
 import {TMovingDirection} from "@/core/common/types/TMovingDirections";
 import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
+import {sortLayoutItemsByRowCol} from "@/core/gridlayout/helpers/sortHelper";
 
 
 
