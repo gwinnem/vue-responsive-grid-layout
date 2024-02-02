@@ -74,6 +74,10 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 ## Changelog
 
 
+### v: 1.2.9 (2024-02-03)
+* __Fixed Issue__ [Dynamic change columns, item will overlap](https://github.com/gwinnem/vue-responsive-grid-layout/issues/12)
+
+
 ### v: 1.2.8 (2024-01-25)
 * __Fixed Issue__ [Unexpected Behavior when dragging items](https://github.com/gwinnem/vue-responsive-grid-layout/issues/54) Tnxs to [T0miii](https://github.com/T0miii)
 
