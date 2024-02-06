@@ -226,7 +226,7 @@
 
 <script lang="ts" setup>
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, Ref, UnwrapRef} from 'vue';
-import {testDataOne as testData} from './test';
+import {testDataTwo as testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
 import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
