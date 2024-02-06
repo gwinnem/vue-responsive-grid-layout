@@ -74,6 +74,10 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 ## Changelog
 
 
+### v: 1.2.10 (2024-02-xx)
+* __Demo App__ [Eventlog is not displaying any resize events.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/46)
+
+
 ### v: 1.2.9 (2024-02-03)
 * __Fixed Issue__ [Dynamic change columns, item will overlap](https://github.com/gwinnem/vue-responsive-grid-layout/issues/12)
 

@@ -531,14 +531,14 @@ const movedEvent = (i: number | string, newX: number, newY: number): void => {
 };
 
 const onResizeEndEvent = (i: number | string, newX: number, newY: number): void => {
-  if (selected.value.includes('resizedEvent') || selected.value.includes('All')) {
-    publishToEventLog(i, 'resizedEvent', newX, newY);
+  if (selected.value.includes('resizedEndEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'Resize End', newX, newY);
   }
 };
 
 const onResizeStartEvent = (i: number | string, newX: number, newY: number): void => {
-  if (selected.value.includes('resizeEvent') || selected.value.includes('All')) {
-    publishToEventLog(i, 'resizeEvent', newX, newY);
+  if (selected.value.includes('resizeStartEvent') || selected.value.includes('All')) {
+    publishToEventLog(i, 'Resize start', newX, newY);
   }
 };
 

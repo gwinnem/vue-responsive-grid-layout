@@ -245,15 +245,6 @@ const classObj = computed(() => {
   };
 });
 
-// TODO Maybe reuse this for the isMirrored change prop
-// Helper for generating the correct css class for resizing a GridItem
-// const resizableHandleClass = computed(() => {
-//   if(renderRtl.value) {
-//     return `vue-resizable-handle vue-rtl-resizable-handle`;
-//   }
-//   return `vue-resizable-handle`;
-// });
-
 /**
  * Translate x and y coordinates from pixels to grid units.
  * @param  {Number} top  Top position (relative to parent) in pixels.
@@ -573,7 +564,7 @@ let edges: IInteractEdges = {
 };
 
 const handleResize = (event: MouseEvent): void => {
-  if (props.isStatic || !props.enableEditMode) {
+  if (props.isStatic || !props.enableEditMode && props.isResizable) {
     return;
   }
   // Get the current drag point from the event. This is used as the offset.
@@ -594,6 +585,8 @@ const handleResize = (event: MouseEvent): void => {
   switch (event.type) {
     case `resizestart`: {
       tryMakeResizable();
+      // (e: EGridItemEvent.RESIZE, i: number | string, h: number, w: number, height: number, width: number): void;
+      emit(EGridItemEvent.RESIZE, props.i, innerH.value, innerW.value, innerH.value, innerW.value);
       previousW.value = innerW.value;
       previousH.value = innerH.value;
       pos = calcPosition(innerX.value, innerY.value, innerW.value, innerH.value);
@@ -601,7 +594,6 @@ const handleResize = (event: MouseEvent): void => {
       newSize.height = pos.height;
       resizing.value = newSize;
       isResizing.value = true;
-      // console.log(`START => innerX: ${innerX.value} innerY: ${innerY.value} 'innerW:'${innerW.value} innerH:${innerH.value} pos: ${JSON.stringify(pos)}`);
       // TODO strongly type event.edges
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
