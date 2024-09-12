@@ -1,5 +1,8 @@
 # GridItem VUE  Events
 
+See https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/src/core/griditem/enums/EGridItemEvents.ts for a list of defined emit events.
+And See https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/src/components/Grid/GridItem.vue#L108-L117 for updated event definitions
+
 ## container-resized
 Container Resized event
 
@@ -12,9 +15,27 @@ containerResizedEvent: function(i, newH, newW, newHPx, newWPx): void {
 ``` 
 
 
-## drag-event
+## drag
 
-## move
+Every time an item is being dragged
+
+```typescript
+dragEvent: function(i, h, w, height, width): void {
+    console.log("DRAG i=" + i + ", h=" + h + ", w=" + w + ", height=" + height + ", width=" + width);
+}
+```
+
+## dragged
+
+Every time an item is finished being dragged
+
+```typescript
+dragEvent: function(i, h, w, height, width): void {
+    console.log("DRAGGED i=" + i + ", h=" + h + ", w=" + w + ", height=" + height + ", width=" + width);
+}
+```
+
+## item-move
 Move event
 
 Every time an item is being moved and changes position
@@ -25,7 +46,7 @@ moveEvent: function(i, newX, newY): void {
 }
 ```
 
-## moved
+## item-moved
 Moved event
 
 Every time an item is finished being moved and changes position
@@ -38,7 +59,13 @@ movedEvent: function(i, newX, newY): void {
 
 
 ## remove-grid-item
-Fired when a GridItem's close button is clicked.
+Emitted when the user clicks the close button in a `GridItem`.
+
+```typescript
+const closeClicked = (id: number): void => {
+  emit(`remove-grid-item`, id);
+};
+```
 
 
 ## resize
@@ -53,16 +80,13 @@ resizeEvent: function(i, newH, newW, newHPx, newWPx): void {
 ``` 
 
 
-## remove-grid-item
-Emitted when the user clicks the close button in a `GridItem`.
-
-```typescript
-const closeClicked = (id: number): void => {
-  emit(`remove-grid-item`, id);
-};
-```
-
-
 ## resized
 
-## resize-event(??)
+Every time an item is finished being resized and changes size
+
+```typescript
+resizeEvent: function(i, newH, newW, newHPx, newWPx): void {
+    console.log("RESIZED i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
+}
+``` 
+
