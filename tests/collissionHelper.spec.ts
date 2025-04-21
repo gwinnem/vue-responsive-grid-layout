@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import {describe, expect, it} from 'vitest';
-import {collides, getAllCollisions, getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
-import {ILayoutItem} from "@/components/Grid/layout-definition";
-import {ErrorMsg} from "../src/core/common/enums/ErrorMessages";
+import { describe, expect, it } from 'vitest';
+import { collides, getAllCollisions, getFirstCollision } from "@/core/gridlayout/helpers/collissionHelper";
+import { ILayoutItem } from "@/components/Grid/layout-definition";
+import { ErrorMsg } from "../src/core/common/enums/ErrorMessages";
 
 const l1: ILayoutItem = {
   i: 0,
@@ -29,10 +29,43 @@ const l3: ILayoutItem = {
   y: 0,
 }
 
+const l4: ILayoutItem = {
+  i: 1,
+  h: 1,
+  w: 1,
+  x: 1,
+  y: 2,
+}
+
+const l5: ILayoutItem = {
+  i: 1,
+  h: 2,
+  w: 2,
+  x: 1,
+  y: 2,
+}
+
 describe(`collides`, () => {
 
   it(`Should throw an error when passed empty values`, () => {
-    expect(() => collides()).toThrowError('Invalid parameter values');
+    expect(() => collides()).toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
+
+
+  it(`Should throw an error when first layout item is undefined`, () => {
+    expect(() => collides(undefined, l2)).toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
+
+  it(`Should throw an error when second layout item is undefined`, () => {
+    expect(() => collides(l1, undefined)).toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
+
+  it(`Should throw an error when first layout item is null`, () => {
+    expect(() => collides(null, l2)).toThrowError(ErrorMsg.INVALID_PARAMS);
+  });
+
+  it(`Should throw an error when second layout item is null`, () => {
+    expect(() => collides(l1, null)).toThrowError(ErrorMsg.INVALID_PARAMS);
   });
 
   it(`Should return false when the same GridItem is passed as parameters`, () => {
@@ -40,13 +73,44 @@ describe(`collides`, () => {
     expect(result).toBe(false);
   });
 
-  it(`Should return false when the GridItems are not colliding`, () => {
+  if('Should return false when l1 is left of l2', () => {
     const result = collides(l1, l3);
     expect(result).toBe(false);
   });
 
-  it(`Should return true when there is a collision between the GridItems`, () => {
-    const result = collides(l1, l2);
+  it(`Should return false when l1 is right of l2`, () => {
+    const result = collides(l3, l1);
+    expect(result).toBe(false);
+  });
+
+  it(`Should return false when l1 is above l2`, () => {
+    // l1.y + l1.h <= l2.y
+    const la: ILayoutItem = {
+      i: 1,
+      h: 1,
+      w: 1,
+      x: 1,
+      y: 0,
+    }
+
+    const lb: ILayoutItem = {
+      i: 1,
+      h: 1,
+      w: 1,
+      x: 0,
+      y: 3,
+    }
+    const result = collides(lb, la);
+    expect(result).toBe(false);
+  });
+
+  it(`Should return false when l1 is below l2`, () => {
+    const result = collides(l2, l4);
+    expect(result).toBe(false);
+  });
+
+  it(`Should return true when items overlap`, () => {
+    const result = collides(l5, l4);
     expect(result).toBe(true);
   });
 });

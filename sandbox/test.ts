@@ -164,12 +164,12 @@ export const testDataOne: TLayout = [
 
 export const testDataTwo: TLayout = [
   {
-    i: 1,
+    i: 'test',
     h: 2,
     w: 1,
     x: 2,
     y: 0,
-    isDraggable: false,
+    isDraggable: true,
     isResizable: true,
   },
 ]

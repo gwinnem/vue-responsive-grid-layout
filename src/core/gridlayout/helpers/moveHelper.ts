@@ -1,9 +1,9 @@
-import {getAllCollisions, getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
-import {ILayoutItem, TLayout} from "@/components";
-import {EMovingDirections} from "@/core/common/enums/EMovingDirections";
-import {TMovingDirection} from "@/core/common/types/TMovingDirections";
-import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
-import {sortLayoutItemsByRowCol} from "@/core/gridlayout/helpers/sortHelper";
+import { getAllCollisions, getFirstCollision } from "@/core/gridlayout/helpers/collissionHelper";
+import { ILayoutItem, TLayout } from "@/components";
+import { EMovingDirections } from "@/core/common/enums/EMovingDirections";
+import { TMovingDirection } from "@/core/common/types/TMovingDirections";
+import { ErrorMsg } from "@/core/common/enums/ErrorMessages";
+import { sortLayoutItemsByRowCol } from "@/core/gridlayout/helpers/sortHelper";
 
 
 
@@ -16,11 +16,11 @@ import {sortLayoutItemsByRowCol} from "@/core/gridlayout/helpers/sortHelper";
  */
 export const moveToCorrectPlace = (layoutItem: ILayoutItem, bounds: { cols: number }, staticItems: ILayoutItem[]): void => {
   // @ts-ignore
-  if(layoutItem == {} as ILayoutItem) {
+  if (layoutItem == {} as ILayoutItem || layoutItem == null) {
     throw new Error(ErrorMsg.INVALID_LAYOUT_ITEM);
   }
 
-  if(bounds.cols < 1) {
+  if (bounds.cols < 1) {
     throw new Error(ErrorMsg.INVALID_BOUNDS);
   }
 
@@ -61,11 +61,11 @@ export function moveElement(
   horizontalShift: boolean,
   preventCollision?: boolean,
 ): TLayout {
-  if(l.isStatic) {
+  if (l.isStatic) {
     return layout;
   }
 
-  if(x < 0 || y < 0) {
+  if (x < 0 || y < 0) {
     throw new Error(ErrorMsg.INVALID_PARAMS)
   }
   // Short-circuit if nothing to do.
@@ -91,13 +91,13 @@ export function moveElement(
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout);
 
-  if(moving.UP) {
+  if (moving.UP) {
     sorted = sorted.reverse();
   }
 
   const collisions = getAllCollisions(sorted, l);
 
-  if(preventCollision && collisions.length) {
+  if (preventCollision && collisions.length) {
     l.x = oldX;
     l.y = oldY;
     l.moved = false;
@@ -105,23 +105,23 @@ export function moveElement(
   }
 
   // Move each item that collides away from this element.
-  for(let i = 0, len = collisions.length; i < len; i++) {
+  for (let i = 0, len = collisions.length; i < len; i++) {
     const collision = collisions[i];
 
     // Short circuit so we can't loop infinite
-    if(collision.moved) {
+    if (collision.moved) {
       continue;
     }
 
     // This makes it feel a bit more precise by waiting to swap for just a bit when moving up.
-    if(l.y > collision.y && l.y - collision.y > collision.h / 4) {
+    if (l.y > collision.y && l.y - collision.y > collision.h / 4) {
       continue;
     }
 
     const movingDirection = (Object.keys(moving) as EMovingDirections[]).filter(k => moving[k])?.[0];
 
     // Don't move static items - we have to move *this* element away
-    if(collision.isStatic) {
+    if (collision.isStatic) {
       // eslint-disable-next-line no-use-before-define
       layout = moveElementAwayFromCollision(layout, collision, l, isUserAction, movingDirection, horizontalShift);
     } else {
@@ -157,7 +157,7 @@ export function moveElementAwayFromCollision(
   // If there is enough space above the collision to put this element, move it there.
   // We only do this on the main collision as this can get funky in cascades and cause
   // unwanted swapping behavior.
-  if(isUserAction) {
+  if (isUserAction) {
     // Make a mock item, so we don't modify the item here, only modify in moveElement.
     const fakeItem: ILayoutItem = {
       h: itemToMove.h,
@@ -169,7 +169,7 @@ export function moveElementAwayFromCollision(
 
     fakeItem.y = Math.max(collidesWith.y - itemToMove.h, 0);
 
-    if(!getFirstCollision(layout, fakeItem)) {
+    if (!getFirstCollision(layout, fakeItem)) {
       return moveElement(layout, itemToMove, fakeItem.x, fakeItem.y, isUserAction, horizontalShift, preventCollision);
     }
   }
@@ -185,10 +185,10 @@ export function moveElementAwayFromCollision(
     [EMovingDirections.DOWN]: [itemToMove.x, itemToMove.y - collidesWith.h],
   };
 
-  if(horizontalShift) {
+  if (horizontalShift) {
     const horizontalDirection = movingDirection === EMovingDirections.LEFT || movingDirection === EMovingDirections.RIGHT;
 
-    if(movingDirection in movingCordsData && !(horizontalDirection && collidesWith.w < itemToMove.w && collidesWith.x !== itemToMove.x)) {
+    if (movingDirection in movingCordsData && !(horizontalDirection && collidesWith.w < itemToMove.w && collidesWith.x !== itemToMove.x)) {
       const [x, y] = movingCordsData[movingDirection];
 
       movingCordsData.$default.x = x;

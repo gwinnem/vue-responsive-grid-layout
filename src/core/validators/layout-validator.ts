@@ -19,7 +19,7 @@ export const layoutValidatorPayload = {
         y: 0,
     },
     invalidRequiredLayout: {
-        h: 0, i: 1, w: 0, x: 0, y: `0`,
+        h: 0, i: 1, w: 0, x: 0, y: "a",
     },
     validOptionalLayout: {
         h: 1,
@@ -41,8 +41,13 @@ export const layoutValidatorPayload = {
     },
 };
 
+/**
+ * Validates that a layout is valid.
+ * @param layout 
+ * @returns True if layout is valid
+ */
 export const layoutValidator = (layout: TLayout): boolean => {
-    if (layout.length === 0) {
+    if (layout === undefined || layout.length === 0) {
         throw new Error(ErrorMsg.INVALID_LAYOUT);
     }
 

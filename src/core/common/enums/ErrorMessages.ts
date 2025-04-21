@@ -8,6 +8,7 @@ export enum ErrorMsg {
   INVALID_GRID_UNITS = 'Invalid gridUnits parameter passed',
   INVALID_LAYOUT = 'Invalid parameter layout passed',
   INVALID_LAYOUT_ITEM = 'Invalid parameter layoutItem passed',
+  INVALID_LAYOUT_ITEM_ID = 'Invalid parameter layoutItem id',
   INVALID_LAYOUT_VALIDATED = 'Layout is not valid',
   INVALID_MARGIN = 'Invalid marginPx parameter passed',
   INVALID_MARGIN_LEFT_RIGHT = 'Invalid parameter marginLeftRight passed',
