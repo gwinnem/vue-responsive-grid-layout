@@ -4,8 +4,13 @@ import { layoutValidator, layoutValidatorPayload } from '../src/core/validators/
 import { ErrorMsg } from '../src/core/common/enums/ErrorMessages';
 
 describe(`layoutValidator`, () => {
-  const { invalidOptionalLayout, invalidRequiredLayout, validRequiredLayout, validOptionalLayout } =
-    layoutValidatorPayload;
+  const {
+    invalidOptionalLayout,
+    invalidRequiredLayout,
+    invalidRequiredLayoutTwo,
+    validRequiredLayout,
+    validOptionalLayout,
+  } = layoutValidatorPayload;
 
   it(`Should throw error when layout is undefined`, () => {
     expect(() => layoutValidator([])).toThrow(ErrorMsg.INVALID_LAYOUT);
@@ -25,6 +30,13 @@ describe(`layoutValidator`, () => {
 
   //   expect(result).toBe(false);
   // });
+
+  it(`Should return false When layout with required keys is invalid`, () => {
+    const data = Array.from({ length: 5 }, () => invalidRequiredLayoutTwo);
+    const result = layoutValidator(data);
+
+    expect(result).toBe(false);
+  });
 
   it(`When layout with required and optional keys is valid`, () => {
     const result = layoutValidator([validRequiredLayout, validOptionalLayout]);

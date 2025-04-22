@@ -76,6 +76,7 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 
 ### v: 1.2.10 (2024-02-xx)
 * __Demo App__ [Eventlog is not displaying any resize events.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/46)
+* __Fixed Issue__ [The margin property cannot be [0,0]](https://github.com/gwinnem/vue-responsive-grid-layout/issues/64)
 
 
 ### v: 1.2.9 (2024-02-03)

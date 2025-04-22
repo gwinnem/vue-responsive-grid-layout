@@ -354,7 +354,10 @@ const resizeEvent = (
   h?: number,
   w?: number,
 ): void => {
-  let l = getLayoutItem(props.layout, id);
+  let l = undefined;
+  if(id !== undefined) {
+    getLayoutItem(props.layout, id);
+  }
   // getLayoutItem sometimes return null object
   if (l === undefined) {
     l = {

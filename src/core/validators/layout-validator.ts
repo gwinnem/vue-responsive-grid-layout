@@ -21,6 +21,9 @@ export const layoutValidatorPayload = {
     invalidRequiredLayout: {
         h: 0, i: 1, w: 0, x: 0, y: "a",
     },
+    invalidRequiredLayoutTwo: {
+        h: 0, i: 1, w: 0, x: 0,
+    },
     validOptionalLayout: {
         h: 1,
         i: 0,
