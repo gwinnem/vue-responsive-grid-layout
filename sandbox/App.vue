@@ -226,13 +226,13 @@
 
 <script lang="ts" setup>
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, Ref, UnwrapRef} from 'vue';
-import {testDataTwo as testData} from './test';
+import {testData as testData} from './test';
 import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
-import {ILayoutItem, TLayout} from "@/components/Grid/layout-definition";
+import {ILayoutItem, TLayout} from "../src/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
-import {getAllStaticGridItems} from "@/core/common/helpers/gridIemTypeHelpers";
-import {getFirstCollision} from "@/core/gridlayout/helpers/collissionHelper";
+import {getAllStaticGridItems} from "../src/core/common/helpers/gridIemTypeHelpers";
+import {getFirstCollision} from "../src/core/gridlayout/helpers/collissionHelper";
 
 /**
  * Removing all selected items in dropdown if All is selected
