@@ -103,8 +103,11 @@ export function getLayoutItem(layout: TLayout, id: string | number | undefined):
   if (layout === undefined) {
     throw new Error(ErrorMsg.INVALID_LAYOUT);
   }
-
-  if (id === undefined || id === null || id.toString().trim().length === 0 || parseInt(id.toString()) < 0) {
+  if (id === undefined) {
+    return undefined;
+  }
+  
+  if (id === null || id.toString().trim().length === 0 || parseInt(id.toString()) < 0) {
     throw new Error(ErrorMsg.INVALID_LAYOUT_ITEM_ID);
   }
 
