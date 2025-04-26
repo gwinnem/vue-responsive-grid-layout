@@ -1,5 +1,5 @@
-import {ILayoutItem, TLayout} from "@/components";
-import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
+import { ILayoutItem, TLayout } from '@/components';
+import { ErrorMsg } from '@/core/common/enums/ErrorMessages';
 
 /**
  * Given two layout items, check if they collide.
@@ -7,7 +7,7 @@ import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
  * @return {Boolean}   True if colliding.
  */
 export function collides(l1: ILayoutItem, l2: ILayoutItem): boolean {
-  if(l1 === undefined || l2 === undefined) {
+  if (l1 === null || l2 === null || l1 === undefined || l2 === undefined) {
     throw new Error(ErrorMsg.INVALID_PARAMS);
   }
 
@@ -30,10 +30,10 @@ export function collides(l1: ILayoutItem, l2: ILayoutItem): boolean {
  * @throws {Error}                  Empty layout.
  */
 export function getAllCollisions(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem[] {
-  if(layout === undefined || layout.length === 0 || layoutItem === undefined) {
+  if (layout === undefined || layout.length === 0 || layoutItem === undefined) {
     throw new Error(ErrorMsg.INVALID_PARAMS);
   }
-  return layout.filter(l => collides(l, layoutItem));
+  return layout.filter((l) => collides(l, layoutItem));
 }
 
 /**
@@ -47,8 +47,7 @@ export function getAllCollisions(layout: TLayout, layoutItem: ILayoutItem): ILay
  * @throws {Error}                  Empty layout.
  */
 export function getFirstCollision(layout: TLayout, layoutItem: ILayoutItem): ILayoutItem | undefined {
-
-  if(layout === undefined || layout.length === 0 || layoutItem === undefined) {
+  if (layout === undefined || layout.length === 0 || layoutItem === undefined) {
     return undefined;
   }
 

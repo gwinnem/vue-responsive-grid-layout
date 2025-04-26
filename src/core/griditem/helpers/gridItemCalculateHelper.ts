@@ -1,4 +1,4 @@
-import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
+import { ErrorMsg } from '@/core/common/enums/ErrorMessages';
 
 // Similar to _.clamp from lodash.
 export const clamp = (num: number, lowerBound: number, upperBound: number): number => {
@@ -45,7 +45,7 @@ export const calcColWidth = (containerWidth: number, marginLeftRight: number, co
     throw new Error(ErrorMsg.INVALID_PARAM_CONTAINER_WIDTH);
   }
 
-  if (marginLeftRight < 1) {
+  if (marginLeftRight < 0) {
     throw new Error(ErrorMsg.INVALID_MARGIN_LEFT_RIGHT);
   }
 

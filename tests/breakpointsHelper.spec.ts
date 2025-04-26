@@ -21,7 +21,7 @@ const breakpoints: IBreakpoints = {
   xxs: 0,
 };
 
-describe(`sortBreakpoints tests`, () => {
+describe(`sortBreakpoints`, () => {
   it(`Breakpoints are sorted correctly`, () => {
     const sortedBreakPoints = sortBreakpoints(breakpoints);
     const resultBreakPoints = [
@@ -70,9 +70,9 @@ describe(`sortBreakpoints tests`, () => {
   });
 });
 
-describe(`getBreakpointFromWidth tests`, () => {
+describe(`getBreakpointFromWidth`, () => {
   it('Should throw error when no breakpoint is passed', () => {
-    expect(() => getBreakpointFromWidth([], 1200)).toThrowError(ErrorMsg.INVALID_BREAKPOINT);
+    expect(() => getBreakpointFromWidth({}, 1200)).toThrowError(ErrorMsg.INVALID_BREAKPOINT);
   });
 
   it(`Correct Breakpoint is returned 1500 = xl`, () => {

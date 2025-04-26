@@ -101,13 +101,25 @@ export function getLayoutItem(
 ): ILayoutItem | undefined {
     if (layout === undefined) {
         throw new Error(ErrorMsg.INVALID_LAYOUT);
-    }
-    for (let i = 0, len = layout.length; i < len; i++) {
-        if (layout[i].i === id) {
+      }
+    
+      if (id === undefined || id === null || id.toString().trim().length === 0 || parseInt(id.toString()) < 0) {
+        throw new Error(ErrorMsg.INVALID_LAYOUT_ITEM_ID);
+      }
+    
+      for (let i = 0, len = layout.length; i < len; i++) {
+        if (typeof id === 'string') {
+          if (layout[i].i.toString().toLowerCase() === id.toString().toLowerCase()) {
             return layout[i];
+          }
+        } else if (typeof id === 'number') {
+          if (layout[i].i === id) {
+            return layout[i];
+          }
         }
-    }
-    return undefined;
+      }
+    
+      return undefined;
 }
 
 /**
