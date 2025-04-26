@@ -10,7 +10,7 @@
     "isolatedModules": false,
     "jsx": "preserve",
     "lib": [
-      "es6",
+      "es2022",
       "dom",
       "dom.iterable",
       "scripthost",

@@ -1,6 +1,6 @@
-import {TBreakpoint, TBreakpoints} from "@/components/Grid/layout-definition";
-import {IColumns} from "@/components/Grid/grid-layout-props.interface";
-import {ErrorMsg} from "@/core/common/enums/ErrorMessages";
+import { TBreakpoint, TBreakpoints } from '@/components/Grid/layout-definition';
+import { IColumns } from '@/components/Grid/grid-layout-props.interface';
+import { ErrorMsg } from '@/core/common/enums/ErrorMessages';
 
 /**
  * Given breakpoints, return an array of breakpoints sorted by width. This is usually
@@ -21,6 +21,21 @@ export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpoint[] => {
   });
 };
 
+const isBreakPointDefined = (breakpoints: TBreakpoints): boolean => {
+  if (
+    Object.hasOwn(breakpoints, 'xxl') &&
+    Object.hasOwn(breakpoints, 'xl') &&
+    Object.hasOwn(breakpoints, 'lg') &&
+    Object.hasOwn(breakpoints, 'md') &&
+    Object.hasOwn(breakpoints, 'sm') &&
+    Object.hasOwn(breakpoints, 'xs') &&
+    Object.hasOwn(breakpoints, 'xxs')
+  ) {
+    return true;
+  }
+  return false;
+};
+
 /**
  * Given a width, find the highest breakpoint that matches is valid for it (width > breakpoint).
  *
@@ -30,12 +45,12 @@ export const sortBreakpoints = (breakpoints: TBreakpoints): TBreakpoint[] => {
  * @throws {Error}                    Invalid width. Must be greater or equal 0
  */
 export const getBreakpointFromWidth = (breakpoints: TBreakpoints, width: number): TBreakpoint => {
-  if (width < 0) {
-    throw new Error(ErrorMsg.INVALID_WIDTH);
+  if (!isBreakPointDefined(breakpoints)) {
+    throw new Error(ErrorMsg.INVALID_BREAKPOINT);
   }
 
-  if (!breakpoints) {
-    throw new Error(ErrorMsg.INVALID_BREAKPOINT);
+  if (width < 0) {
+    throw new Error(ErrorMsg.INVALID_WIDTH);
   }
 
   const sortedBreakpoints = sortBreakpoints(breakpoints);

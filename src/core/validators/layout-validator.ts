@@ -55,6 +55,11 @@ export const layoutValidatorPayload = {
   },
 };
 
+/**
+ * Validates that a layout is valid.
+ * @param layout 
+ * @returns True if layout is valid
+ */
 export const layoutValidator = (layout: TLayout): boolean => {
   if (layout.length === 0 || layout === ([] as TLayout)) {
     throw new Error(ErrorMsg.INVALID_LAYOUT);

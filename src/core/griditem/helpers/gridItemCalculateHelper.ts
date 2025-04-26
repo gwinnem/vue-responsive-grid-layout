@@ -23,7 +23,7 @@ export const calcGridItemWH = (gridUnits: number, colOrRowSize: number, marginPx
     throw new Error(ErrorMsg.INVALID_COL_OR_ROW_SIZE);
   }
 
-  if (marginPx < 1) {
+  if (marginPx < 0) {
     throw new Error(ErrorMsg.INVALID_MARGIN);
   }
 
@@ -53,5 +53,8 @@ export const calcColWidth = (containerWidth: number, marginLeftRight: number, co
     throw new Error(ErrorMsg.INVALID_COLUMNS);
   }
 
+  // if(marginLeftRight === 0){
+  //   return (containerWidth * (cols + 1)) / cols;
+  // }
   return (containerWidth - marginLeftRight * (cols + 1)) / cols;
 };

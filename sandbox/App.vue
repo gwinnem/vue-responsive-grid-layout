@@ -241,8 +241,6 @@ import {getFirstCollision} from "../src/core/gridlayout/helpers/collissionHelper
 
 // Model for select dropdown.
 const updateSelected = (val: string[]): void => {
-  // debugger;
-  // console.error(val);
   if (val.length > 0 && val.includes('All')) {
     selected.value = ['All'];
   }
@@ -264,8 +262,8 @@ const isDraggable = ref(true);
 const isMirrored = ref(false);
 const isResizable = ref(true);
 const isResponsive = ref(true);
-const marginLeftRight = ref(10);
-const marginTopBottom = ref(10);
+const marginLeftRight = ref(0);
+const marginTopBottom = ref(0);
 const maxRows = ref(10);
 const preserveAspectRatio = ref(false);
 const preventCollision = ref(false);
@@ -298,14 +296,14 @@ const onMaxRowsChange = (): void => {
 };
 
 const onMarginTopBottomChange = (): void => {
-  if (marginTopBottom.value < 1) {
-    marginTopBottom.value = 1;
+  if (marginTopBottom.value < 0) {
+    marginTopBottom.value = 0;
   }
 };
 
 const onMarginLeftRightChange = (): void => {
-  if (marginLeftRight.value < 1) {
-    marginLeftRight.value = 1;
+  if (marginLeftRight.value < 0) {
+    marginLeftRight.value = 0;
   }
 };
 

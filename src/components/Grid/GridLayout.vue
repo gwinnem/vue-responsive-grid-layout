@@ -3,7 +3,10 @@
     ref="refsLayout"
     class="vue-grid-layout"
     :class="{ grid: props.showGridLines }"
+    :class="{ grid: props.showGridLines }"
     :dir="props.isMirrored ? 'rtl' : 'ltr'"
+    :style="mergeStyle"
+  >
     :style="mergeStyle"
   >
     <slot></slot>
@@ -17,6 +20,8 @@
       :use-border-radius="useBorderRadius"
       :w="placeholder.w"
       :x="placeholder.x"
+      :y="placeholder.y"
+    />
       :y="placeholder.y"
     />
   </div>
@@ -34,7 +39,20 @@
     toRef,
     watch,
   } from 'vue';
+  import {
+    computed,
+    defineComponent,
+    nextTick,
+    onBeforeMount,
+    onBeforeUnmount,
+    onMounted,
+    provide,
+    ref,
+    toRef,
+    watch,
+  } from 'vue';
 
+  export default defineComponent({
   export default defineComponent({
     name: `GridLayout`,
   });
@@ -46,10 +64,21 @@
   import { IPlaceholder } from '@/core/gridlayout/interfaces/layout-data.interface';
   import GridItem from './GridItem.vue';
   import { compactLayout, getLayoutItem, cloneLayout } from '@/core/helpers/utils';
+  import { compactLayout, getLayoutItem, cloneLayout } from '@/core/helpers/utils';
   import { addWindowEventListener, removeWindowEventListener } from '@/core/helpers/DOM';
   import { EGridLayoutEvent } from '@/core/gridlayout/enums/EGridLayoutEvents';
   import { IBreakpoints, IColumns } from './grid-layout-props.interface';
+  import { IBreakpoints, IColumns } from './grid-layout-props.interface';
   import { IEventsData } from '@/core/common/interfaces/eventBus.interfaces';
+  import { EDragEvent } from '@/core/gridlayout/enums/EDragEvent';
+  import { getBreakpointFromWidth, getColsFromBreakpoint } from '@/core/common/helpers/breakpointsHelper';
+  import { findOrGenerateResponsiveLayout } from '@/core/gridlayout/helpers/responsiveHelper';
+  import { getAllCollisions, getFirstCollision } from '@/core/gridlayout/helpers/collissionHelper';
+  import { getBottomYCoordinate } from '@/core/gridlayout/helpers/gridLayoutHelper';
+  import { getAllStaticGridItems } from '@/core/common/helpers/gridIemTypeHelpers';
+  import { moveElement } from '@/core/gridlayout/helpers/moveHelper';
+  import { layoutValidator } from '@/core/validators/layout-validator';
+  import { ErrorMsg } from '@/core/common/enums/ErrorMessages';
   import { EDragEvent } from '@/core/gridlayout/enums/EDragEvent';
   import { getBreakpointFromWidth, getColsFromBreakpoint } from '@/core/common/helpers/breakpointsHelper';
   import { findOrGenerateResponsiveLayout } from '@/core/gridlayout/helpers/responsiveHelper';
@@ -196,6 +225,7 @@
 
   const containerHeight = (): string => {
     if (!props.autoSize) {
+    if (!props.autoSize) {
       return ``;
     }
     return `${getBottomYCoordinate(props.layout) * (props.rowHeight + props.margin[1]) + props.margin[1]}px`;
@@ -217,9 +247,11 @@
     let colsCompute = newCols;
     // max is colNum which is set by user
     if (colNum.value < colNumResponsive.value) {
+    if (colNum.value < colNumResponsive.value) {
       colsCompute = colNum.value;
     }
 
+    if (lastBreakpoint.value != null && !layouts.value[lastBreakpoint.value]) {
     if (lastBreakpoint.value != null && !layouts.value[lastBreakpoint.value]) {
       layouts.value[lastBreakpoint.value] = cloneLayout(props.layout);
     }
@@ -238,6 +270,7 @@
 
     layouts.value[newBreakpoint] = cloneLayout(layout);
 
+    if (lastBreakpoint.value !== newBreakpoint) {
     if (lastBreakpoint.value !== newBreakpoint) {
       emit(EGridLayoutEvent.BREAKPOINT_CHANGED, newBreakpoint, layout);
     }
@@ -264,11 +297,13 @@
 
     // GetLayoutItem sometimes returns null object
     if (l === undefined) {
+    if (l === undefined) {
       l = {
         x: 0,
         y: 0,
       } as ILayoutItem;
     }
+    if (eventName === 'dragstart' && !props.verticalCompact) {
     if (eventName === 'dragstart' && !props.verticalCompact) {
       // noinspection TypeScriptValidateTypes
       positionsBeforeDrag.value = props.layout.reduce(
@@ -300,6 +335,7 @@
     }
 
     if (eventName === EDragEvent.DRAG_MOVE || eventName === EDragEvent.DRAG_START) {
+    if (eventName === EDragEvent.DRAG_MOVE || eventName === EDragEvent.DRAG_START) {
       placeholder.value.i = id as string | number;
       placeholder.value.x = l.x as number;
       placeholder.value.y = l.y as number;
@@ -307,6 +343,15 @@
       placeholder.value.h = h as number;
 
       const staticItem = getAllStaticGridItems(propsLayout.value);
+      if (
+        getFirstCollision(staticItem, {
+          i: `index`,
+          h: placeholder.value.h,
+          w: placeholder.value.w,
+          x: placeholder.value.x,
+          y: placeholder.value.y,
+        }) === undefined
+      ) {
       if (
         getFirstCollision(staticItem, {
           i: `index`,
@@ -326,6 +371,7 @@
         });
       }
     } else {
+    } else {
       nextTick(() => {
         isDragging.value = false;
       });
@@ -341,8 +387,18 @@
       props.horizontalShift as boolean,
       props.preventCollision,
     );
+    const layout = moveElement(
+      props.layout,
+      l,
+      x as number,
+      y as number,
+      true,
+      props.horizontalShift as boolean,
+      props.preventCollision,
+    );
     emit(EGridLayoutEvent.LAYOUT_UPDATE, layout);
 
+    if (props.restoreOnDrag) {
     if (props.restoreOnDrag) {
       // Do not compact items more than in layout before drag
       // Set moved item as static to avoid to compact it
@@ -357,8 +413,10 @@
     eventBus.emit(`compact`);
     updateHeight();
     if (eventName !== undefined && eventName === EGridLayoutEvent.DRAG_END) {
+    if (eventName !== undefined && eventName === EGridLayoutEvent.DRAG_END) {
       positionsBeforeDrag.value = undefined;
       originalLayout.value = layout;
+      emit(EGridLayoutEvent.DRAG_END, 1);
       emit(EGridLayoutEvent.DRAG_END, 1);
       emit(EGridLayoutEvent.LAYOUT_UPDATED, layout);
     }
@@ -375,6 +433,7 @@
     let l = getLayoutItem(props.layout, id);
     // getLayoutItem sometimes return null object
     if (l === undefined) {
+    if (l === undefined) {
       l = {
         h: 0,
         w: 0,
@@ -384,14 +443,17 @@
     const internalH = Number(h);
     let hasCollisions;
     if (props.preventCollision) {
+    if (props.preventCollision) {
       const collisions = getAllCollisions(props.layout, {
         ...l,
         h: internalH,
         w: internalW,
       }).filter((layoutItem) => layoutItem.i !== l?.i);
+      }).filter((layoutItem) => layoutItem.i !== l?.i);
       hasCollisions = collisions.length > 0;
 
       // If we're colliding, we need adjust the placeholder.
+      if (hasCollisions) {
       if (hasCollisions) {
         // adjust w && h to maximum allowed space
         let leastX = Infinity;
@@ -399,19 +461,26 @@
         collisions.forEach((layoutItem) => {
           if (layoutItem.x > Number(l?.x)) leastX = Math.min(leastX, layoutItem.x);
           if (layoutItem.y > Number(l?.y)) leastY = Math.min(leastY, layoutItem.y);
+        collisions.forEach((layoutItem) => {
+          if (layoutItem.x > Number(l?.x)) leastX = Math.min(leastX, layoutItem.x);
+          if (layoutItem.y > Number(l?.y)) leastY = Math.min(leastY, layoutItem.y);
         });
 
+        if (Number.isFinite(leastX)) l.w = leastX - l.x;
+        if (Number.isFinite(leastY)) l.h = leastY - l.y;
         if (Number.isFinite(leastX)) l.w = leastX - l.x;
         if (Number.isFinite(leastY)) l.h = leastY - l.y;
       }
     }
 
     if (!hasCollisions) {
+    if (!hasCollisions) {
       // Set new width and height.
       l.w = internalW;
       l.h = internalH;
     }
 
+    if (eventName === `resizestart` || eventName === `resizemove`) {
     if (eventName === `resizestart` || eventName === `resizemove`) {
       placeholder.value.i = id as string | number;
       placeholder.value.x = x as number;
@@ -433,6 +502,7 @@
     updateHeight();
 
     if (eventName === `resizeend`) {
+    if (eventName === `resizeend`) {
       originalLayout.value = props.layout;
       emit(EGridLayoutEvent.LAYOUT_UPDATED, props.layout);
     }
@@ -441,8 +511,10 @@
   // Accessible references of functions for removing in beforeDestroy
   const resizeEventHandler = (data?: IEventsData): void => {
     if (!data) {
+    if (!data) {
       resizeEvent();
     } else {
+      const { eventType, i, x, y, h, w } = data;
       const { eventType, i, x, y, h, w } = data;
       resizeEvent(eventType, i, x, y, h, w);
     }
@@ -452,8 +524,10 @@
 
   const dragEventHandler = (data?: IEventsData): void => {
     if (!data) {
+    if (!data) {
       dragEvent();
     } else {
+      const { eventType, i, x, y, h, w } = data;
       const { eventType, i, x, y, h, w } = data;
       dragEvent(eventType, i, x, y, h, w);
     }
@@ -466,11 +540,15 @@
     // Find values that are in result1 but not in result2
     const uniqueResultOne = layout.filter((obj) => {
       return !orgLayout.some((obj2) => {
+    const uniqueResultOne = layout.filter((obj) => {
+      return !orgLayout.some((obj2) => {
         return obj.i === obj2.i;
       });
     });
 
     // Find values that are in result2 but not in result1
+    const uniqueResultTwo = orgLayout.filter((obj) => {
+      return !layout.some((obj2) => {
     const uniqueResultTwo = orgLayout.filter((obj) => {
       return !layout.some((obj2) => {
         return obj.i === obj2.i;
@@ -489,15 +567,22 @@
   const layoutUpdate = (): void => {
     if (originalLayout.value !== undefined && props.layout.length > 0) {
       if (!originalLayout.value) {
+    if (originalLayout.value !== undefined && props.layout.length > 0) {
+      if (!originalLayout.value) {
         return;
       }
       const tmpLayout = originalLayout.value as TLayout;
       if (props.layout.length !== originalLayout.value?.length) {
+      if (props.layout.length !== originalLayout.value?.length) {
         const diff = findDifference(props.layout, tmpLayout);
+        if (diff.length > 0) {
+          if (props.layout.length > tmpLayout.length) {
         if (diff.length > 0) {
           if (props.layout.length > tmpLayout.length) {
             originalLayout.value = tmpLayout.concat(diff);
           } else {
+            originalLayout.value = tmpLayout.filter((obj) => {
+              return !diff.some((obj2) => {
             originalLayout.value = tmpLayout.filter((obj) => {
               return !diff.some((obj2) => {
                 return obj.i === obj2.i;
@@ -523,9 +608,11 @@
     // fix: when item ref or his parent is hidden, offsetWidth = 0
     const widthT = refsLayout.value.offsetWidth;
     if (widthT > 0) {
+    if (widthT > 0) {
       width.value = widthT;
     }
 
+    if (props.responsive) {
     if (props.responsive) {
       responsiveGridLayout();
     }
@@ -537,6 +624,7 @@
     eventBus.off(`resizeEvent`, resizeEventHandler);
     eventBus.off(`dragEvent`, dragEventHandler);
     removeWindowEventListener(`resize`, onWindowResize);
+    if (erd.value) {
     if (erd.value) {
       erd.value?.uninstall(refsLayout.value);
     }
@@ -550,6 +638,7 @@
     emit(EGridLayoutEvent.LAYOUT_MOUNTED, props.layout);
     nextTick(() => {
       const valid = layoutValidator(props.layout);
+      if (!valid) {
       if (!valid) {
         throw new Error(ErrorMsg.INVALID_LAYOUT_VALIDATED);
       }
@@ -583,7 +672,15 @@
     nextTick(() => {
       eventBus.emit(`updateWidth`, newVal);
       if (oldVal === null) {
+      if (oldVal === null) {
         /*
+        If old val == null is when the width has never been
+        set before. That only occurs when mounting is
+        finished, and onWindowResize has been called and
+        this.width has been changed the first time after it
+        got set to null in the constructor. It is now time
+        to issue layout-ready events as the GridItems have
+        their sizes configured properly.
         If old val == null is when the width has never been
         set before. That only occurs when mounting is
         finished, and onWindowResize has been called and
@@ -599,7 +696,17 @@
         sure that they have the final size before we emit
         layout-ready (for this GridLayout) and
         item-layout-ready (for the GridItem-s).
+        The reason for emitting the layout-ready events on
+        the next tick is to allow for the newly-emitted
+        updateWidth event (above) to have reached the
+        children GridItem-s and had their effect, so we're
+        sure that they have the final size before we emit
+        layout-ready (for this GridLayout) and
+        item-layout-ready (for the GridItem-s).
 
+        This way any client event handlers can reliably
+        investigate stable sizes of GridItem-s.
+      */
         This way any client event handlers can reliably
         investigate stable sizes of GridItem-s.
       */
@@ -617,7 +724,19 @@
       layoutUpdate();
     },
   );
+  watch(
+    () => props.layout,
+    () => {
+      layoutUpdate();
+    },
+  );
 
+  watch(
+    () => props.layout.length,
+    () => {
+      layoutUpdate();
+    },
+  );
   watch(
     () => props.layout.length,
     () => {
@@ -634,7 +753,22 @@
       responsiveGridLayout();
     },
   );
+  watch(
+    () => props.colNum,
+    (val) => {
+      // TODO remove eventBus
+      eventBus.emit(`setColNum`, val);
+      emit(EGridLayoutEvent.COLUMNS_CHANGED, val);
+      responsiveGridLayout();
+    },
+  );
 
+  watch(
+    () => props.rowHeight,
+    (val) => {
+      eventBus.emit(`setRowHeight`, val);
+    },
+  );
   watch(
     () => props.rowHeight,
     (val) => {
@@ -648,7 +782,19 @@
       eventBus.emit(`setDraggable`, val);
     },
   );
+  watch(
+    () => props.isDraggable,
+    (val) => {
+      eventBus.emit(`setDraggable`, val);
+    },
+  );
 
+  watch(
+    () => props.isResizable,
+    (val) => {
+      eventBus.emit(`setResizable`, val);
+    },
+  );
   watch(
     () => props.isResizable,
     (val) => {
@@ -662,6 +808,12 @@
       eventBus.emit(`setBounded`, val);
     },
   );
+  watch(
+    () => props.isBounded,
+    (val) => {
+      eventBus.emit(`setBounded`, val);
+    },
+  );
 
   watch(
     () => props.isMirrored,
@@ -669,7 +821,19 @@
       eventBus.emit(`changeDirection`, val);
     },
   );
+  watch(
+    () => props.isMirrored,
+    (val) => {
+      eventBus.emit(`changeDirection`, val);
+    },
+  );
 
+  watch(
+    () => props.transformScale,
+    (val) => {
+      eventBus.emit(`setTransformScale`, val);
+    },
+  );
   watch(
     () => props.transformScale,
     (val) => {
@@ -687,6 +851,16 @@
       onWindowResize();
     },
   );
+  watch(
+    () => props.responsive,
+    (val) => {
+      if (!val) {
+        emit(EGridLayoutEvent.LAYOUT_UPDATE, originalLayout.value || []);
+        eventBus.emit(`setColNum`, props.colNum);
+      }
+      onWindowResize();
+    },
+  );
 
   watch(
     () => props.maxRows,
@@ -694,7 +868,19 @@
       eventBus.emit(`setMaxRows`, val);
     },
   );
+  watch(
+    () => props.maxRows,
+    (val) => {
+      eventBus.emit(`setMaxRows`, val);
+    },
+  );
 
+  watch(
+    () => props.margin,
+    () => {
+      updateHeight();
+    },
+  );
   watch(
     () => props.margin,
     () => {
@@ -728,12 +914,18 @@
 
 <style lang="scss" scoped>
   @import '@/styles/variables';
+  @import '@/styles/variables';
 
   .vue-grid-layout {
     position: relative;
     transition: height 200ms ease;
   }
+  .vue-grid-layout {
+    position: relative;
+    transition: height 200ms ease;
+  }
 
+  /*.grid::before {
   /*.grid::before {
   background-image:
     linear-gradient($grid-line-color 1px, transparent 1px),
@@ -747,6 +939,17 @@
   width: calc(100% + 10px);
 }*/
 
+  .grid::before {
+    content: '';
+    background-size: calc(calc(100% - 10px) / 6) 70px;
+    background-image: linear-gradient(to right, $grid-line-color 1px, transparent 1px),
+      linear-gradient(to bottom, $grid-line-color 1px, transparent 1px);
+    height: calc(100% - 5px);
+    width: calc(100% - 5px);
+    position: absolute;
+    background-repeat: repeat;
+    margin: 5px;
+  }
   .grid::before {
     content: '';
     background-size: calc(calc(100% - 10px) / 6) 70px;

@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { moveElement, moveToCorrectPlace } from "../src/core/gridlayout/helpers/moveHelper";
 import { ErrorMsg } from "../src/core/common/enums/ErrorMessages";
 import { TLayout } from "../src/components";
+import { describe, expect, it } from 'vitest';
+import { moveElement, moveToCorrectPlace } from "../src/core/gridlayout/helpers/moveHelper";
+import { ErrorMsg } from "../src/core/common/enums/ErrorMessages";
+import { TLayout } from "../src/components";
 
 const testDataOne: TLayout = [
   {
@@ -62,6 +66,7 @@ describe(`moveToCorrectPlace`, () => {
 
   it(`Should throw an error if parameter bounds is less than 1`, () => {
     expect(() => moveToCorrectPlace(testDataOne[0], { cols: 0 }, [testDataOne[0]]))
+    expect(() => moveToCorrectPlace(testDataOne[0], { cols: 0 }, [testDataOne[0]]))
       .toThrow(ErrorMsg.INVALID_BOUNDS);
   });
 });
@@ -81,6 +86,7 @@ describe(`moveElement`, () => {
 
   it('Should return the passed in layout when item isStatic', () => {
     const result = moveElement(testDataOne, {
+    const result = moveElement(testDataOne, {
       isStatic: true,
       i: 1,
       x: 1,
@@ -88,11 +94,13 @@ describe(`moveElement`, () => {
       w: 1,
       h: 1
     }, 0, 0, false, false, false);
+    }, 0, 0, false, false, false);
 
     expect(testDataOne).toMatchObject(result);
   });
 
   it('Should return', () => {
+    const result = moveElement(testDataOne, {
     const result = moveElement(testDataOne, {
       isStatic: false,
       i: 1,
@@ -100,6 +108,7 @@ describe(`moveElement`, () => {
       y: 1,
       w: 1,
       h: 1
+    }, 0, 0, false, true, false);
     }, 0, 0, false, true, false);
 
     expect(testDataOne).toMatchObject(result);
