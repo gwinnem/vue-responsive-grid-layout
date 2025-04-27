@@ -1,4 +1,4 @@
-import {IPoint} from "@/core/helpers/IPoint";
+import { IPoint } from '@/core/helpers/point.interface';
 
 /**
  * Checking if the number is a real number and not NaN.
@@ -16,10 +16,13 @@ function isNum(num: number): boolean {
 export function offsetXYFromParentOf(evt: MouseEvent): IPoint {
   const t = evt.target as HTMLElement;
   const offsetParent = t.offsetParent || document.body;
-  const offsetParentRect = t.offsetParent === document.body ? {
-    left: 0,
-    top: 0,
-  } : offsetParent.getBoundingClientRect();
+  const offsetParentRect =
+    t.offsetParent === document.body
+      ? {
+          left: 0,
+          top: 0,
+        }
+      : offsetParent.getBoundingClientRect();
 
   const x = evt.clientX + offsetParent.scrollLeft - offsetParentRect.left;
   const y = evt.clientY + offsetParent.scrollTop - offsetParentRect.top;
@@ -49,16 +52,11 @@ export interface IDraggableCoreData {
  * @param x
  * @param y
  */
-export function createCoreData(
-  lastX: number,
-  lastY: number,
-  x: number,
-  y: number,
-): IDraggableCoreData {
+export function createCoreData(lastX: number, lastY: number, x: number, y: number): IDraggableCoreData {
   // State changes are often (but not always!) async. We want the latest value.
   const isStart = !isNum(lastX);
 
-  if(isStart) {
+  if (isStart) {
     // If this is our first move, use the x and y as last coords.
     return {
       deltaX: 0,
