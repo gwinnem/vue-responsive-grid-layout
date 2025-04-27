@@ -61,7 +61,7 @@ export const layoutValidatorPayload = {
  * @returns True if layout is valid
  */
 export const layoutValidator = (layout: TLayout): boolean => {
-  if (layout.length === 0 || layout === ([] as TLayout)) {
+  if (layout.length === 0) {
     throw new Error(ErrorMsg.INVALID_LAYOUT);
   }
 
