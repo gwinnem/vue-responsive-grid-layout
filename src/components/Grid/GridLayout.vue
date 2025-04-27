@@ -727,7 +727,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/styles/variables';
+  @import '../../styles/variables';
 
   .vue-grid-layout {
     position: relative;
