@@ -196,7 +196,7 @@
   import {
     ref, onMounted, nextTick, onBeforeUnmount,
   } from 'vue';
-  import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
+  import '../../../node_modules/vue-ts-responsive-grid-layout/dist/vue-ts-responsive-grid-layout.css';
   import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
   // import { EGridItemEvent } from "../../../src/core/enums/EGridItemEvents";
   import { testData } from './test';

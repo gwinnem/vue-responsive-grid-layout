@@ -74,7 +74,7 @@ If you enjoyed this project â€” or just feeling generous, consider buying me a ð
 ## Changelog
 
 
-### v: 1.2.10 (2025-xx-xx)
+### v: 1.2.10 (2025-04-28)
 * __Demo App__ [Eventlog is not displaying any resize events.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/46)
 * __Fixed Issue__ [The margin property cannot be [0,0]](https://github.com/gwinnem/vue-responsive-grid-layout/issues/64)
 * __Fixed Issue__ [Hide resize cursor change when GridItem is not resizable](https://github.com/gwinnem/vue-responsive-grid-layout/issues/49)
