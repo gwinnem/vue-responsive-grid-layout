@@ -143,7 +143,7 @@
   const isDragging = ref<boolean>(false);
   const placeholder = ref<IPlaceholder>({
     h: 0,
-    i: -1,
+    i: '__grid_placeholder__',
     w: 0,
     x: 0,
     y: 0,
