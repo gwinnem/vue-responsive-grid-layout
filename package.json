@@ -164,7 +164,7 @@
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "license-checker-rseidelsohn": "^4.4.2",
-    "lint-staged": "^15.5.1",
+    "lint-staged": "^17.1.0",
     "path": "^0.12.7",
     "postcss": "^8.5.3",
     "postcss-html": "^1.8.0",
