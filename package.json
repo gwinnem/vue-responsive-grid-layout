@@ -163,7 +163,7 @@
     "globals": "^17.7.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
-    "license-checker-rseidelsohn": "^4.4.2",
+    "license-checker-rseidelsohn": "^5.0.1",
     "lint-staged": "^15.5.1",
     "path": "^0.12.7",
     "postcss": "^8.5.3",
