@@ -160,7 +160,7 @@ export const testDataOne: TLayout = [
     x: 7,
     y: 0,
   }
-]
+];
 
 export const testDataTwo: TLayout = [
   {
@@ -172,7 +172,7 @@ export const testDataTwo: TLayout = [
     isDraggable: true,
     isResizable: true,
   },
-]
+];
 
 export const testDataThree = [
   {
@@ -234,4 +234,4 @@ export const testDataThree = [
     "isResizable": false,
     "moved": false
   }
-]
+];

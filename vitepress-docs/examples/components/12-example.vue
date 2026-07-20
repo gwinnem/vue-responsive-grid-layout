@@ -18,57 +18,98 @@
       other item aside) against blocking the move entirely instead.
     </template>
     <template #controls>
-      <ExampleToggle v-model="sourceEnabled" label="Left grid: allow cross-grid drag" />
-      <ExampleToggle v-model="targetEnabled" label="Right grid: allow cross-grid drag" />
-      <ExampleToggle v-model="preventCollision" label="preventCollision" />
+      <ExampleToggle
+        v-model="sourceEnabled"
+        label="Left grid: allow cross-grid drag" />
+      <ExampleToggle
+        v-model="targetEnabled"
+        label="Right grid: allow cross-grid drag" />
+      <ExampleToggle
+        v-model="preventCollision"
+        label="preventCollision" />
     </template>
 
     <div class="grids">
       <div id="grid-source">
-        <p class="grid-label">Source</p>
-        <GridLayout v-model:layout="sourceLayout" :allow-cross-grid-drag="sourceEnabled" layout-id="example-12-source"
-          :col-num="2" :row-height="60" :prevent-collision="preventCollision">
-          <GridItem v-for="item in sourceLayout" :key="item.i" :h="item.h" :i="item.i" :is-static="item.isStatic"
-            :w="item.w" :x="item.x" :y="item.y">
-            <div class="example-item" :class="item.isStatic ? 'example-item--static' : 'example-item--c6'">
+        <p class="grid-label">
+          Source
+        </p>
+        <GridLayout
+          v-model:layout="sourceLayout"
+          :allow-cross-grid-drag="sourceEnabled"
+          :col-num="2"
+          layout-id="example-12-source"
+          :prevent-collision="preventCollision"
+          :row-height="60">
+          <GridItem
+            v-for="item in sourceLayout"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :is-static="item.isStatic"
+            :w="item.w"
+            :x="item.x"
+            :y="item.y">
+            <div
+              class="example-item"
+              :class="item.isStatic ? 'example-item--static' : 'example-item--c6'">
               {{ item.i }}<small v-if="item.isStatic">locked</small>
             </div>
           </GridItem>
         </GridLayout>
       </div>
       <div id="grid-target">
-        <p class="grid-label">Target</p>
-        <GridLayout v-model:layout="targetLayout" :allow-cross-grid-drag="targetEnabled" layout-id="example-12-target"
-          :col-num="2" :row-height="60" :prevent-collision="preventCollision">
-          <GridItem v-for="item in targetLayout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x"
+        <p class="grid-label">
+          Target
+        </p>
+        <GridLayout
+          v-model:layout="targetLayout"
+          :allow-cross-grid-drag="targetEnabled"
+          :col-num="2"
+          layout-id="example-12-target"
+          :prevent-collision="preventCollision"
+          :row-height="60">
+          <GridItem
+            v-for="item in targetLayout"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :w="item.w"
+            :x="item.x"
             :y="item.y">
-            <div class="example-item example-item--c1">{{ item.i }}</div>
+            <div class="example-item example-item--c1">
+              {{ item.i }}
+            </div>
           </GridItem>
         </GridLayout>
       </div>
     </div>
 
     <template #footer>
-      <LayoutJsonViewer label="Source" :layout="sourceLayout" />
-      <LayoutJsonViewer label="Target" :layout="targetLayout" />
+      <LayoutJsonViewer
+        label="Source"
+        :layout="sourceLayout" />
+      <LayoutJsonViewer
+        label="Target"
+        :layout="targetLayout" />
     </template>
   </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const sourceEnabled = ref(true);
-const targetEnabled = ref(true);
-const preventCollision = ref(false);
+  const sourceEnabled = ref(true);
+  const targetEnabled = ref(true);
+  const preventCollision = ref(false);
 
-const sourceLayout = ref<TLayout>([
-  { h: 2, i: 'A', w: 2, x: 0, y: 0 },
-  { h: 2, i: 'B', w: 2, x: 0, y: 2 },
-  { h: 2, i: 'locked', isStatic: true, w: 2, x: 0, y: 4 },
-]);
-const targetLayout = ref<TLayout>([]);
+  const sourceLayout = ref<TLayout>([
+    { h: 2, i: 'A', w: 2, x: 0, y: 0 },
+    { h: 2, i: 'B', w: 2, x: 0, y: 2 },
+    { h: 2, i: 'locked', isStatic: true, w: 2, x: 0, y: 4 },
+  ]);
+  const targetLayout = ref<TLayout>([]);
 </script>
 
 <style scoped>

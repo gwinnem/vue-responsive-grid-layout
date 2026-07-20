@@ -10,8 +10,13 @@
       landed; none, it stays exactly where you dropped it.
     </template>
     <template #controls>
-      <ExampleToggle v-model="verticalCompactEnabled" label="compactType (vertical vs none)" />
-      <div class="droppable" draggable="true" @dragstart="onDragStart">
+      <ExampleToggle
+        v-model="verticalCompactEnabled"
+        label="compactType (vertical vs none)" />
+      <div
+        class="droppable"
+        draggable="true"
+        @dragstart="onDragStart">
         ⠿ Drag me into the grid
       </div>
     </template>
@@ -19,14 +24,22 @@
     <GridLayout
       v-model:layout="layout"
       allow-outside-drop
-      :outside-drop-width="2"
-      :outside-drop-height="2"
-      :row-height="60"
       :compact-type="compactType"
-      @item-dropped-from-outside="onDropped"
-    >
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item example-item--c5">{{ item.i }}</div>
+      :outside-drop-height="2"
+      :outside-drop-width="2"
+      :row-height="60"
+      @item-dropped-from-outside="onDropped">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item example-item--c5">
+          {{ item.i }}
+        </div>
       </GridItem>
     </GridLayout>
     <template #footer>
@@ -36,26 +49,26 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { computed, ref } from 'vue';
+  import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const verticalCompactEnabled = ref(true);
-const compactType = computed(() => (verticalCompactEnabled.value ? ECompactType.VERTICAL : ECompactType.NONE));
+  const verticalCompactEnabled = ref(true);
+  const compactType = computed(() => (verticalCompactEnabled.value ? ECompactType.VERTICAL : ECompactType.NONE));
 
-const layout = ref<TLayout>([
-  { h: 2, i: '0', w: 2, x: 0, y: 0 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: '0', w: 2, x: 0, y: 0 },
+  ]);
 
-const onDragStart = (event: DragEvent): void => {
-  event.dataTransfer?.setData('text/plain', 'dropped-widget');
-  if (event.dataTransfer) {
-    event.dataTransfer.effectAllowed = 'copy';
-  }
-};
+  const onDragStart = (event: DragEvent): void => {
+    event.dataTransfer?.setData('text/plain', 'dropped-widget');
+    if(event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'copy';
+    }
+  };
 
-const onDropped = (payload: { x: number; y: number; w: number; h: number }): void => {
-  layout.value = [...layout.value, { h: payload.h, i: String(Date.now()), w: payload.w, x: payload.x, y: payload.y }];
-};
+  const onDropped = (payload: { x: number; y: number; w: number; h: number }): void => {
+    layout.value = [...layout.value, { h: payload.h, i: String(Date.now()), w: payload.w, x: payload.x, y: payload.y }];
+  };
 </script>
 
 <style scoped>

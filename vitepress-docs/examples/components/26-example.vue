@@ -10,12 +10,27 @@
       around to see guides appear against items 0 and 1.
     </template>
     <template #controls>
-      <ExampleToggle v-model="showAlignmentGuides" label="showAlignmentGuides" />
+      <ExampleToggle
+        v-model="showAlignmentGuides"
+        label="showAlignmentGuides" />
     </template>
 
-    <GridLayout v-model:layout="layout" :show-alignment-guides="showAlignmentGuides" :row-height="60" :compact-type="ECompactType.NONE">
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.i }}</div>
+    <GridLayout
+      v-model:layout="layout"
+      :compact-type="ECompactType.NONE"
+      :row-height="60"
+      :show-alignment-guides="showAlignmentGuides">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.i }}
+        </div>
       </GridItem>
     </GridLayout>
 
@@ -26,14 +41,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<TLayout>([
-  { h: 2, i: '0', w: 2, x: 0, y: 0 },
-  { h: 2, i: '1', w: 3, x: 4, y: 0 },
-  { h: 2, i: '2', w: 2, x: 6, y: 4 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: '0', w: 2, x: 0, y: 0 },
+    { h: 2, i: '1', w: 3, x: 4, y: 0 },
+    { h: 2, i: '2', w: 2, x: 6, y: 4 },
+  ]);
 
-const showAlignmentGuides = ref(true);
+  const showAlignmentGuides = ref(true);
 </script>

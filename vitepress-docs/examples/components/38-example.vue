@@ -7,7 +7,9 @@
       a corner.
     </template>
 
-    <GridLayout v-model:layout="layout" :row-height="60">
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="60">
       <GridItem
         v-for="item in layout"
         :key="item.i"
@@ -20,8 +22,7 @@
         :preserve-aspect-ratio="item.preserveAspectRatio"
         :w="item.w"
         :x="item.x"
-        :y="item.y"
-      >
+        :y="item.y">
         <div class="example-item">
           {{ item.label }}
         </div>
@@ -34,19 +35,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<(TLayout[number] & {
-  label: string;
-  minW?: number;
-  maxW?: number;
-  minH?: number;
-  maxH?: number;
-  preserveAspectRatio?: boolean;
-})[]>([
-  { h: 2, i: '0', label: 'minW: 2, maxW: 4', maxW: 4, minW: 2, w: 3, x: 0, y: 0 },
-  { h: 2, i: '1', label: 'minH: 2, maxH: 3', maxH: 3, minH: 2, w: 3, x: 3, y: 0 },
-  { h: 2, i: '2', label: 'preserveAspectRatio', preserveAspectRatio: true, w: 3, x: 6, y: 0 },
-]);
+  const layout = ref<(TLayout[number] & {
+    label: string;
+    minW?: number;
+    maxW?: number;
+    minH?: number;
+    maxH?: number;
+    preserveAspectRatio?: boolean;
+  })[]>([
+    { h: 2, i: '0', label: 'minW: 2, maxW: 4', maxW: 4, minW: 2, w: 3, x: 0, y: 0 },
+    { h: 2, i: '1', label: 'minH: 2, maxH: 3', maxH: 3, minH: 2, w: 3, x: 3, y: 0 },
+    { h: 2, i: '2', label: 'preserveAspectRatio', preserveAspectRatio: true, w: 3, x: 6, y: 0 },
+  ]);
 </script>

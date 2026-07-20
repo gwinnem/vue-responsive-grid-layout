@@ -6,13 +6,28 @@
       as a dedicated drag handle.
     </template>
 
-    <GridLayout v-model:layout="layout" :row-height="70">
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y"
-        drag-allow-from=".drag-handle-slot" resize-ignore-from=".drag-handle-slot" :show-close-button="false">
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="70">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        drag-allow-from=".drag-handle-slot"
+        :h="item.h"
+        :i="item.i"
+        resize-ignore-from=".drag-handle-slot"
+        :show-close-button="false"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
         <div class="example-item example-item--c2">
-          <CustomDragElement class="drag-handle-slot" text="⠿" />
+          <CustomDragElement
+            class="drag-handle-slot"
+            text="⠿" />
           {{ item.i }}
-          <CustomCloseButton :i="item.i" @remove-grid-item="removeItem" />
+          <CustomCloseButton
+            :i="item.i"
+            @remove-grid-item="removeItem" />
         </div>
       </GridItem>
     </GridLayout>
@@ -23,17 +38,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, CustomCloseButton, CustomDragElement, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, CustomCloseButton, CustomDragElement, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<TLayout>([
-  { h: 2, i: '0', w: 3, x: 0, y: 0 },
-  { h: 2, i: '1', w: 3, x: 3, y: 0 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: '0', w: 3, x: 0, y: 0 },
+    { h: 2, i: '1', w: 3, x: 3, y: 0 },
+  ]);
 
-const removeItem = (id: string | number): void => {
-  layout.value = layout.value.filter(item => item.i !== id);
-};
+  const removeItem = (id: string | number): void => {
+    layout.value = layout.value.filter(item => item.i !== id);
+  };
 </script>
 
 <style scoped>

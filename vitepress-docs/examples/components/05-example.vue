@@ -6,17 +6,32 @@
       anywhere <em>except</em> its button (<code>dragIgnoreFrom</code>).
     </template>
 
-    <GridLayout v-model:layout="layout" :row-height="70">
-      <GridItem :h="layout[0].h" :i="layout[0].i" :w="layout[0].w" :x="layout[0].x" :y="layout[0].y"
-        drag-allow-from=".drag-handle">
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="70">
+      <GridItem
+        drag-allow-from=".drag-handle"
+        :h="layout[0].h"
+        :i="layout[0].i"
+        :w="layout[0].w"
+        :x="layout[0].x"
+        :y="layout[0].y">
         <div class="example-item example-item--c2">
           <span class="drag-handle">⠿ Drag handle</span>
         </div>
       </GridItem>
-      <GridItem :h="layout[1].h" :i="layout[1].i" :w="layout[1].w" :x="layout[1].x" :y="layout[1].y"
-        drag-ignore-from=".no-drag">
+      <GridItem
+        drag-ignore-from=".no-drag"
+        :h="layout[1].h"
+        :i="layout[1].i"
+        :w="layout[1].w"
+        :x="layout[1].x"
+        :y="layout[1].y">
         <div class="example-item example-item--c3">
-          <button class="no-drag example-button example-button--secondary" type="button" @click.stop>
+          <button
+            class="no-drag example-button example-button--secondary"
+            type="button"
+            @click.stop>
             Click me (won't drag)
           </button>
         </div>
@@ -29,13 +44,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<TLayout>([
-  { h: 2, i: 'handle', w: 4, x: 0, y: 0 },
-  { h: 2, i: 'ignore', w: 4, x: 4, y: 0 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: 'handle', w: 4, x: 0, y: 0 },
+    { h: 2, i: 'ignore', w: 4, x: 4, y: 0 },
+  ]);
 </script>
 
 <style scoped>

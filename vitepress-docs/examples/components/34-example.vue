@@ -13,14 +13,12 @@
       <span
         class="demo-droppable"
         draggable="true"
-        @dragstart="onDragStart($event, true)"
-      >Compatible widget</span>
+        @dragstart="onDragStart($event, true)">Compatible widget</span>
       <span
         class="demo-droppable"
-        style="background: var(--color-text-muted)"
         draggable="true"
-        @dragstart="onDragStart($event, false)"
-      >Incompatible widget</span>
+        style="background: var(--color-text-muted)"
+        @dragstart="onDragStart($event, false)">Incompatible widget</span>
     </template>
 
     <GridLayout
@@ -28,44 +26,52 @@
       allow-outside-drop
       :outside-drop-accept="acceptOnlyOurWidgets"
       :row-height="80"
-      @item-dropped-from-outside="onDropped"
-    >
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.label }}</div>
+      @item-dropped-from-outside="onDropped">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.label }}
+        </div>
       </GridItem>
     </GridLayout>
   </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, readOutsideDropPayload, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, readOutsideDropPayload, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const MIME_TYPE = 'application/x-example-widget';
+  const MIME_TYPE = 'application/x-example-widget';
 
-const layout = ref<(TLayout[number] & { label: string })[]>([]);
+  const layout = ref<(TLayout[number] & { label: string })[]>([]);
 
-function onDragStart(event: DragEvent, compatible: boolean): void {
-  if (compatible) {
-    event.dataTransfer?.setData(MIME_TYPE, JSON.stringify({ label: 'Dropped widget' }));
-  } else {
-    // No MIME_TYPE data set at all — outsideDropAccept below checks
-    // dataTransfer.types, which won't include MIME_TYPE for this one.
-    event.dataTransfer?.setData('text/plain', 'incompatible');
+  function onDragStart(event: DragEvent, compatible: boolean): void {
+    if(compatible) {
+      event.dataTransfer?.setData(MIME_TYPE, JSON.stringify({ label: 'Dropped widget' }));
+    } else {
+      // No MIME_TYPE data set at all — outsideDropAccept below checks
+      // dataTransfer.types, which won't include MIME_TYPE for this one.
+      event.dataTransfer?.setData('text/plain', 'incompatible');
+    }
   }
-}
 
-function acceptOnlyOurWidgets(dataTransfer: DataTransfer | null): boolean {
-  return !!dataTransfer?.types.includes(MIME_TYPE);
-}
+  function acceptOnlyOurWidgets(dataTransfer: DataTransfer | null): boolean {
+    return !!dataTransfer?.types.includes(MIME_TYPE);
+  }
 
-function onDropped(payload: { x: number; y: number; w: number; h: number; dataTransfer: DataTransfer | null }): void {
-  const data = readOutsideDropPayload<{ label: string }>(payload.dataTransfer, MIME_TYPE);
-  layout.value = [
-    ...layout.value,
-    { h: payload.h, i: String(Date.now()), label: data?.label ?? 'widget', w: payload.w, x: payload.x, y: payload.y },
-  ];
-}
+  function onDropped(payload: { x: number; y: number; w: number; h: number; dataTransfer: DataTransfer | null }): void {
+    const data = readOutsideDropPayload<{ label: string }>(payload.dataTransfer, MIME_TYPE);
+    layout.value = [
+      ...layout.value,
+      { h: payload.h, i: String(Date.now()), label: data?.label ?? 'widget', w: payload.w, x: payload.x, y: payload.y },
+    ];
+  }
 </script>
 
 <style scoped>

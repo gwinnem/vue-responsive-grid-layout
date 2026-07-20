@@ -113,7 +113,7 @@
     "release:dry-run": "semantic-release --dry-run --no-ci",
     "typecheck": "vue-tsc --project tsconfig.json --noEmit",
     "lint": "eslint --color",
-    "lint:fix": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
+    "lint:fix": "eslint --fix --color",
     "lint:style": "npx stylelint src/**/*.{scss,vue} --no-fix --color",
     "lint:style-fix": "npx stylelint src/**/*.{scss,vue} --fix --color",
     "lint:markup": "vue-tsc -noEmit",

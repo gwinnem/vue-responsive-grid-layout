@@ -23,91 +23,114 @@
         :key="widget.label"
         class="droppable"
         draggable="true"
-        @dragstart="onDragStart($event, widget.label)"
-      >
+        @dragstart="onDragStart($event, widget.label)">
         ⠿ {{ widget.label }}
       </div>
     </template>
 
     <div class="grids">
       <div>
-        <p class="grid-label">Grid 1</p>
+        <p class="grid-label">
+          Grid 1
+        </p>
         <GridLayout
           v-model:layout="leftLayout"
-          allow-outside-drop
           allow-cross-grid-drag
-          layout-id="example-23-left"
-          :outside-drop-width="2"
-          :outside-drop-height="2"
-          :row-height="60"
+          allow-outside-drop
           :col-num="6"
-          @item-dropped-from-outside="onDropped('left', $event)"
-        >
-          <GridItem v-for="item in leftLayout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-            <div class="example-item example-item--c5">{{ item.label ?? item.i }}</div>
+          layout-id="example-23-left"
+          :outside-drop-height="2"
+          :outside-drop-width="2"
+          :row-height="60"
+          @item-dropped-from-outside="onDropped('left', $event)">
+          <GridItem
+            v-for="item in leftLayout"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :w="item.w"
+            :x="item.x"
+            :y="item.y">
+            <div class="example-item example-item--c5">
+              {{ item.label ?? item.i }}
+            </div>
           </GridItem>
         </GridLayout>
       </div>
       <div>
-        <p class="grid-label">Grid 2</p>
+        <p class="grid-label">
+          Grid 2
+        </p>
         <GridLayout
           v-model:layout="rightLayout"
-          allow-outside-drop
           allow-cross-grid-drag
-          layout-id="example-23-right"
-          :outside-drop-width="2"
-          :outside-drop-height="2"
-          :row-height="60"
+          allow-outside-drop
           :col-num="6"
-          @item-dropped-from-outside="onDropped('right', $event)"
-        >
-          <GridItem v-for="item in rightLayout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-            <div class="example-item example-item--c1">{{ item.label ?? item.i }}</div>
+          layout-id="example-23-right"
+          :outside-drop-height="2"
+          :outside-drop-width="2"
+          :row-height="60"
+          @item-dropped-from-outside="onDropped('right', $event)">
+          <GridItem
+            v-for="item in rightLayout"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :w="item.w"
+            :x="item.x"
+            :y="item.y">
+            <div class="example-item example-item--c1">
+              {{ item.label ?? item.i }}
+            </div>
           </GridItem>
         </GridLayout>
       </div>
     </div>
 
     <template #footer>
-      <LayoutJsonViewer label="Grid 1" :layout="leftLayout" />
-      <LayoutJsonViewer label="Grid 2" :layout="rightLayout" />
+      <LayoutJsonViewer
+        label="Grid 1"
+        :layout="leftLayout" />
+      <LayoutJsonViewer
+        label="Grid 2"
+        :layout="rightLayout" />
     </template>
   </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const widgets = [{ label: 'A' }, { label: 'B' }];
+  const widgets = [{ label: 'A' }, { label: 'B' }];
 
-type DroppableLayout = (TLayout[number] & { label?: string })[];
-const leftLayout = ref<DroppableLayout>([{ h: 2, i: 'left-0', w: 2, x: 0, y: 0 }]);
-const rightLayout = ref<DroppableLayout>([]);
+  type TDroppableLayout = (TLayout[number] & { label?: string })[];
+  const leftLayout = ref<TDroppableLayout>([{ h: 2, i: 'left-0', w: 2, x: 0, y: 0 }]);
+  const rightLayout = ref<TDroppableLayout>([]);
 
-const onDragStart = (event: DragEvent, label: string): void => {
-  event.dataTransfer?.setData('text/plain', label);
-  if (event.dataTransfer) {
-    event.dataTransfer.effectAllowed = 'copy';
+  const onDragStart = (event: DragEvent, label: string): void => {
+    event.dataTransfer?.setData('text/plain', label);
+    if(event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'copy';
+    }
+  };
+
+  interface IOutsideDropPayload {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    dataTransfer: DataTransfer | null;
   }
-};
 
-interface OutsideDropPayload {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  dataTransfer: DataTransfer | null;
-}
-
-const onDropped = (gridId: 'left' | 'right', payload: OutsideDropPayload): void => {
-  const label = payload.dataTransfer?.getData('text/plain') || 'New';
-  const target = gridId === 'left' ? leftLayout : rightLayout;
-  target.value = [
-    ...target.value,
-    { h: payload.h, i: String(Date.now()), label, w: payload.w, x: payload.x, y: payload.y },
-  ];
-};
+  const onDropped = (gridId: 'left' | 'right', payload: IOutsideDropPayload): void => {
+    const label = payload.dataTransfer?.getData('text/plain') || 'New';
+    const target = gridId === 'left' ? leftLayout : rightLayout;
+    target.value = [
+      ...target.value,
+      { h: payload.h, i: String(Date.now()), label, w: payload.w, x: payload.x, y: payload.y },
+    ];
+  };
 </script>
 
 <style scoped>

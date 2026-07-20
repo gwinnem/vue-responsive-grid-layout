@@ -9,7 +9,10 @@
     </template>
 
     <div class="scroll-box">
-      <GridLayout v-model:layout="layout" :max-rows="20" :row-height="60">
+      <GridLayout
+        v-model:layout="layout"
+        :max-rows="20"
+        :row-height="60">
         <GridItem
           v-for="item in layout"
           :key="item.i"
@@ -18,8 +21,7 @@
           :i="item.i"
           :w="item.w"
           :x="item.x"
-          :y="item.y"
-        >
+          :y="item.y">
           <div class="example-item">
             {{ item.label }}
           </div>
@@ -33,14 +35,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<(TLayout[number] & { label: string })[]>([
-  { h: 2, i: '0', label: 'autoScroll enabled', w: 4, x: 0, y: 0 },
-  { h: 2, i: '1', label: 'autoScroll off (default)', w: 4, x: 4, y: 0 },
-  { h: 2, i: '2', label: 'spacer', w: 12, x: 0, y: 8 },
-]);
+  const layout = ref<(TLayout[number] & { label: string })[]>([
+    { h: 2, i: '0', label: 'autoScroll enabled', w: 4, x: 0, y: 0 },
+    { h: 2, i: '1', label: 'autoScroll off (default)', w: 4, x: 4, y: 0 },
+    { h: 2, i: '2', label: 'spacer', w: 12, x: 0, y: 8 },
+  ]);
 </script>
 
 <style scoped>

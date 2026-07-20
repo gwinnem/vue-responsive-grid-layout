@@ -12,14 +12,40 @@
       has to account for manually.
     </template>
     <template #controls>
-      <button class="example-button" type="button" @click="onSave">Save layout</button>
-      <button class="example-button example-button--secondary" type="button" @click="onLoad">Load saved layout</button>
-      <button class="example-button example-button--secondary" type="button" @click="reset">Reset to default</button>
+      <button
+        class="example-button"
+        type="button"
+        @click="onSave">
+        Save layout
+      </button>
+      <button
+        class="example-button example-button--secondary"
+        type="button"
+        @click="onLoad">
+        Load saved layout
+      </button>
+      <button
+        class="example-button example-button--secondary"
+        type="button"
+        @click="reset">
+        Reset to default
+      </button>
     </template>
 
-    <GridLayout v-model:layout="layout" :row-height="60">
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.i }}</div>
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="60">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.i }}
+        </div>
       </GridItem>
     </GridLayout>
 
@@ -32,41 +58,41 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, useLayoutStorage, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, useLayoutStorage, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const STORAGE_KEY = 'vue-grid-layout-docs-example-19';
+  const STORAGE_KEY = 'vue-grid-layout-docs-example-19';
 
-const defaultLayout = (): TLayout => [
-  { h: 2, i: '0', w: 2, x: 0, y: 0 },
-  { h: 2, i: '1', w: 2, x: 2, y: 0 },
-  { h: 2, i: '2', w: 2, x: 4, y: 0 },
-];
+  const defaultLayout = (): TLayout => [
+    { h: 2, i: '0', w: 2, x: 0, y: 0 },
+    { h: 2, i: '1', w: 2, x: 2, y: 0 },
+    { h: 2, i: '2', w: 2, x: 4, y: 0 },
+  ];
 
-const layout = ref<TLayout>(defaultLayout());
-const status = ref('');
+  const layout = ref<TLayout>(defaultLayout());
+  const status = ref('');
 
-// autoLoad: false — this example wants an explicit "Load saved layout"
-// button rather than silently restoring on page load, so the default
-// (empty) layout above is what visitors see first.
-const { save, load, hasSaved } = useLayoutStorage(STORAGE_KEY, layout, { autoLoad: false });
+  // autoLoad: false — this example wants an explicit "Load saved layout"
+  // button rather than silently restoring on page load, so the default
+  // (empty) layout above is what visitors see first.
+  const { save, load, hasSaved } = useLayoutStorage(STORAGE_KEY, layout, { autoLoad: false });
 
-const onSave = (): void => {
-  save();
-  status.value = `Saved at ${new Date().toLocaleTimeString()}`;
-};
+  const onSave = (): void => {
+    save();
+    status.value = `Saved at ${new Date().toLocaleTimeString()}`;
+  };
 
-const onLoad = (): void => {
-  if (!hasSaved()) {
-    status.value = 'No saved layout found yet — try "Save layout" first.';
-    return;
-  }
-  load();
-  status.value = 'Loaded saved layout.';
-};
+  const onLoad = (): void => {
+    if(!hasSaved()) {
+      status.value = 'No saved layout found yet — try "Save layout" first.';
+      return;
+    }
+    load();
+    status.value = 'Loaded saved layout.';
+  };
 
-const reset = (): void => {
-  layout.value = defaultLayout();
-  status.value = 'Reset to default layout.';
-};
+  const reset = (): void => {
+    layout.value = defaultLayout();
+    status.value = 'Reset to default layout.';
+  };
 </script>

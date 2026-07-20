@@ -6,33 +6,32 @@
   <label class="number-field">
     <span class="number-field__label">{{ label }}</span>
     <input
-      type="number"
       class="number-field__input"
-      :value="modelValue"
-      :min="min"
       :max="max"
+      :min="min"
       :step="step"
-      @input="$emit('update:modelValue', Number(($event.target as HTMLInputElement).value))"
-    >
+      type="number"
+      :value="modelValue"
+      @input="$emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
   </label>
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{
-  modelValue: number;
-  label: string;
-  min?: number;
-  max?: number;
-  /** The input's step increment. Default `1` — matches the native `<input type="number">` default explicitly rather than relying on it implicitly, so it's visible/adjustable per-usage. */
-  step?: number;
-}>(), {
-  max: undefined,
-  min: undefined,
-  step: 1,
-});
-defineEmits<{
-  (e: 'update:modelValue', value: number): void;
-}>();
+  withDefaults(defineProps<{
+    modelValue: number;
+    label: string;
+    min?: number;
+    max?: number;
+    /** The input's step increment. Default `1` — matches the native `<input type="number">` default explicitly rather than relying on it implicitly, so it's visible/adjustable per-usage. */
+    step?: number;
+  }>(), {
+    max: undefined,
+    min: undefined,
+    step: 1,
+  });
+  defineEmits<{
+    (e: 'update:modelValue', value: number): void;
+  }>();
 </script>
 
 <style scoped>

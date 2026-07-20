@@ -5,22 +5,33 @@
 -->
 <template>
   <div class="layout-json">
-    <p v-if="label" class="layout-json__label">{{ label }}</p>
+    <p
+      v-if="label"
+      class="layout-json__label">
+      {{ label }}
+    </p>
     <div class="layout-json__grid">
-      <div v-for="item in layout" :key="item.i" class="layout-json__item">
+      <div
+        v-for="item in layout"
+        :key="item.i"
+        class="layout-json__item">
         <strong>{{ item.i }}</strong>
         <span class="layout-json__coords">x:{{ item.x }} y:{{ item.y }} w:{{ item.w }} h:{{ item.h }}</span>
       </div>
-      <p v-if="layout.length === 0" class="layout-json__empty">empty</p>
+      <p
+        v-if="layout.length === 0"
+        class="layout-json__empty">
+        empty
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  layout: Array<{ i: string | number; x: number; y: number; w: number; h: number }>;
-  label?: string;
-}>();
+  defineProps<{
+    layout: { i: string | number; x: number; y: number; w: number; h: number }[];
+    label?: string;
+  }>();
 </script>
 
 <style scoped>

@@ -16,94 +16,174 @@
       the move entirely instead.
     </template>
     <template #controls>
-      <ExampleToggle v-model="teamAEnabled" label="Team A: allow cross-grid drag" />
-      <ExampleToggle v-model="teamBEnabled" label="Team B: allow cross-grid drag" />
-      <ExampleToggle v-model="archiveEnabled" label="Archive: allow cross-grid drag" />
-      <ExampleToggle v-model="archiveRejects" label="Archive: reject external drops" />
-      <ExampleToggle v-model="preventCollision" label="preventCollision" />
+      <ExampleToggle
+        v-model="teamAEnabled"
+        label="Team A: allow cross-grid drag" />
+      <ExampleToggle
+        v-model="teamBEnabled"
+        label="Team B: allow cross-grid drag" />
+      <ExampleToggle
+        v-model="archiveEnabled"
+        label="Archive: allow cross-grid drag" />
+      <ExampleToggle
+        v-model="archiveRejects"
+        label="Archive: reject external drops" />
+      <ExampleToggle
+        v-model="preventCollision"
+        label="preventCollision" />
     </template>
 
     <div class="grids">
       <div>
-        <p class="grid-label">Team A</p>
-        <GridLayout v-model:layout="teamA" :allow-cross-grid-drag="teamAEnabled" layout-id="team-a" :col-num="2" :row-height="60"
+        <p class="grid-label">
+          Team A
+        </p>
+        <GridLayout
+          v-model:layout="teamA"
+          :allow-cross-grid-drag="teamAEnabled"
+          :col-num="2"
+          layout-id="team-a"
           :prevent-collision="preventCollision"
-          @cross-grid-item-dropped="onDropped('Team A', $event)" @cross-grid-drop-rejected="onRejected('Team A', $event)">
-          <GridItem v-for="item in teamA" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-            <div class="example-item example-item--c6">{{ item.i }}</div>
+          :row-height="60"
+          @cross-grid-drop-rejected="onRejected('Team A', $event)"
+          @cross-grid-item-dropped="onDropped('Team A', $event)">
+          <GridItem
+            v-for="item in teamA"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :w="item.w"
+            :x="item.x"
+            :y="item.y">
+            <div class="example-item example-item--c6">
+              {{ item.i }}
+            </div>
           </GridItem>
         </GridLayout>
       </div>
       <div>
-        <p class="grid-label">Team B</p>
-        <GridLayout v-model:layout="teamB" :allow-cross-grid-drag="teamBEnabled" layout-id="team-b" :col-num="2" :row-height="60"
+        <p class="grid-label">
+          Team B
+        </p>
+        <GridLayout
+          v-model:layout="teamB"
+          :allow-cross-grid-drag="teamBEnabled"
+          :col-num="2"
+          layout-id="team-b"
           :prevent-collision="preventCollision"
-          @cross-grid-item-dropped="onDropped('Team B', $event)" @cross-grid-drop-rejected="onRejected('Team B', $event)">
-          <GridItem v-for="item in teamB" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-            <div class="example-item example-item--c1">{{ item.i }}</div>
+          :row-height="60"
+          @cross-grid-drop-rejected="onRejected('Team B', $event)"
+          @cross-grid-item-dropped="onDropped('Team B', $event)">
+          <GridItem
+            v-for="item in teamB"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :w="item.w"
+            :x="item.x"
+            :y="item.y">
+            <div class="example-item example-item--c1">
+              {{ item.i }}
+            </div>
           </GridItem>
         </GridLayout>
       </div>
       <div>
-        <p class="grid-label">Archive (read-only)</p>
-        <GridLayout v-model:layout="archive" :allow-cross-grid-drag="archiveEnabled" :disable-external-drop="archiveRejects" layout-id="archive"
-          :col-num="2" :row-height="60" :prevent-collision="preventCollision" @cross-grid-item-dropped="onDropped('Archive', $event)"
-          @cross-grid-drop-rejected="onRejected('Archive', $event)">
-          <GridItem v-for="item in archive" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-            <div class="example-item example-item--c4">{{ item.i }}</div>
+        <p class="grid-label">
+          Archive (read-only)
+        </p>
+        <GridLayout
+          v-model:layout="archive"
+          :allow-cross-grid-drag="archiveEnabled"
+          :col-num="2"
+          :disable-external-drop="archiveRejects"
+          layout-id="archive"
+          :prevent-collision="preventCollision"
+          :row-height="60"
+          @cross-grid-drop-rejected="onRejected('Archive', $event)"
+          @cross-grid-item-dropped="onDropped('Archive', $event)">
+          <GridItem
+            v-for="item in archive"
+            :key="item.i"
+            :h="item.h"
+            :i="item.i"
+            :w="item.w"
+            :x="item.x"
+            :y="item.y">
+            <div class="example-item example-item--c4">
+              {{ item.i }}
+            </div>
           </GridItem>
         </GridLayout>
       </div>
     </div>
 
-    <div class="drop-log" data-testid="drop-log">
-      <p class="grid-label">Log</p>
-      <div v-if="log.length === 0" class="drop-log__empty">Drag an item between grids to see events here.</div>
-      <div v-for="(entry, idx) in log" :key="idx" class="drop-log__entry" :class="`drop-log__entry--${entry.kind}`">
+    <div
+      class="drop-log"
+      data-testid="drop-log">
+      <p class="grid-label">
+        Log
+      </p>
+      <div
+        v-if="log.length === 0"
+        class="drop-log__empty">
+        Drag an item between grids to see events here.
+      </div>
+      <div
+        v-for="(entry, idx) in log"
+        :key="idx"
+        class="drop-log__entry"
+        :class="`drop-log__entry--${entry.kind}`">
         {{ entry.message }}
       </div>
     </div>
 
     <template #footer>
-      <LayoutJsonViewer label="Team A" :layout="teamA" />
-      <LayoutJsonViewer label="Team B" :layout="teamB" />
-      <LayoutJsonViewer label="Archive" :layout="archive" />
+      <LayoutJsonViewer
+        label="Team A"
+        :layout="teamA" />
+      <LayoutJsonViewer
+        label="Team B"
+        :layout="teamB" />
+      <LayoutJsonViewer
+        label="Archive"
+        :layout="archive" />
     </template>
   </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const teamAEnabled = ref(true);
-const teamBEnabled = ref(true);
-const archiveEnabled = ref(true);
-const archiveRejects = ref(true);
-const preventCollision = ref(false);
+  const teamAEnabled = ref(true);
+  const teamBEnabled = ref(true);
+  const archiveEnabled = ref(true);
+  const archiveRejects = ref(true);
+  const preventCollision = ref(false);
 
-const teamA = ref<TLayout>([
-  { h: 2, i: 'A1', w: 2, x: 0, y: 0 },
-  { h: 2, i: 'A2', w: 2, x: 0, y: 2 },
-]);
-const teamB = ref<TLayout>([{ h: 2, i: 'B1', w: 2, x: 0, y: 0 }]);
-const archive = ref<TLayout>([{ h: 2, i: 'Locked', w: 2, x: 0, y: 0, isStatic: true }]);
+  const teamA = ref<TLayout>([
+    { h: 2, i: 'A1', w: 2, x: 0, y: 0 },
+    { h: 2, i: 'A2', w: 2, x: 0, y: 2 },
+  ]);
+  const teamB = ref<TLayout>([{ h: 2, i: 'B1', w: 2, x: 0, y: 0 }]);
+  const archive = ref<TLayout>([{ h: 2, i: 'Locked', w: 2, x: 0, y: 0, isStatic: true }]);
 
-const log = ref<{ kind: 'dropped' | 'rejected'; message: string }[]>([]);
-const addLogEntry = (kind: 'dropped' | 'rejected', message: string): void => {
-  log.value = [{ kind, message }, ...log.value].slice(0, 6);
-};
+  const log = ref<{ kind: 'dropped' | 'rejected'; message: string }[]>([]);
+  const addLogEntry = (kind: 'dropped' | 'rejected', message: string): void => {
+    log.value = [{ kind, message }, ...log.value].slice(0, 6);
+  };
 
-const onDropped = (targetName: string, payload: { item: { i: string | number }; sourceLayoutId: string }): void => {
-  addLogEntry('dropped', `"${payload.item.i}" moved into ${targetName} (from ${payload.sourceLayoutId}).`);
-};
+  const onDropped = (targetName: string, payload: { item: { i: string | number }; sourceLayoutId: string }): void => {
+    addLogEntry('dropped', `"${payload.item.i}" moved into ${targetName} (from ${payload.sourceLayoutId}).`);
+  };
 
-const onRejected = (targetName: string, payload: { itemId: string | number; sourceLayoutId: string }): void => {
-  addLogEntry(
-    'rejected',
-    `${targetName} rejected "${payload.itemId}" from ${payload.sourceLayoutId} — this grid doesn't accept drops.`,
-  );
-};
+  const onRejected = (targetName: string, payload: { itemId: string | number; sourceLayoutId: string }): void => {
+    addLogEntry(
+      'rejected',
+      `${targetName} rejected "${payload.itemId}" from ${payload.sourceLayoutId} — this grid doesn't accept drops.`,
+    );
+  };
 </script>
 
 <style scoped>

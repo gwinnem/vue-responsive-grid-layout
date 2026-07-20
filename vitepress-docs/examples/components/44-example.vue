@@ -25,27 +25,62 @@
     <template #controls>
       <label>
         rowHeight ({{ rowHeight }}px)
-        <input v-model.number="rowHeight" max="150" min="20" step="5" type="range" />
+        <input
+          v-model.number="rowHeight"
+          max="150"
+          min="20"
+          step="5"
+          type="range" />
       </label>
       <label>
         colNum ({{ colNum }})
-        <input v-model.number="colNum" max="16" min="2" step="1" type="range" />
+        <input
+          v-model.number="colNum"
+          max="16"
+          min="2"
+          step="1"
+          type="range" />
       </label>
       <label>
         margin horizontal ({{ marginH }}px)
-        <input v-model.number="marginH" max="40" min="0" step="2" type="range" />
+        <input
+          v-model.number="marginH"
+          max="40"
+          min="0"
+          step="2"
+          type="range" />
       </label>
       <label>
         margin vertical ({{ marginV }}px)
-        <input v-model.number="marginV" max="40" min="0" step="2" type="range" />
+        <input
+          v-model.number="marginV"
+          max="40"
+          min="0"
+          step="2"
+          type="range" />
       </label>
-      <ExampleToggle v-model="showGridLines" label="Show gridlines" />
+      <ExampleToggle
+        v-model="showGridLines"
+        label="Show gridlines" />
     </template>
 
-    <GridLayout v-model:layout="layout" :col-num="colNum" :margin="[marginH, marginV]" :row-height="rowHeight"
+    <GridLayout
+      v-model:layout="layout"
+      :col-num="colNum"
+      :margin="[marginH, marginV]"
+      :row-height="rowHeight"
       :show-grid-lines="showGridLines">
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.i }}</div>
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.i }}
+        </div>
       </GridItem>
     </GridLayout>
 
@@ -56,19 +91,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<TLayout>([
-  { h: 2, i: '0', w: 3, x: 0, y: 0 },
-  { h: 2, i: '1', w: 3, x: 3, y: 0 },
-  { h: 2, i: '2', w: 3, x: 6, y: 0 },
-  { h: 2, i: '3', w: 3, x: 9, y: 0 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: '0', w: 3, x: 0, y: 0 },
+    { h: 2, i: '1', w: 3, x: 3, y: 0 },
+    { h: 2, i: '2', w: 3, x: 6, y: 0 },
+    { h: 2, i: '3', w: 3, x: 9, y: 0 },
+  ]);
 
-const rowHeight = ref(80);
-const colNum = ref(12);
-const marginH = ref(10);
-const marginV = ref(10);
-const showGridLines = ref(true);
+  const rowHeight = ref(80);
+  const colNum = ref(12);
+  const marginH = ref(10);
+  const marginV = ref(10);
+  const showGridLines = ref(true);
 </script>

@@ -7,31 +7,43 @@
 -->
 <template>
   <div class="example-demo">
-    <div v-if="title || $slots.description" class="example-demo__header">
-      <h3 v-if="title" class="example-demo__title">{{ title }}</h3>
-      <p v-if="$slots.description" class="example-demo__description">
-        <slot name="description" />
+    <div
+      v-if="title || $slots.description"
+      class="example-demo__header">
+      <h3
+        v-if="title"
+        class="example-demo__title">
+        {{ title }}
+      </h3>
+      <p
+        v-if="$slots.description"
+        class="example-demo__description">
+        <slot name="description"></slot>
       </p>
     </div>
 
-    <div v-if="$slots.controls" class="example-demo__controls">
-      <slot name="controls" />
+    <div
+      v-if="$slots.controls"
+      class="example-demo__controls">
+      <slot name="controls"></slot>
     </div>
 
     <div class="example-demo__stage">
-      <slot />
+      <slot></slot>
     </div>
 
-    <div v-if="$slots.footer" class="example-demo__footer">
-      <slot name="footer" />
+    <div
+      v-if="$slots.footer"
+      class="example-demo__footer">
+      <slot name="footer"></slot>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  title?: string;
-}>();
+  defineProps<{
+    title?: string;
+  }>();
 </script>
 
 <style scoped>

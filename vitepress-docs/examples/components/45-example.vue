@@ -25,9 +25,21 @@
       library — and `canUndo` correctly resets to `false`.
     </template>
     <template #controls>
-      <label><input v-model="forceRemount" type="checkbox" /> Force remount on switch</label>
-      <button data-testid="switch-to-a" type="button" @click="switchTo('a')">Switch to Layout A</button>
-      <button data-testid="switch-to-b" type="button" @click="switchTo('b')">Switch to Layout B</button>
+      <label><input
+        v-model="forceRemount"
+        type="checkbox" /> Force remount on switch</label>
+      <button
+        data-testid="switch-to-a"
+        type="button"
+        @click="switchTo('a')">
+        Switch to Layout A
+      </button>
+      <button
+        data-testid="switch-to-b"
+        type="button"
+        @click="switchTo('b')">
+        Switch to Layout B
+      </button>
     </template>
 
     <GridLayout
@@ -35,60 +47,72 @@
       ref="gridRef"
       v-model:layout="layout"
       enable-undo-redo
-      :row-height="70"
-    >
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.i }}</div>
+      :row-height="70">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.i }}
+        </div>
       </GridItem>
     </GridLayout>
 
     <template #footer>
-      <p data-testid="current-layout-name">Current layout: <strong>{{ currentLayoutName }}</strong></p>
-      <p data-testid="can-undo-feedback">canUndo: {{ gridRef?.canUndo ?? false }}</p>
+      <p data-testid="current-layout-name">
+        Current layout: <strong>{{ currentLayoutName }}</strong>
+      </p>
+      <p data-testid="can-undo-feedback">
+        canUndo: {{ gridRef?.canUndo ?? false }}
+      </p>
       <LayoutJsonViewer :layout="layout" />
     </template>
   </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layoutA: TLayout = [
-  { h: 2, i: 'a0', w: 2, x: 0, y: 0 },
-  { h: 2, i: 'a1', w: 2, x: 2, y: 0 },
-  { h: 2, i: 'a2', w: 2, x: 4, y: 0 },
-];
+  const layoutA: TLayout = [
+    { h: 2, i: 'a0', w: 2, x: 0, y: 0 },
+    { h: 2, i: 'a1', w: 2, x: 2, y: 0 },
+    { h: 2, i: 'a2', w: 2, x: 4, y: 0 },
+  ];
 
-// Deliberately the same length (3 items) as layoutA — GridLayout has
-// its own `watch(() => props.layout.length, ...)` that commits an
-// undo point whenever the length changes (see GridLayout.vue), which
-// would otherwise fire on every switch regardless of whether anything
-// was actually dragged, confounding this example's own demonstration
-// of canUndo staying stale specifically from Layout A's own drag.
-const layoutB: TLayout = [
-  { h: 3, i: 'b0', w: 4, x: 0, y: 0 },
-  { h: 3, i: 'b1', w: 4, x: 4, y: 0 },
-  { h: 2, i: 'b2', w: 8, x: 0, y: 3 },
-];
+  // Deliberately the same length (3 items) as layoutA — GridLayout has
+  // its own `watch(() => props.layout.length, ...)` that commits an
+  // undo point whenever the length changes (see GridLayout.vue), which
+  // would otherwise fire on every switch regardless of whether anything
+  // was actually dragged, confounding this example's own demonstration
+  // of canUndo staying stale specifically from Layout A's own drag.
+  const layoutB: TLayout = [
+    { h: 3, i: 'b0', w: 4, x: 0, y: 0 },
+    { h: 3, i: 'b1', w: 4, x: 4, y: 0 },
+    { h: 2, i: 'b2', w: 8, x: 0, y: 3 },
+  ];
 
-const layout = ref<TLayout>(structuredClone(layoutA));
-const currentLayoutName = ref<'A' | 'B'>('A');
-const forceRemount = ref(false);
-const gridRef = ref<InstanceType<typeof GridLayout>>();
+  const layout = ref<TLayout>(structuredClone(layoutA));
+  const currentLayoutName = ref<'A' | 'B'>('A');
+  const forceRemount = ref(false);
+  const gridRef = ref<InstanceType<typeof GridLayout>>();
 
-// Only meaningful while forceRemount is on — changing this changes the
-// GridLayout's own :key above, which is what actually triggers Vue to
-// unmount and remount the component (a fresh instance, all internal
-// state reset) rather than just reactively updating props on the
-// existing one. Incrementing on every switch (not just toggling
-// true/false once) means switching back and forth between A and B
-// remounts every time, not just the first switch after enabling it.
-const gridKey = ref(0);
+  // Only meaningful while forceRemount is on — changing this changes the
+  // GridLayout's own :key above, which is what actually triggers Vue to
+  // unmount and remount the component (a fresh instance, all internal
+  // state reset) rather than just reactively updating props on the
+  // existing one. Incrementing on every switch (not just toggling
+  // true/false once) means switching back and forth between A and B
+  // remounts every time, not just the first switch after enabling it.
+  const gridKey = ref(0);
 
-function switchTo(target: 'a' | 'b'): void {
-  layout.value = structuredClone(target === 'a' ? layoutA : layoutB);
-  currentLayoutName.value = target === 'a' ? 'A' : 'B';
-  gridKey.value += 1;
-}
+  function switchTo(target: 'a' | 'b'): void {
+    layout.value = structuredClone(target === 'a' ? layoutA : layoutB);
+    currentLayoutName.value = target === 'a' ? 'A' : 'B';
+    gridKey.value += 1;
+  }
 </script>

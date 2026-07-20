@@ -10,32 +10,55 @@
       easier to see happen against.
     </template>
     <template #controls>
-      <ExampleToggle v-model="snapToGrid" label="snapToGrid" />
-      <ExampleToggle v-model="showGridLines" label="showGridLines" />
+      <ExampleToggle
+        v-model="snapToGrid"
+        label="snapToGrid" />
+      <ExampleToggle
+        v-model="showGridLines"
+        label="showGridLines" />
       <label class="example-controls-label">
         snapThreshold:
-        <input v-model.number="snapThreshold" max="4" min="0" type="number">
+        <input
+          v-model.number="snapThreshold"
+          max="4"
+          min="0"
+          type="number" />
       </label>
     </template>
 
-    <GridLayout v-model:layout="layout" :row-height="80" :show-grid-lines="showGridLines" :snap-threshold="snapThreshold" :snap-to-grid="snapToGrid" :compact-type="ECompactType.NONE">
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.i }}</div>
+    <GridLayout
+      v-model:layout="layout"
+      :compact-type="ECompactType.NONE"
+      :row-height="80"
+      :show-grid-lines="showGridLines"
+      :snap-threshold="snapThreshold"
+      :snap-to-grid="snapToGrid">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.i }}
+        </div>
       </GridItem>
     </GridLayout>
   </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<TLayout>([
-  { h: 2, i: 'a', w: 2, x: 0, y: 6 },
-  { h: 2, i: 'b', w: 8, x: 0, y: 0 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: 'a', w: 2, x: 0, y: 6 },
+    { h: 2, i: 'b', w: 8, x: 0, y: 0 },
+  ]);
 
-const snapToGrid = ref(true);
-const snapThreshold = ref(2);
-const showGridLines = ref(true);
+  const snapToGrid = ref(true);
+  const snapThreshold = ref(2);
+  const showGridLines = ref(true);
 </script>

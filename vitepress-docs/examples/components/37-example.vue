@@ -17,11 +17,30 @@
       <span class="demo-description">Try it: select two items, then Tab to one and press an arrow key — the other moves too.</span>
     </template>
 
-    <GridLayout ref="gridRef" v-model:layout="layout" multi-select :row-height="80" :compact-type="ECompactType.NONE">
-      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :is-static="item.i === 'd'" :max-w="item.i === 'd' ? 3 : undefined" show-resize-handles :w="item.w" :x="item.x" :y="item.y">
-        <div class="example-item">{{ item.i }}{{ item.i === 'd' ? ' (static)' : '' }}</div>
+    <GridLayout
+      ref="gridRef"
+      v-model:layout="layout"
+      :compact-type="ECompactType.NONE"
+      multi-select
+      :row-height="80">
+      <GridItem
+        v-for="item in layout"
+        :key="item.i"
+        :h="item.h"
+        :i="item.i"
+        :is-static="item.i === 'd'"
+        :max-w="item.i === 'd' ? 3 : undefined"
+        show-resize-handles
+        :w="item.w"
+        :x="item.x"
+        :y="item.y">
+        <div class="example-item">
+          {{ item.i }}{{ item.i === 'd' ? ' (static)' : '' }}
+        </div>
         <template #resize-handle="{ edge }">
-          <span class="resize-dot" :title="edge">⤡</span>
+          <span
+            class="resize-dot"
+            :title="edge">⤡</span>
         </template>
       </GridItem>
     </GridLayout>
@@ -29,17 +48,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
+  import { ref } from 'vue';
+  import { GridLayout, GridItem, ECompactType, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-const layout = ref<TLayout>([
-  { h: 2, i: 'a', w: 3, x: 0, y: 0 },
-  { h: 2, i: 'b', w: 3, x: 3, y: 0 },
-  { h: 2, i: 'c', w: 3, x: 6, y: 0 },
-  { h: 2, i: 'd', w: 3, x: 0, y: 2 },
-]);
+  const layout = ref<TLayout>([
+    { h: 2, i: 'a', w: 3, x: 0, y: 0 },
+    { h: 2, i: 'b', w: 3, x: 3, y: 0 },
+    { h: 2, i: 'c', w: 3, x: 6, y: 0 },
+    { h: 2, i: 'd', w: 3, x: 0, y: 2 },
+  ]);
 
-const gridRef = ref<InstanceType<typeof GridLayout>>();
+  const gridRef = ref<InstanceType<typeof GridLayout>>();
 </script>
 
 <style scoped>
