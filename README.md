@@ -1,5 +1,6 @@
 <div style="text-align: center">
 
+[![CI](https://github.com/gwinnem/vue-responsive-grid-layout/actions/workflows/ci.yml/badge.svg)](https://github.com/gwinnem/vue-responsive-grid-layout/actions/workflows/ci.yml)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/vue-ts-responsive-grid-layout)](https://bundlephobia.com/result?p=vue-ts-responsive-grid-layout)
 [![npm](https://img.shields.io/npm/v/vue-ts-responsive-grid-layout)](https://www.npmjs.com/package/vue-ts-responsive-grid-layout)
@@ -15,18 +16,97 @@
 <h1 align="center">vue-ts-responsive-grid-layout</h1>
 
 <h2 align="center">
-  <a href="https://vue-ts-responsive-grid-layout.winnem.tech" target="_blank">Documentation Website</a>
+  <a href="https://vue-ts-responsive-grid-layout.winnem.tech" target="_blank">Documentation Website — 45 interactive examples</a>
 </h2>
 
-## What is vue-ts-responsive-grid-layout
+## What this actually is
 
-VUE 3 responsive grid layout is based on the original work by [JBaysolution's vue-grid-layout](https://github.com/jbaysolutions/vue-grid-layout).
+A Vue 3, TypeScript-native library for building **draggable, resizable,
+responsive dashboard layouts** — the kind of thing you'd use to let a
+user rearrange widgets, charts, or panels on a screen, with drag,
+resize, responsive breakpoints, and collision handling built in.
 
-This new and refactored component has more features, typesafe Emits, Props and a strict linting rule setup.
+It is **not** a data table/grid. If you're looking for sorting,
+filtering, paging, or spreadsheet-style rows and columns, this isn't
+that (see [`COMPARISON_ALTERNATIVES.md`](./COMPARISON_ALTERNATIVES.md)
+for exactly that distinction, spelled out against Kendo/AG-Grid-style
+products). This is closer in spirit to `react-grid-layout` or
+`gridstack.js` — but for Vue 3, written in TypeScript from the ground
+up rather than ported from an older codebase.
 
-A proper App developed for testing purposes.
+## Why this exists
 
-Documentation website contains 13 examples. Will be updated when new features are added to the component.
+The most popular Vue option in this space,
+[`vue-grid-layout`](https://github.com/jbaysolutions/vue-grid-layout)
+(~7.4k stars), **still has no official Vue 3 release** — its own GitHub
+issues show people asking for a Vue 3 alternative as far back as 2022.
+What filled that gap instead is a handful of independently-maintained
+community forks (`vue-grid-layout-v3`, `vue3-grid-layout-next`, at
+least one explicitly marked "no longer supported"), with no obvious
+default among them.
+
+`vue-ts-responsive-grid-layout` is a ground-up TypeScript rewrite built
+specifically to be the option in that gap with the most complete
+feature set and the most rigorously tested codebase — not a patch on
+top of the original Vue 2 source. See
+[`COMPARISON_ALTERNATIVES.md`](./COMPARISON_ALTERNATIVES.md) for the
+full, search-grounded comparison, including where this library is
+genuinely ahead of every alternative checked (magnetic snap-to-grid,
+visual alignment guides, named layout presets, SVG export, localizable
+ARIA strings) and where it's genuinely behind (ecosystem age, no
+multi-select yet, Vue-only by design).
+
+## Quick start
+
+```sh
+npm install vue-ts-responsive-grid-layout
+```
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+import 'vue-ts-responsive-grid-layout/style.css';
+
+const layout = ref<TLayout>([
+  { h: 2, i: '0', w: 2, x: 0, y: 0 },
+  { h: 2, i: '1', w: 2, x: 2, y: 0 },
+  { h: 4, i: '2', w: 2, x: 4, y: 0 },
+]);
+</script>
+
+<template>
+  <GridLayout v-model:layout="layout" :col-num="12" :row-height="30">
+    <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
+      {{ item.i }}
+    </GridItem>
+  </GridLayout>
+</template>
+```
+
+That's a fully draggable, resizable, auto-compacting grid — no other
+setup required. `vue` (`^3.0.0`) is a peer dependency. See
+[`INSTALL.md`](./INSTALL.md) for Options API usage, and the
+[documentation site](https://vue-ts-responsive-grid-layout.winnem.tech)
+for every prop, event, and the full example catalog.
+
+A focused demo app lives in [`demo/`](./demo) (`npm run demo`) — see
+[`demo/README.md`](./demo/README.md). The `sandbox/` app is a separate,
+larger test bench used for manually exercising every prop during
+development.
+
+**Using just the grid math, without Vue?** `vue-ts-responsive-grid-layout/core`
+exports the same collision detection, compaction, movement, and
+alignment functions the components above are built on — zero Vue
+dependency, no live DOM required, plain data in and out:
+
+```ts
+import { collides, compactLayout, moveElement } from 'vue-ts-responsive-grid-layout/core';
+```
+
+Useful for validating a layout server-side, or building an entirely
+different UI on the same algorithms. See `src/core/index.ts` for the
+complete export list.
 
 <br/>
 
@@ -42,112 +122,131 @@ If you enjoyed this project — or just feeling generous, consider buying me a �
 
 <br/>
 
-### Features:
+## Features
 
-* Prop in GridLayout for distributing GridItem's equally.
-* GridLayout now has slot for GridItem.
-* Prop for displaying grid lines in GridLayout.
-* Prop for setting edit mode in GridLayout. Shortcuts the isDraggable and isResizable props.
-* Prop for adding border radius in GridLayout. Adds a 8px radius to each GridItem.
-* Prop in GridLayout for shifting GridItems horizontally when dragging instead of vertical.
-* Separated out style variables, so it is easier to restyle the component.
-* Added tab navigation support.
-* Close button in GridItem for removing the GridItem from the GridLayout.
-* Added more events to GridLayout and GridItem.
-* Support for resize Bottom, Bottom Right and Right in GridIem.
-* Draggable widgets
-* Resizable widgets
-* Static widgets
-* Bounds checking for dragging and resizing
-* Widgets may be added or removed without rebuilding grid
-* Layout can be serialized and restored
-* Automatic RTL support
-* Responsive using predefined layout's for different breakpoints.
-* GridItem automatically resizes when content change(Useful when displaying charts).
+Full reference, organized by category with live example links, in
+[`FEATURES.md`](./FEATURES.md). The headline items — several with no
+equivalent in any alternative checked in
+[`COMPARISON_ALTERNATIVES.md`](./COMPARISON_ALTERNATIVES.md):
 
-### Testing:
+* **Core layout** — grid-unit positioning with automatic pixel
+  conversion, `v-model:layout`, auto-sizing container (grid-level and
+  per-item `autoHeight`), visible grid lines, visual alignment guides
+  *and* magnetic `snapToGrid` (a real distinction — one shows where
+  edges line up, the other actually moves the item), CSS transform
+  positioning, a generic `ILayoutItem<TMeta>` for attaching typed
+  consumer data to each item.
+* **Drag and resize** — drag from anywhere on an item by default;
+  resize from all eight edges/corners with cursor affordance and
+  optional visible handles (`showResizeHandles`/`resizeHandleColor`);
+  drag-handle/ignore selectors; bounded dragging; aspect-ratio locking;
+  per-item size constraints; keyboard move/resize (arrow keys / shift+
+  arrow); a blocked-move feedback event
+  (`MOVE_BLOCKED_BY_COLLISION`) for shake/flash/toast UI without
+  reimplementing collision detection yourself.
+* **Collision and compaction** — vertical compaction, `preventCollision`,
+  horizontal shift, static items excluded from cascades, on-demand
+  `compactNow()`/`rearrange()`, collision-safe `duplicateItem(id)`, a
+  pluggable `compactor` prop for replacing the compaction algorithm
+  entirely.
+* **Responsive layouts** — predefined layouts per breakpoint, with
+  auto-generation for breakpoints without one.
+* **Multi-grid and drag-and-drop** — drag items between independent
+  `GridLayout` instances (`allowCrossGridDrag`), and from outside the
+  grid system entirely via native HTML5 drag-and-drop
+  (`allowOutsideDrop`, `outsideDropAccept` to reject incompatible
+  drags, a typed-payload helper for the drop event).
+* **Editing and lifecycle** — a close button, edit-mode toggle,
+  add/remove items without rebuilding the grid, opt-in undo/redo
+  (`enableUndoRedo`) at committed-change granularity.
+* **Styling and customization** — border radius, configurable
+  transition duration/easing, a slot for custom drag-placeholder
+  content, automatic RTL support (including resize from every edge,
+  verified in both directions).
+* **Persistence** — `useLayoutStorage`/`serializeLayout`/`deserializeLayout`
+  for a single saved layout, plus `useLayoutPresets` for saving and
+  switching between several named arrangements of the same items.
+* **Export** — `exportLayoutAsSvg()`, a dependency-free grid-to-image
+  export for a report, thumbnail, or "share my dashboard" feature.
+* **Accessibility** — keyboard move/resize, `aria-roledescription`/
+  `role="group"` on interactive items, and localizable UI/ARIA strings
+  (`ariaLabels`) — not a full WAI-ARIA grid/application pattern by
+  design; see [`docs/ACCESSIBILITY.md`](./docs/ACCESSIBILITY.md) for
+  the explicit scope.
 
-* __Unit tests__ [Using Vitest](https://vitest.dev/)
-* __Unit test console__ [Using Vitest UI](https://vitest.dev/guide/ui.html#vitest-ui)
-* __e2e tests__ [Using nightwatchjs](https://nightwatchjs.org/)
+## Built to a higher testing bar than most projects in this space
+
+* 99%+ statement/branch coverage, enforced, not aspirational
+* Mutation testing (Stryker) on the core composables, not just line
+  coverage
+* Unit/component tests via [Vitest](https://vitest.dev/) +
+  [@vue/test-utils](https://test-utils.vuejs.org/), with a
+  [Vitest UI](https://vitest.dev/guide/ui.html#vitest-ui) test console
+* e2e tests via [Playwright](https://playwright.dev/) — see
+  [`docs/TESTING.md`](./docs/TESTING.md)
+* A pack-and-install smoke test that verifies the actual published
+  tarball resolves and exports correctly — not just that the source
+  tree looks right
+* Every finding — bug fixes, design decisions, things tried and
+  rejected — logged with root cause and verification method in
+  [`docs/REFACTORING.md`](./docs/REFACTORING.md), not just a changelog
+  line
+
+## Reports & documentation
+
+* [`INSTALL.md`](./INSTALL.md) — installation guide for consumers of the package, with usage examples
+* [`MIGRATION.md`](./MIGRATION.md) — upgrading between major versions; states plainly whether a release has breaking changes rather than leaving that implicit in the changelog
+* [`SUPPORT.md`](./SUPPORT.md) — how to get help, supported versions/environments, and the maintenance model stated plainly (including bus-factor)
+* [`NOTICE.md`](./NOTICE.md) — third-party license attributions for bundled dependencies
+* [`FEATURES.md`](./FEATURES.md) — comprehensive reference of every feature currently implemented, organized by category
+* [`ROADMAP.md`](./ROADMAP.md) — suggested next features, not a task list nobody's committed to
+* [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md) — checked, not assumed: what's actually verified, what's a known gap, and what's blocking real-world use
+* [`MANUAL_TEST_CHECKLIST.md`](./MANUAL_TEST_CHECKLIST.md) — a step-by-step, prop-by-prop checklist (107 items) covering every documented prop/event/exposed method, plus cross-browser, touch, RTL, and screen-reader scenarios the automated suite can't cover from this environment
+* [`COMPARISON_ALTERNATIVES.md`](./COMPARISON_ALTERNATIVES.md) — an honest, search-grounded comparison against other GitHub grid-layout projects (`vue-grid-layout`, `react-grid-layout`, `gridstack.js`, and the fragmented Vue 3 community forks that fill `vue-grid-layout`'s own gap)
+* [`COMPARISON_COMMERCIAL.md`](./COMPARISON_COMMERCIAL.md) — the same, against two commercial products in an adjacent space: Kendo TileLayout and DevExtreme's Dashboard Designer, kept separate since both have a different licensing model (one, DevExtreme, is arguably a different product category entirely)
+* [`COMPETITIVE_ROADMAP.md`](./COMPETITIVE_ROADMAP.md) — a prioritized, sequenced plan for closing the gaps identified above, including what's deliberately *not* recommended and why
+* [`docs/REFACTOR_STRATEGY.md`](./docs/REFACTOR_STRATEGY.md) — full roadmap: standardization, maintainability, testability, enterprise readiness
+* [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — how GridLayout and GridItem talk to each other, and the composable split
+* [`docs/BUNDLE_ANALYSIS.md`](./docs/BUNDLE_ANALYSIS.md) — measured bundle composition, including the native drag/resize engine that replaced `interact.js` (removing it as a runtime dependency entirely)
+* [`docs/REFACTORING.md`](./docs/REFACTORING.md) — specific refactoring findings from the current source
+* [`docs/TESTING.md`](./docs/TESTING.md) — unit + e2e testing guide
+* [`docs/STRYKER.md`](./docs/STRYKER.md) — mutation testing: what it's for, how to run it, and what's in scope
+* [`docs/VISUAL_REGRESSION.md`](./docs/VISUAL_REGRESSION.md) — screenshot-based regression testing: current status and one-time setup
+* [`docs/ACCESSIBILITY.md`](./docs/ACCESSIBILITY.md) — keyboard move/resize support, screen reader support, and what's not covered
+* [`docs/FEATURE_RECOMMENDATIONS.md`](./docs/FEATURE_RECOMMENDATIONS.md) — the fuller, source-grounded version of `ROADMAP.md`'s suggestions
 
 ## Changelog
 
+See [`CHANGELOG.md`](./CHANGELOG.md) for the full history. Latest entries:
 
-### v: 1.2.10 (2025-04-28)
-* __Demo App__ [Eventlog is not displaying any resize events.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/46)
-* __Fixed Issue__ [The margin property cannot be [0,0]](https://github.com/gwinnem/vue-responsive-grid-layout/issues/64)
-* __Fixed Issue__ [Hide resize cursor change when GridItem is not resizable](https://github.com/gwinnem/vue-responsive-grid-layout/issues/49)
-* __Tests__ Added more unit tests and refactored code so it is easier to test.
-* __Tests__ Updated vitest.config.js coverage exclude section.
+### Unreleased
 
-
-
-### v: 1.2.9 (2024-02-03)
-* __Fixed Issue__ [Dynamic change columns, item will overlap](https://github.com/gwinnem/vue-responsive-grid-layout/issues/12)
-
-
-### v: 1.2.8 (2024-01-25)
-* __Fixed Issue__ [Unexpected Behavior when dragging items](https://github.com/gwinnem/vue-responsive-grid-layout/issues/54) Tnxs to [T0miii](https://github.com/T0miii)
-
-
-### v: 1.2.7 (2024-01-10)
-* __Fixed Issue__ [option "responsive" not working](https://github.com/gwinnem/vue-responsive-grid-layout/issues/51). Tnxs to [T0miii](https://github.com/T0miii)
-
-
-### v: 1.2.6 (2023-12-28) 
-* __Fixed Issue__ Problem if layout doesnt have static item [PullRequest](https://github.com/gwinnem/vue-responsive-grid-layout/pull/47)
-
-
-### v: 1.2.5 (2023-12-14)
-* __Fixed Issue__ [editMode not working as expected](https://github.com/gwinnem/vue-responsive-grid-layout/issues/33)
-* __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
-* __Demo App__ Added inputs for Margins.
-* __Refactor__ Updated style for gridlines in GridLayout.vue.
-* __Config__ Added style linting to project.
-* __Config__ Updated scripts section in package.json.
-* __Demo App__ Fixed index value when dropping a new GridItem onto the layout. This only works when index is a numeric value.
-* __Demo App__ Added checks so number input can not have less than 1.
-* __Tests__ Added more unit tests and refactored code so it is easier to test.
- 
-
-
-### v: 1.2.4 (2023-10-23)
-
-* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19). Tnxs to [SamGeems](https://github.com/SamGeens)
-* __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20). Tnxs to [SamGeems](https://github.com/SamGeens)
-* __Feature__ Added event __drag-end__ to GridLayout.
-* __Feature__ Added event __drag-move__ to GridLayout.
-* __Feature__ Added event __drag-start__ to GridLayout.
-* __Codebase__ Renamed EGridLayoutEvent value UPDATE_LAYOUT to LAYOUT_UPDATE.
-* __Codebase__ Removed file EDragEvents and updated GridLayout. Values are implemented in EGridLayoutEvent.
-* __Codebase__ Added documentation to file DOM.ts
-* __Codebase__ Added new enum for drag events and refactored GridLayout to use new enum.
-* __Refactor__ Removed obsolete enum EMovingDirections.
-* __Demo App__ Added button for clearing the event log.
-* __Demo App__ Added Dropdown for filtering on events.
-
-### v: 1.2.2 (2023-09-19)
-
-* __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
-* __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
-  * __Right, Right Bottom and Bottom__ resize fixed.
-  * __Left, Top Left, Top and Top Right__ resize not fixed.
-* __Codebase__ Adding description to functions.
-* __Codebase__ Added contributors to package.json.
-* __Codebase__ Added badges to README file.
-* __Codebase__ Fixed outdated dependencies.
-
-Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this release.
-
-### v: 1.2.1 (2023-05-07)
-
-* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks to [UTing1119](https://github.com/UTing1119)
-* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks to [UTing1119](https://github.com/UTing1119)
+Two large batches of work on top of the original test/CI/docs
+foundation (99%+ coverage, mutation testing, three CI workflows):
+first, cross-grid drag/drop, drag-and-drop from outside the grid,
+all-edge resize, keyboard move/resize, a first-party persistence
+helper, a generic `ILayoutItem<TMeta>`, configurable transitions, a
+custom drag-placeholder slot, and alignment guides while dragging.
+Then a further batch: `compactNow()`/`rearrange()`, collision-safe
+`duplicateItem(id)`, a `MOVE_BLOCKED_BY_COLLISION` feedback event,
+per-item `autoHeight`, magnetic `snapToGrid` (distinct from the
+visual-only alignment guides), configurable resize-handle appearance,
+`outsideDropAccept` and a typed outside-drop payload helper, named
+layout presets (`useLayoutPresets`), a dependency-free SVG export
+(`exportLayoutAsSvg`), localizable ARIA strings (`ariaLabels`), shared
+design tokens between `demo/`/`sandbox/`, and a `npm run package`
+script that runs every quality gate and produces the exact publishable
+tarball in one command. VitePress documentation grew alongside all of
+it, from 26 to 37 interactive examples. See
+[`CHANGELOG.md`](./CHANGELOG.md) for the complete, dated list, and
+[`docs/REFACTOR_STRATEGY.md`](./docs/REFACTOR_STRATEGY.md) for the
+roadmap this was scoped against.
 
 ## Setting up vue-ts-responsive-grid-layout in your project
 
-[Howto](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/setup.md)
+See [INSTALL.md](./INSTALL.md) for adding the package to your own project,
+with usage examples (Composition API, Options API, TypeScript). Contributing
+to this repository itself instead? See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 <br/>
 
@@ -165,4 +264,4 @@ Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this
 * [Vue-Multiselect used in the sandbox](https://vue-multiselect.js.org/#sub-getting-started)
 * [Vitest](https://vitest.dev/)
 * [Vitest UI](https://vitest.dev/guide/ui.html#vitest-ui)
-* [nightwatchjs](https://nightwatchjs.org/)
+* [Playwright](https://playwright.dev/)

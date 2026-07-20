@@ -1,1 +1,5 @@
-@import 'variables';
+// Not currently imported anywhere — GridItem.vue/GridLayout.vue's <style>
+// blocks import `../../styles/variables` directly instead of going through
+// this file. Kept here as a conventional "styles entry point," but as
+// written it's dead weight; either wire it in or remove it.
+@use 'variables';

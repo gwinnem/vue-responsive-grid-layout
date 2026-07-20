@@ -1,0 +1,166 @@
+name: CI
+
+# Runs on every push to main and every PR. This is Phase 1 from
+# docs/REFACTOR_STRATEGY.md: before this workflow existed, there was no
+# automated verification of anything — a PR could delete src/ entirely and
+# nothing would fail before a human noticed.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same branch/PR so pushing a fix doesn't
+# leave a stale run occupying a runner.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # actions/setup-node's built-in npm cache needs a lockfile to key off of.
+  # If package-lock.json isn't committed, remove the `cache: npm` lines
+  # below (or commit the lockfile — recommended for a project this size).
+  NODE_VERSION_DEFAULT: '20'
+
+jobs:
+  verify:
+    name: Verify (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # package.json's engines field is "^18.0.0 || ^20.0.0 || >=22.0.0"
+        # (see docs/REFACTORING.md #6) — test against the full supported
+        # range, not just whatever happens to be on the runner by default.
+        node: ['18', '20', '22']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint (style — clean, blocking)
+        run: npm run lint:style
+
+      - name: Lint (ESLint — advisory, not yet blocking)
+        # ~800 pre-existing issues from before this codebase had a working
+        # ESLint config at all (see docs/REFACTORING.md #6 and
+        # docs/REFACTOR_STRATEGY.md's "Phase 0.5" note on `lint:fix`).
+        # Runs so the count is visible on every PR without failing builds
+        # on debt nobody's asked this PR to pay down. Flip this to a hard
+        # gate once that cleanup lands.
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Unit + component tests (with coverage gate)
+        # Coverage thresholds (90% lines/branches/functions/statements)
+        # are enforced by vitest.config.js itself — this step fails on
+        # either a test failure or a coverage drop below that floor.
+        run: npm run test:coverage
+
+      - name: Build library
+        run: npm run build:only
+
+      - name: Check bundle size
+        run: npm run check:bundle-size
+
+      - name: Verify the published package actually installs and resolves
+        # Every other step in this workflow (test:coverage, e2e, the demo
+        # build, every VitePress example) exercises the library through
+        # source aliases, never package.json's own `exports` field the
+        # way a real `npm install`'d consumer would. That gap is exactly
+        # what let a real, published-package-breaking bug ship
+        # undetected once already (see docs/REFACTORING.md #46) — this
+        # step packs the tarball, installs it into a genuinely separate
+        # scratch directory, and asserts every exports subpath actually
+        # resolves.
+        run: npm run check:package-install
+
+      - name: Build demo app
+        run: npm run demo:build
+
+      - name: Build documentation site
+        run: npm run docs:build
+
+  e2e:
+    name: End-to-end tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION_DEFAULT }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        # playwright.config.ts defines chromium/firefox/webkit projects —
+        # install all three, plus their OS-level dependencies.
+        run: npx playwright install --with-deps
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION_DEFAULT }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit production dependencies (blocking)
+        # Scoped to production deps: this is the security surface a
+        # consumer of the published package actually inherits. Currently
+        # clean — see docs/REFACTOR_STRATEGY.md's Phase 1 notes.
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit all dependencies (advisory)
+        # Includes devDependencies. `qs` and `esbuild` advisories were
+        # fixed via package.json's `overrides` (see docs/REFACTORING.md
+        # #28); the remainder is vitepress's own vendored `vite` (a major
+        # version behind this project's own top-level vite, with no
+        # non-breaking fix available yet) — dev-server-only, doesn't
+        # affect published consumers. Visible on every run without
+        # blocking on a docs-tooling issue outside this project's control.
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Check production dependency licenses (blocking)
+        # Fails if any production dependency (or transitive dependency) is
+        # under a license outside the allowlist — copyleft licenses
+        # (GPL/AGPL/etc.) are the main thing this catches, since they'd
+        # impose obligations on every consumer of this package. Scoped to
+        # production deps for the same reason as the audit step above:
+        # this is what a consumer actually inherits. Currently clean.
+        run: npm run check:licenses

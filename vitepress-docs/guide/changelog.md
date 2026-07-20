@@ -5,75 +5,139 @@ page: true
 title: Changelog
 ---
 
-## Changelog
+# Changelog
 
+This mirrors the repository's
+[`CHANGELOG.md`](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/CHANGELOG.md) —
+check there for the single source of truth if this page looks out of date.
 
-### v: 1.2.10 (2025-04-28)
-* __Demo App__ [Eventlog is not displaying any resize events.](https://github.com/gwinnem/vue-responsive-grid-layout/issues/46)
-* __Fixed Issue__ [The margin property cannot be [0,0]](https://github.com/gwinnem/vue-responsive-grid-layout/issues/64)
-* __Fixed Issue__ [Hide resize cursor change when GridItem is not resizable](https://github.com/gwinnem/vue-responsive-grid-layout/issues/49)
-* __Tests__ Added more unit tests and refactored code so it is easier to test.
-* __Tests__ Updated vitest.config.js coverage exclude section.
+## Unreleased
 
+## v2.0.0 — 2026-07-14
 
-### v: 1.2.9 (2024-02-03)
-* __Fixed Issue__ [Dynamic change columns, item will overlap](https://github.com/gwinnem/vue-responsive-grid-layout/issues/12)
+The first major release. Two large passes: the first brought cross-grid
+and outside-the-grid drag-and-drop, a full test/CI/docs foundation, and
+this documentation site; the second closed out the rest of the
+then-current roadmap in one batch — magnetic snapping, layout tools,
+persistence presets, export, and localization — plus a further round of
+e2e coverage and a bug found while writing it. See
+`docs/REFACTOR_STRATEGY.md` for the roadmap this was scoped against, and
+`docs/REFACTORING.md`/`docs/BUNDLE_ANALYSIS.md` for exhaustive detail on
+every item below.
 
+**Added (first pass):** cross-grid drag/drop
+(`allowCrossGridDrag`/`disableExternalDrop` — see
+[Drag, drop from grid to grid](/examples/12-example)); native
+drag-and-drop from outside the grid system entirely
+(`allowOutsideDrop`/`outsideDropWidth`/`outsideDropHeight` — see
+[Drag, drop from outside](/examples/11-example) and
+[into multiple grids](/examples/23-example)); resize from **all four
+edges and their corners** with cursor affordance; full unit/component/e2e
+test suite (**98%+ coverage**, enforced — see
+[Test Coverage](/guide/coverage)); CI/CD across Node 18/20/22 with a
+bundle-size regression check, dependency audit, and automated releases;
+keyboard move/resize accessibility support; a `demo/` app and a restyled
+`sandbox/` test bench; a live layout viewer under every example, paired
+with the [Understanding Layouts](/guide/understanding-layouts) guide.
 
-### v: 1.2.8 (2024-01-25)
-* __Fixed Issue__ [Unexpected Behavior when dragging items](https://github.com/gwinnem/vue-responsive-grid-layout/issues/54) Tnxs to [T0miii](https://github.com/T0miii)
+**Added (second pass):** `compactNow()`/`rearrange()` (on-demand
+compaction); collision-safe `duplicateItem(id)`; a
+`MOVE_BLOCKED_BY_COLLISION` feedback event for `preventCollision` — see
+[Blocked-move feedback](/examples/30-example); per-item `autoHeight`
+(a real `ResizeObserver`, not a one-shot measurement) — see
+[Per-item autoHeight](/examples/31-example); magnetic `snapToGrid`/
+`snapThreshold`, distinct from the visual-only `showAlignmentGuides` —
+see [Snap to grid](/examples/32-example); configurable resize-handle
+appearance (`showResizeHandles`/`resizeHandleColor`) — see
+[Configurable resize-hint appearance](/examples/33-example);
+`outsideDropAccept` and a typed outside-drop payload helper
+(`readOutsideDropPayload`) — see
+[outsideDropAccept & readOutsideDropPayload](/examples/34-example);
+named layout presets (`useLayoutPresets`) — see
+[Named layout presets](/examples/35-example); a dependency-free
+grid-to-SVG export (`exportLayoutAsSvg`) — see
+[Export layout as SVG](/examples/28-example); localizable UI/ARIA
+strings (`ariaLabels`) — see
+[Localizable ARIA strings](/examples/36-example); shared design tokens
+between `demo/`/`sandbox/`; and `npm run package`, a script running
+every quality gate and producing the exact publishable tarball in one
+command. The example catalog grew from 23 to 36 across both passes.
 
+**Fixed:** 40+ source-level bugs found while building tests, adding
+features, and writing documentation in the first pass — several
+crash-level, several silent (changing `margin`/`showCloseButton`/RTL
+mirroring after mount never reaching already-rendered items; a fast drag
+committing short of where the pointer released), and several
+API-surface bugs. In the second pass: **`compactNow()`/`rearrange()`
+was a no-op whenever `verticalCompact` was `false`** — found while
+writing an e2e test for exactly that "tidy up" scenario, not from a bug
+report — now always forces compaction regardless of the ambient
+auto-compact setting, since that's the entire point of a manual
+trigger. Full detail, with exact file references, in
+[`docs/REFACTORING.md`](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/REFACTORING.md).
 
-### v: 1.2.7 (2024-01-10)
-* __Fixed Issue__ [option "responsive" not working](https://github.com/gwinnem/vue-responsive-grid-layout/issues/51). Tnxs to [T0miii](https://github.com/T0miii)
+**Changed:** `element-resize-detector` replaced with native
+`ResizeObserver` (17% smaller gzipped bundle); `GridItem.vue` reduced
+from 1,345 to ~830 lines via composable extraction; every prop, event
+enum, and layout/breakpoint type exported from the package's main entry
+point; `sandbox/` restyled to match `demo/`'s visual language; the
+bundle-size budget raised from 45 KB to 55 KB gzip to accommodate the
+second pass's feature growth, with the reasoning documented alongside
+the change rather than raised silently; e2e test flakiness
+(`drag-and-resize.spec.ts` and two new spec files) traced to a
+project-wide race between an item's draggable-ready class appearing and
+its container-width measurement actually settling, fixed with a shared
+`stableBoundingBox()` test helper.
 
+## v1.2.10 — 2025-04-28
 
-### v: 1.2.6 (2023-12-28)
-* __Fixed Issue__ Problem if layout doesnt have static item [PullRequest](https://github.com/gwinnem/vue-responsive-grid-layout/pull/47)
+- **Demo App**: eventlog wasn't displaying any resize events.
+- **Fixed**: the `margin` property couldn't be `[0, 0]`.
+- **Fixed**: resize cursor changed even when a `GridItem` wasn't resizable.
+- **Tests**: added more unit tests; refactored code to be easier to test.
+- **Tests**: updated `vitest.config.js`'s coverage exclude section.
 
+## v1.2.9 — 2024-02-03
 
-### v: 1.2.5 (2023-12-14)
-* __Fixed Issue__ [editMode not working as expected](https://github.com/gwinnem/vue-responsive-grid-layout/issues/33)
-* __Documentation__ Updated config so when refreshing a page it loads the correct page and not the 404 page.
-* __Demo App__ Added inputs for Margins.
-* __Refactor__ Updated style for gridlines in GridLayout.vue.
-* __Config__ Added style linting to project.
-* __Config__ Updated scripts section in package.json.
-* __Demo App__ Fixed index value when dropping a new GridItem onto the layout. This only works when index is a numeric value.
-* __Demo App__ Added checks so number input can not have less than 1.
-* __Tests__ Added more unit tests and refactored code so it is easier to test.
+- **Fixed**: dynamic column changes caused items to overlap.
 
+## v1.2.8 — 2024-01-25
 
+- **Fixed**: unexpected behavior when dragging items. Thanks to [T0miii](https://github.com/T0miii).
 
-### v: 1.2.4 (2023-10-23)
+## v1.2.7 — 2024-01-10
 
-* __Fixed Issue__ [Layout update event is raised before update is finished](https://github.com/gwinnem/vue-responsive-grid-layout/issues/19). Tnxs to [SamGeems](https://github.com/SamGeens)
-* __Fixed issue__ [Close button css is different from the example](https://github.com/gwinnem/vue-responsive-grid-layout/issues/20). Tnxs to [SamGeems](https://github.com/SamGeens)
-* __Feature__ Added event __drag-end__ to GridLayout.
-* __Feature__ Added event __drag-move__ to GridLayout.
-* __Feature__ Added event __drag-start__ to GridLayout.
-* __Codebase__ Renamed EGridLayoutEvent value UPDATE_LAYOUT to LAYOUT_UPDATE.
-* __Codebase__ Removed file EDragEvents and updated GridLayout. Values are implemented in EGridLayoutEvent.
-* __Codebase__ Added documentation to file DOM.ts
-* __Codebase__ Added new enum for drag events and refactored GridLayout to use new enum.
-* __Refactor__ Removed obsolete enum EMovingDirections.
-* __Demo App__ Added button for clearing the event log.
-* __Demo App__ Added Dropdown for filtering on events.
+- **Fixed**: the `responsive` option wasn't working. Thanks to [T0miii](https://github.com/T0miii).
 
-### v: 1.2.2 (2023-09-19)
+## v1.2.6 — 2023-12-28
 
-* __Fixed Issue__ [Drag and Drop from outside is not working when distributeEvenly prop is set](https://github.com/gwinnem/vue-responsive-grid-layout/issues/5)
-* __Partial Fix__ [Resizemove edges case handling is incomplete](https://github.com/gwinnem/vue-responsive-grid-layout/issues/13)
-  * __Right, Right Bottom and Bottom__ resize fixed.
-  * __Left, Top Left, Top and Top Right__ resize not fixed.
-* __Codebase__ Adding description to functions.
-* __Codebase__ Added contributors to package.json.
-* __Codebase__ Added badges to README file.
-* __Codebase__ Fixed outdated dependencies.
+- **Fixed**: a problem when the layout had no static item.
 
-Thanks to [UTing1119](https://github.com/UTing1119) for his contribution to this release.
+## v1.2.5 — 2023-12-14
 
-### v: 1.2.1 (2023-05-07)
+- **Fixed**: `editMode` not working as expected.
+- **Docs**: fixed page config so refreshing loads the correct page instead of a 404.
+- **Demo App**: added margin inputs; number inputs can no longer go below 1; fixed the dropped-item index when it's numeric.
+- **Refactor**: updated gridline styling in `GridLayout.vue`.
+- **Config**: added style linting; updated `package.json` scripts.
+- **Tests**: added more unit tests; refactored code to be easier to test.
 
-* --Fixed Issue-- [Issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7), thanks to [UTing1119](https://github.com/UTing1119)
-* --Fixed Issue-- [Issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6), thanks to [UTing1119](https://github.com/UTing1119)
+## v1.2.4 — 2023-10-23
+
+- **Fixed**: the layout-update event was raised before the update finished. Thanks to [SamGeems](https://github.com/SamGeens).
+- **Fixed**: the close button's CSS didn't match the documented example. Thanks to [SamGeems](https://github.com/SamGeens).
+- **Added**: `drag-end`, `drag-move`, and `drag-start` events on `GridLayout`.
+- **Codebase**: renamed `EGridLayoutEvent.UPDATE_LAYOUT` to `LAYOUT_UPDATE`; removed `EDragEvents` (folded into `EGridLayoutEvent`); documented `DOM.ts`; removed the obsolete `EMovingDirections` enum.
+- **Demo App**: added a button to clear the event log and a dropdown to filter events.
+
+## v1.2.2 — 2023-09-19
+
+- **Fixed**: drag-and-drop from outside the grid wasn't working when `distributeEvenly` was set.
+- **Partial fix**: `resizemove` edge-case handling — right/bottom-right/bottom fixed; left/top-left/top/top-right still not (see [Roadmap](/guide/roadmap)).
+- **Codebase**: added function documentation, contributor list, and README badges; updated outdated dependencies.
+
+Thanks to [UTing1119](https://github.com/UTing1119) for contributing to this release.
+
+## v1.2.1 — 2023-05-07
+
+- **Fixed**: [issue 7](https://github.com/gwinnem/vue-responsive-grid-layout/issues/7) and [issue 6](https://github.com/gwinnem/vue-responsive-grid-layout/issues/6). Thanks to [UTing1119](https://github.com/UTing1119).

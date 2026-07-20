@@ -1,0 +1,70 @@
+name: Release
+
+# Runs on every push to main. semantic-release inspects the conventional
+# commit messages since the last release to decide whether a release is
+# warranted at all and, if so, what version bump it implies — most pushes
+# (docs-only commits, chore commits) result in no release, which is
+# expected and not a failure.
+#
+# REQUIRES an `NPM_TOKEN` repository secret (an npm automation token with
+# publish rights to this package) before this can actually publish. Until
+# that secret is added, the "Publish" step below will fail — that's
+# expected and safe (it fails the job, it doesn't do anything partial or
+# destructive) rather than something to route around. GITHUB_TOKEN is
+# provided automatically by Actions and needs no setup.
+on:
+  push:
+    branches: [main]
+
+# Needed for @semantic-release/github (creating releases, commenting on
+# issues/PRs) and @semantic-release/git (pushing the version bump +
+# changelog commit back to main).
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # semantic-release needs the full commit history to determine
+          # the next version from conventional commits, not a shallow clone.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test (with coverage gate)
+        run: npm run test:coverage
+
+      - name: Build library
+        run: npm run build:only
+
+      - name: Check bundle size
+        run: npm run check:bundle-size
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release

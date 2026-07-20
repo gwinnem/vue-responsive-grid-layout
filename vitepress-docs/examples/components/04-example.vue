@@ -1,503 +1,71 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <form>
-          <fieldset>
-            <legend>Test bench</legend>
-            <label for="editMode">
-              editMode
-            </label>
-            <input
-              id="editMode"
-              v-model="enableEditMode"
-              type="checkbox" />
-            <label for="isDraggable">isDraggable</label>
-            <input
-              id="isDraggable"
-              v-model="isDraggable"
-              type="checkbox" />
-            <label for="isResizable">isResizable</label>
-            <input
-              id="isResizable"
-              v-model="isResizable"
-              type="checkbox" />
-          </fieldset>
-        </form>
+  <ExampleDemo title="Multiple independent grids">
+    <template #description>
+      Each `GridLayout` manages its own state independently — there's
+      nothing special to configure to have more than one on a page.
+    </template>
+
+    <div class="grids">
+      <div>
+        <p class="grid-label">Grid A</p>
+        <GridLayout v-model:layout="layoutA" :col-num="4" :row-height="50">
+          <GridItem v-for="item in layoutA" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
+            <div class="example-item example-item--c1">{{ item.i }}</div>
+          </GridItem>
+        </GridLayout>
+      </div>
+      <div>
+        <p class="grid-label">Grid B</p>
+        <GridLayout v-model:layout="layoutB" :col-num="4" :row-height="50">
+          <GridItem v-for="item in layoutB" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y">
+            <div class="example-item example-item--c4">{{ item.i }}</div>
+          </GridItem>
+        </GridLayout>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-2 hide">
-        <div
-          class="droppable-element"
-          draggable="true"
-          @drag="drag"
-          @dragend="dragend">
-          Droppable Element (Drag me!)
-        </div>
-      </div>
-      <div class="col-sm-7 hide">
-        <div class="layoutJSON">
-          Displayed as <code>[x, y, w, h]</code>:
-          <div class="columns">
-            <div
-              v-for="item in testLayout"
-              :key="item.i">
-              <b>{{ item.i }}</b>: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-3 hide">
-        <textarea style="width: 100%; margin-top: 15px; height: 150px; border-radius: 12px;"></textarea>
-      </div>
-    </div>
-    <div style="font-size: 0; height: 5px; margin:0; padding: 0;"></div>
-    <div class="row">
-      <div class="col-sm">
-        <span>Grid 1:</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm">
-        <div class="layout">
-          <div
-            id="content"
-            class="content">
-            <GridLayout
-              ref="refLayout"
-              v-model:layout="testLayout"
-              :auto-size="autoResizeGridLayout"
-              :class="{grid: showGridLines}"
-              :col-num="colNum"
-              :horizontal-shift="horizontalShift"
-              :is-bounded="isBounded"
-              :is-draggable="isDraggable"
-              :is-mirrored="isMirrored"
-              :is-resizable="isResizable"
-              :margin="[10, 10]"
-              :max-rows="maxRows"
-              :prevent-collision="preventCollision"
-              :responsive="isResponsive"
-              :restore-on-drag="restoreOnDrag"
-              :row-height="rowHeight"
-              :use-border-radius="useBorderRadius"
-              :use-css-transforms="true"
-              :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged">
-              <GridItem
-                v-for="item in testLayout"
-                :key="item.i"
-                :ref="el => setChildRef(el)"
-                class="test"
-                :enable-edit-mode="enableEditMode"
-                :h="item.h"
-                :i="item.i"
-                :is-draggable="item.isDraggable"
-                :is-resizable="item.isResizable"
-                :is-static="item.isStatic"
-                :min-h="item.minH"
-                :min-w="item.minW"
-                :preserve-aspect-ratio="preserveAspectRatio"
-                :show-close-button="showCloseButton"
-                :use-border-radius="useBorderRadius"
-                :w="item.w"
-                :x="item.x"
-                :y="item.y"
-                @container-resized="containerResizedEvent"
-                @drag="dragEvent"
-                @dragged="draggedEvent"
-                @move="moveEvent"
-                @moved="movedEvent"
-                @remove-grid-item="removeGridItem"
-                @resize="resizeEvent"
-                @resized="resizedEvent">
-                <span class="text">
-                  {{ itemTitle(item) }}
-                </span>
-              </GridItem>
-            </GridLayout>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm">
-        <span>Grid 2:</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm">
-        <div class="layout">
-          <div
-            id="content"
-            class="content">
-            <GridLayout
-              ref="refLayout"
-              v-model:layout="testLayout2"
-              :auto-size="autoResizeGridLayout"
-              :class="{grid: showGridLines}"
-              :col-num="colNum"
-              :horizontal-shift="horizontalShift"
-              :is-bounded="isBounded"
-              :is-draggable="isDraggable"
-              :is-mirrored="isMirrored"
-              :is-resizable="isResizable"
-              :margin="[10, 10]"
-              :max-rows="maxRows"
-              :prevent-collision="preventCollision"
-              :responsive="isResponsive"
-              :restore-on-drag="restoreOnDrag"
-              :row-height="rowHeight"
-              :use-border-radius="useBorderRadius"
-              :use-css-transforms="true"
-              :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged">
-              <GridItem
-                v-for="item in testLayout"
-                :key="item.i"
-                :ref="el => setChildRef(el)"
-                class="test"
-                :enable-edit-mode="enableEditMode"
-                :h="item.h"
-                :i="item.i"
-                :is-draggable="item.isDraggable"
-                :is-resizable="item.isResizable"
-                :is-static="item.isStatic"
-                :min-h="item.minH"
-                :min-w="item.minW"
-                :preserve-aspect-ratio="preserveAspectRatio"
-                :show-close-button="showCloseButton"
-                :use-border-radius="useBorderRadius"
-                :w="item.w"
-                :x="item.x"
-                :y="item.y"
-                @container-resized="containerResizedEvent"
-                @drag="dragEvent"
-                @dragged="draggedEvent"
-                @move="moveEvent"
-                @moved="movedEvent"
-                @remove-grid-item="removeGridItem"
-                @resize="resizeEvent"
-                @resized="resizedEvent">
-                <span class="text">
-                  {{ itemTitle(item) }}
-                </span>
-              </GridItem>
-            </GridLayout>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
+    <template #footer>
+      <LayoutJsonViewer label="Grid A" :layout="layoutA" />
+      <LayoutJsonViewer label="Grid B" :layout="layoutB" />
+    </template>
+  </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-  import {
-    ref, onMounted, nextTick, onBeforeUnmount,
-  } from 'vue';
-  import '../../../node_modules/vue-ts-responsive-grid-layout/dist/vue-ts-responsive-grid-layout.css';
-  import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
-  // import { EGridItemEvent } from "../../../src/core/enums/EGridItemEvents";
-  import { testData } from './test';
-  import { testData2 } from './test2';
+import { ref } from 'vue';
+import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
 
-  const autoResizeGridLayout = ref(true);
-  const colNum = ref(12);
-  const enableEditMode = ref(true);
-  const horizontalShift = ref(false);
-  const isBounded = ref(false);
-  const isDraggable = ref(true);
-  const isMirrored = ref(false); // TODO Not auto updating
-  const isResizable = ref(true);
-  const isResponsive = ref(true);
-  const maxRows = ref(40);
-  const preserveAspectRatio = ref(false);
-  const preventCollision = ref(false);
-  const rowHeight = ref(50);
-  const restoreOnDrag = ref(false);
-  const showCloseButton = ref(false);
-  const showGridLines = ref(false);
-  const useBorderRadius = ref(true);
-  const verticalCompact = ref(true);
+const layoutA = ref<TLayout>([
+  { h: 2, i: 'a1', w: 2, x: 0, y: 0 },
+  { h: 2, i: 'a2', w: 2, x: 2, y: 0 },
+]);
 
-  const testLayout = ref(testData);
-  const testLayout2 = ref(testData2);
-  const refLayout = ref();
-  const mapCache: Map<string, any> = new Map();
-
-  let orgColNum = colNum.value;
-  const colNumChanged = (value: number): void => {
-    if(orgColNum !== value) {
-      orgColNum = value;
-      colNum.value = value;
-    }
-  };
-
-  const removeGridItem = (id: string | number): void => {
-    testLayout.value = testLayout.value.filter(item => {
-      return item.i !== id;
-    });
-    // emits(EGridItemEvent.REMOVE_ITEM);
-  };
-
-  const itemTitle = (item: TLayoutItem): string => {
-    let result = item.i;
-    if(item.isStatic) {
-      result += ` - Static`;
-    }
-    return <string>result;
-  };
-
-  const setChildRef = (vm: TLayoutItem): void => {
-    if(vm && vm.i) {
-      mapCache.set(vm.i, vm);
-    }
-  };
-
-  const mouseXY = {
-    x: 0,
-    y: 0,
-  };
-
-  const DragPos = {
-    h: 1,
-    i: ``,
-    w: 1,
-    x: 0,
-    y: 0,
-  };
-
-  const drag = (e: DragEvent): void => {
-    e.stopPropagation();
-    e.preventDefault();
-    if(!enableEditMode.value && !isDraggable.value) {
-      return;
-    }
-    const t = document.getElementById(`content`) as HTMLElement;
-    const parentRect = t.getBoundingClientRect();
-    let mouseInGrid = false;
-    if(
-      mouseXY.x > parentRect.left
-      && mouseXY.x < parentRect.right
-      && mouseXY.y > parentRect.top
-      && mouseXY.y < parentRect.bottom
-    ) {
-      mouseInGrid = true;
-    }
-    if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === `drop`) === -1) {
-      testLayout.value.push({
-        h: 2,
-        i: `drop`,
-        w: 2,
-        x: (testLayout.value.length * 2) % colNum.value,
-        y: testLayout.value.length + colNum.value, // puts it at the bottom
-      });
-    }
-
-    const index = testLayout.value.findIndex(item => item.i === `drop`);
-
-    if(index !== -1) {
-      try {
-        refLayout.value.defaultGridItem.$el.style.display = `none`;
-      } catch{
-        // Do nothing
-      }
-      const el = mapCache.get(`drop`);
-      if(!el) {
-        return;
-      }
-
-      el.dragging = {
-        left: mouseXY.x - parentRect.left,
-        top: mouseXY.y - parentRect.top,
-      };
-      const newPos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
-      if(mouseInGrid === true) {
-        refLayout.value.dragEvent(`dragstart`, `drop`, newPos.x, newPos.y, 2, 2);
-        DragPos.i = String(index);
-        DragPos.x = testLayout.value[index].x;
-        DragPos.y = testLayout.value[index].y;
-      }
-      if(mouseInGrid === false) {
-        refLayout.value.dragEvent(`dragend`, `drop`, newPos.x, newPos.y, 2, 2);
-        testLayout.value = testLayout.value.filter(obj => obj.i !== `drop`);
-      }
-    }
-  };
-
-  const dragend = (): void => {
-    const t = document.getElementById(`content`) as HTMLElement;
-    const parentRect = t.getBoundingClientRect();
-    let mouseInGrid = false;
-    if(
-      mouseXY.x > parentRect.left
-      && mouseXY.x < parentRect.right
-      && mouseXY.y > parentRect.top
-      && mouseXY.y < parentRect.bottom
-    ) {
-      mouseInGrid = true;
-    }
-
-    if(mouseInGrid === true) {
-      refLayout.value.dragEvent(`dragend`, `drop`, DragPos.x, DragPos.y, 2, 2);
-      testLayout.value = testLayout.value.filter(obj => obj.i !== `drop`);
-      nextTick(() => {
-        testLayout.value.push({
-          h: 1,
-          i: DragPos.i,
-          minH: 1,
-          minW: 1,
-          w: 1,
-          x: DragPos.x,
-          y: DragPos.y,
-        });
-        refLayout.value.dragEvent(`dragend`, DragPos.i, DragPos.x, DragPos.y, 2, 2);
-        mapCache.delete(`drop`);
-      });
-    }
-  };
-
-  const addDragOverEvent = (e: DragEvent): void => {
-    mouseXY.x = e.clientX;
-    mouseXY.y = e.clientY;
-  };
-
-  onMounted(() => {
-    document.addEventListener(`dragover`, addDragOverEvent);
-  });
-  onBeforeUnmount(() => {
-    document.removeEventListener(`dragover`, addDragOverEvent);
-  });
+const layoutB = ref<TLayout>([
+  { h: 2, i: 'b1', w: 4, x: 0, y: 0 },
+  { h: 2, i: 'b2', w: 2, x: 0, y: 2 },
+  { h: 2, i: 'b3', w: 2, x: 2, y: 2 },
+]);
 </script>
 
-<style lang="scss" scoped>
-// @import '../../../node_modules/vue-ts-responsive-grid-layout/dist/style.css';
-
-.hide {
-  display: none;
+<style scoped>
+.grids {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
 }
 
-form {
-  background-color: #7f8497;
-  border-radius: 12px;
+.grid-label {
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
 }
 
-fieldset {
-  color: #000;
-  padding: 15px;
-}
-
-legend {
-  font-weight: bold;
-}
-
-#rowHeight {
-  max-width: 70px !important;
-}
-
-#colNum {
-  max-width: 70px !important;
-}
-
-#mlr {
-  max-width: 70px !important;
-}
-
-#mtb {
-  max-width: 70px !important;
-}
-
-#maxRows {
-  max-width: 70px !important;
-}
-
-#borderRadius {
-  max-width: 70px !important;
-}
-
-.container {
-  background: #646cff;
-  min-width: 330px;
-  padding: 10px;
-}
-
-.grid::before {
-  content: '';
-  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
-  background-image: linear-gradient(
-      to right,
-      black 1px,
-      transparent 1px
-  ),
-  linear-gradient(
-      to bottom,
-      black 1px,
-      transparent 1px);
-  height: calc(100% - 5px);
-  width: calc(100% - 5px);
-  position: absolute;
-  background-repeat: repeat;
-  margin: 5px;
-}
-
-.vue-grid-item .text {
-  bottom: 0;
-  font-size: 20px;
-  height: 100%;
-  left: 0;
-  margin: auto;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 20px;
-  width: 100%;
-}
-
-.layout {
-  background-color: #58749f;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.test {
-  background-color: #a86666;
-}
-
-.droppable-element {
-  background: #fdd;
-  border: 1px solid black;
-  border-radius: 8px;
-  cursor: grab;
-  margin: 0;
-  height: 100px;
-  padding: 10px;
-  text-align: center;
-  max-width: 250px;
-}
-
-.layoutJSON {
-  background: #ddd;
-  border: 1px solid black;
-  border-radius: 8px;
-  color: #000;
-  margin-top: 10px;
-  padding: 10px;
-}
-
-.eventsJSON {
-  background: #726e6e;
-  border: 1px solid black;
-  border-radius: 12px;
-  color: #000;
-  height: 200px;
-  padding: 10px;
-  overflow-y: scroll;
-}
-
-.columns {
-  -moz-columns: 120px;
-  -webkit-columns: 120px;
-  columns: 120px;
+@media (width <= 640px) {
+  .grids {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

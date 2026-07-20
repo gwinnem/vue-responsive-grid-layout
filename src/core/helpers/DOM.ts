@@ -11,8 +11,8 @@ const hasWindow = (): boolean => {
  * @param {Function}  callback  Callback function.
  * @see   https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
  */
-export const addWindowEventListener = (event: string, callback: () => any): boolean => {
-  if(!hasWindow) {
+export const addWindowEventListener = (event: string, callback: () => void): boolean => {
+  if(!hasWindow()) {
     callback();
     return false;
   }
@@ -26,8 +26,8 @@ export const addWindowEventListener = (event: string, callback: () => any): bool
  * @param {Function}  callback  Callback function.
  * @see   https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
  */
-export const removeWindowEventListener = (event: string, callback: () => any): void => {
-  if(!hasWindow) {
+export const removeWindowEventListener = (event: string, callback: () => void): void => {
+  if(!hasWindow()) {
     return;
   }
   window.removeEventListener(event, callback);

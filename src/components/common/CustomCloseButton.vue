@@ -1,20 +1,31 @@
+<!--
+  The default close button rendered inside a `GridItem` when
+  `showCloseButton` is true. Also exported standalone from the package's
+  public entry point in case a consumer wants to render the same button
+  (e.g. in a custom header) and wire it to the same `remove-grid-item`
+  event manually.
+-->
 <template>
   <button
+    aria-label="Close"
     class="btn-close"
     type="button"
     @click="removeItem">
-    <span class="icon-cross"></span>
+    <span
+      aria-hidden="true"
+      class="icon-cross"></span>
   </button>
 </template>
 
 <script lang="ts" setup>
   import { EGridItemEvent } from '@/core/griditem/enums/EGridItemEvents';
 
-  export interface IProps {
-    i: string | number;
+  export interface ICustomCloseButtonProps {
+    /** The id of the `GridItem` this button removes when clicked. `-1` (the default) is treated as "no item" and the click is a no-op. */
+    i?: string | number;
   }
 
-  const props = withDefaults(defineProps<IProps>(), {
+  const props = withDefaults(defineProps<ICustomCloseButtonProps>(), {
     i: -1,
   });
 
@@ -22,6 +33,7 @@
     (e: EGridItemEvent.REMOVE_ITEM, value: string | number): void;
   }>();
 
+  /** Emits `EGridItemEvent.REMOVE_ITEM` with the configured `i`, unless `i` is the default `-1` sentinel. */
   const removeItem = (): void => {
     if(Number(props.i) === -1) {
       return;

@@ -1,92 +1,25 @@
-# GridItem VUE  Events
+# GridItem Events
 
-See https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/src/core/griditem/enums/EGridItemEvents.ts for a list of defined emit events.
-And See https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/src/components/Grid/GridItem.vue#L108-L117 for updated event definitions
+Emitted directly on a `<GridItem>` — listen with `@event-name`.
 
-## container-resized
-Container Resized event
+| Event | Payload | When |
+|---|---|---|
+| `container-resized` | `(i, h, w, height, width)` | The item's rendered pixel size changed. See [Layout lifecycle events](/examples/40-example). |
+| `item-clicked` | `(i, event: MouseEvent)` | A genuine click/tap on the item — the trailing click a browser can still dispatch immediately after a drag/resize gesture ends is suppressed. The native `MouseEvent` is included so a handler can check `shiftKey`/`ctrlKey`/`metaKey`. Backs `GridLayout`'s own `multiSelect` handling; also usable directly. See [Multi-select & group move/resize](/examples/37-example). |
+| `item-move` | `(i, x, y)` | Fired continuously while a drag is in progress, whenever the grid-unit position changes. |
+| `item-moved` | `(i, x, y)` | Fired once when a drag completes and the position actually changed. |
+| `remove-grid-item` | `(i)` | The item's close button was clicked. See [Show close button](/examples/13-example). |
+| `resize` | `(i, h, w, height, width)` | Fired continuously while a resize is in progress. See [Layout lifecycle events](/examples/40-example). |
+| `resized` | `(i, h, w, height, width)` | Fired once when a resize completes and the size actually changed. |
 
-Every time the grid item/layout container changes size (browser window or other)
+Bind these with `@container-resized`, `@item-clicked`, `@item-move`, `@item-moved`,
+`@remove-grid-item`, `@resize`, and `@resized` respectively — see
+[Events](/examples/03-example) for a live demo, and
+[`EGridItemEvent`](/api/GridItem-enums) for the backing enum.
 
-```typescript
-containerResizedEvent: function(i, newH, newW, newHPx, newWPx): void {
-    console.log("CONTAINER RESIZED i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
-}
-``` 
-
-
-## drag
-
-Every time an item is being dragged
-
-```typescript
-dragEvent: function(i, h, w, height, width): void {
-    console.log("DRAG i=" + i + ", h=" + h + ", w=" + w + ", height=" + height + ", width=" + width);
-}
-```
-
-## dragged
-
-Every time an item is finished being dragged
-
-```typescript
-dragEvent: function(i, h, w, height, width): void {
-    console.log("DRAGGED i=" + i + ", h=" + h + ", w=" + w + ", height=" + height + ", width=" + width);
-}
-```
-
-## item-move
-Move event
-
-Every time an item is being moved and changes position
-
-```typescript
-moveEvent: function(i, newX, newY): void {
-    console.log("MOVE i=" + i + ", X=" + newX + ", Y=" + newY);
-}
-```
-
-## item-moved
-Moved event
-
-Every time an item is finished being moved and changes position
-
-```typescript
-movedEvent: function(i, newX, newY): void {
-    console.log("MOVED i=" + i + ", X=" + newX + ", Y=" + newY);
-}
-```
-
-
-## remove-grid-item
-Emitted when the user clicks the close button in a `GridItem`.
-
-```typescript
-const closeClicked = (id: number): void => {
-  emit(`remove-grid-item`, id);
-};
-```
-
-
-## resize
-Resize event
-
-Every time an item is being resized and changes size
-
-```typescript
-resizeEvent: function(i, newH, newW, newHPx, newWPx): void {
-    console.log("RESIZE i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
-}
-``` 
-
-
-## resized
-
-Every time an item is finished being resized and changes size
-
-```typescript
-resizeEvent: function(i, newH, newW, newHPx, newWPx): void {
-    console.log("RESIZED i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
-}
-``` 
-
+::: warning Declared but not currently emitted
+`EGridItemEvent.DRAG` and `DRAGGED` exist on the enum for backwards
+compatibility, but `GridItem` emits `item-move`/`item-moved` instead —
+listening for `@drag`/`@dragged` won't see anything fire. See
+[Roadmap](/guide/roadmap).
+:::

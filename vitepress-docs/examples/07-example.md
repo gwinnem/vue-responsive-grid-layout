@@ -1,31 +1,25 @@
-# Responsive layout
+# Responsive breakpoints
 
-The following breakpoints are applied by default:
-
-```typescript
-breakpoints: (): IBreakpoints => ({
-  xxl: 1600,
-  xl: 1400,
-  lg: 1200,
-  md: 996,
-  sm: 768,
-  xs: 480,
-  xxs: 0,
-})
-cols: (): IColumns => ({
-  xxl: 12,
-  xl: 12,
-  lg: 12,
-  md: 10,
-  sm: 6,
-  xs: 4,
-  xxs: 2,
-})
-```
-::: tip
-Resize the browser window to see how the Grid is behaving.
-:::
 <CustomComponent/>
+
+## Code
+
+```vue
+<GridLayout v-model:layout="layout" responsive @breakpoint-changed="onBreakpointChanged">
+  ...
+</GridLayout>
+```
+
+```ts
+const onBreakpointChanged = (breakpoint: string) => {
+  console.log('now at breakpoint', breakpoint);
+};
+```
+
+Customize the breakpoints and per-breakpoint column counts with the
+`breakpoints`/`cols` props — see [GridLayout props](/components/grid-layout-props).
+For full control, pre-define a layout for specific breakpoints with
+`responsiveLayouts` — see [Responsive predefined layouts](/examples/09-example).
 
 <script setup>
 import CustomComponent from './components/07-example.vue';

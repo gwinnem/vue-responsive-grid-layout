@@ -1,4 +1,11 @@
-export enum ErrorMsg {
+/**
+ * Error messages thrown by the validators and grid-math helpers in
+ * `src/core/**`. Grouped in one enum so every thrown error in the library
+ * has a single, greppable source of truth for its wording, and so
+ * `expect(() => fn()).toThrowError(EErrorMessage.X)` in tests doesn't rely on
+ * copy-pasted string literals matching by coincidence.
+ */
+export enum EErrorMessage {
   INVALID_BREAKPOINT = 'Invalid parameter breakpoint',
   INVALID_BREAKPOINT_NOT_FOUND = 'Breakpoint not found',
   INVALID_BOUNDS = 'Invalid parameter bounds passed',

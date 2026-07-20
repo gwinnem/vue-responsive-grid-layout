@@ -1,0 +1,43 @@
+name: Mutation testing
+
+# Deliberately NOT run on every push/PR — mutation testing re-runs the test
+# suite once per mutant (1,300+ mutants over the scoped files as of this
+# writing), which is far too slow for per-PR feedback. Runs weekly instead,
+# plus on-demand via workflow_dispatch. See docs/STRYKER.md for the full
+# rationale and how to run it locally.
+on:
+  schedule:
+    - cron: '0 3 * * 1' # every Monday at 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  mutation-test:
+    name: Stryker mutation testing
+    runs-on: ubuntu-latest
+    # Mutation testing is inherently slow (see docs/STRYKER.md) — give it
+    # real headroom instead of hitting the default job timeout partway
+    # through a run.
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stryker
+        run: npm run test:mutation
+
+      - name: Upload mutation report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: reports/mutation/
+          retention-days: 30

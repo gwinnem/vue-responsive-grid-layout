@@ -1,0 +1,13 @@
+/**
+ * Sandbox's own entry stylesheet. Imports the shared design tokens
+ * (`dev-shared/tokens.css`) — previously not imported anywhere in
+ * `sandbox/`, despite `sandbox/App.vue`'s own scoped styles already
+ * referencing `var(--color-primary)`, `var(--color-surface)`, etc.
+ * (e.g. the outside-drop widget styling). Those variables were
+ * genuinely undefined before this, silently falling back to the
+ * browser's initial values rather than the intended design tokens — not
+ * just a duplication cleanup, an actual gap this closes. See
+ * `ROADMAP.md`'s "Shared design tokens" item and
+ * `docs/REFACTORING.md`'s entry documenting this.
+ */
+@import '../dev-shared/tokens.css';

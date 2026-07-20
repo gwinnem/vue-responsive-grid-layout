@@ -1,4 +1,8 @@
 {
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
   "include": ["src/**/*"],
   "exclude": [
     "src/**/__tests__/*",
@@ -7,14 +11,9 @@
     "vitepress-docs/*",
     "tests/*",
     "sandbox/",
+    "demo/",
     "/dist",
     "node_modules/*",
     "*.tgz"
-  ],
-  "paths": {
-    "@/*": [
-      "src/*",
-    ],
-    "@theme/*": ["vitepress-docs/.vitepress/theme/*"],
-  }
+  ]
 }

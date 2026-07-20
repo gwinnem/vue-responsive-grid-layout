@@ -1,25 +1,16 @@
-.editorconfig
-.eslintrc
-.eslintignore
-.gitignore
-.husky
-.prettierrc
-.prettierignore
-.stylelintrc
-.vscode/
-cypress.config.ts
-package.json
-package-lock.json
-pnpm-lock.yaml
-tsconfig.json
-vite.config.ts
-CHANGELOG.md
-README.md
-TODO.md
-coverage/
-cypress/
-dist/
-docs/
-node_modules/
-public/assets/
-src/vite-env.d.ts
+# Prettier is only meant to format files under src/ (see package.json's
+# own "format" script: `prettier --write "src/**/*"`). Ignoring
+# everything else here, rather than relying solely on that glob, keeps
+# behavior consistent regardless of how Prettier gets invoked —
+# directly via that script, through an editor/IDE integration, or via
+# lint-staged — since .prettierignore is always respected no matter
+# what glob (if any) the caller passes in.
+/*
+!/src
+
+# .vue files are excluded from Prettier entirely, everywhere under
+# src/ — ESLint (via eslint-plugin-vue) owns formatting for them
+# instead (see the "lint"/"lint:fix" scripts), since Prettier's own
+# .vue support doesn't handle template-specific formatting the same,
+# more Vue-aware way.
+src/**/*.vue

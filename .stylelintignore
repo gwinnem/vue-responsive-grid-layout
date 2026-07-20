@@ -1,7 +1,9 @@
 /coverage/*
-/cyprus/*
+/tests/coverage/*
 /docs/*
 /dist/*
+/dist-demo/*
+/dist-analyze/*
 /node_modules/*
 /sandbox/*
 /tests/*

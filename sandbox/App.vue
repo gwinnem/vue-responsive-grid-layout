@@ -1,149 +1,168 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <form style="border-radius: 8px;">
-          <fieldset>
-            <legend>Test bench</legend>
-            <div class="row hidden">
-              <button
-                  class="col-sm-2 secondary small"
-                  @click.prevent="resetLayout">
-                Reset Layout
-              </button>
-            </div>
-            <div
-                v-if="!hideEventLog"
-                class="row">
-              <button
-                  class="col-sm-2 tertiary small"
-                  @click.prevent="clearEventLog">
-                Clear Event Log
-              </button>
-              <VueMultiselect
-                  v-model="selected"
-                  :hide-selected="false"
-                  :multiple="true"
-                  :taggable="true"
-                  :options="options"
-                  class="col-sm-9"
-                  deselect-label="Remove me"
-                  placeholder="Select events to log"
-                  select-label="Select me"
-                  style="width: 50%"
-                  @change="updateSelected">
-              </VueMultiselect>
-            </div>
-            <hr/>
-            <label for="rowHeight">Row Height(px)</label>
-            <input id="rowHeight" v-model="rowHeight" type="number" @change="onRowHeightChange"/>
-            <label for="colNum">Max Columns</label>
-            <input id="colNum" v-model="colNum" type="number" @change="onColNumChange"/>
-            <label for="maxRows">Max Rows</label>
-            <input id="maxRows" v-model="maxRows" type="number" @change="onMaxRowsChange"/>
-            <label class="" for="mtb">Margin Top / Bottom</label>
-            <input id="mtb" v-model="marginTopBottom" class="" type="number" @change="onMarginTopBottomChange"/>
-            <label class="" for="mlr">Margin Left / Right</label>
-            <input id="mlr" v-model="marginLeftRight" class="" type="number" @change="onMarginLeftRightChange"/>
-            <label class="hide" for="borderRadius">Border Radius</label>
-            <input id="borderRadius" v-model="borderRadiusPx" class="hide" type="number"/>
-            <label for="hideLayout">Hide Layout</label>
-            <input id="hideLayout" v-model="hideLayout" type="checkbox">
-            <label for="hideEventLog">Hide Event Log</label>
-            <input id="hideEventLog" v-model="hideEventLog" type="checkbox">
-            <label for="hideDroppable">Hide Droppable</label>
-            <input id="hideDroppable" v-model="hideDroppable" type="checkbox">
-            <br/>
-            <label for="autosize">autosize</label>
-            <input id="autosize" v-model="autoResizeGridLayout" type="checkbox">
-            <label for="distributeEvenly">distributeEvenly</label>
-            <input id="distributeEvenly" v-model="distributeEvenly" type="checkbox">
-            <label for="editMode">editMode</label>
-            <input id="editMode" v-model="enableEditMode" type="checkbox">
-            <label for="horizontalShift">horizontalShift</label>
-            <input id="horizontalShift" v-model="horizontalShift" type="checkbox">
-            <label for="isBounded">isBounded</label>
-            <input id="isBounded" v-model="isBounded" type="checkbox">
-            <label class="hide" for="isDraggable">isDraggable</label>
-            <input id="isDraggable" class="hide" v-model="isDraggable" type="checkbox">
-            <label for="isMirrored">isMirrored</label>
-            <input id="isMirrored" v-model="isMirrored" type="checkbox">
-            <label class="hide" for="isResizable">isResizable</label>
-            <input id="isResizable" class="hide" v-model="isResizable" type="checkbox">
-            <label for="isResponsive">isResponsive</label>
-            <input id="isResponsive" v-model="isResponsive" type="checkbox">
-            <br/>
-            <label for="preserveAspectRatio">preserveAspectRatio</label>
-            <input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox">
-            <label for="preventCollision">preventCollision</label>
-            <input id="preventCollision" v-model="preventCollision" type="checkbox">
-            <label for="restoreOnDrag">restoreOnDrag</label>
-            <input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">
-            <label for="showCloseButton">showCloseButton</label>
-            <input id="showCloseButton" v-model="showCloseButton" type="checkbox">
-            <label for="showGridLines">showGridLines</label>
-            <input id="showGridLines" v-model="showGridLines" type="checkbox">
-            <label for="useBorderRadius">useBorderRadius</label>
-            <input id="useBorderRadius" v-model="useBorderRadius" type="checkbox">
-            <label for="verticalCompact">verticalCompact</label>
-            <input id="verticalCompact" v-model="verticalCompact" type="checkbox">
-          </fieldset>
-        </form>
+  <div class="sandbox-shell">
+    <header class="sandbox-header">
+      <h1>vue-ts-responsive-grid-layout — Test bench</h1>
+      <p class="demo-description">
+        Every prop, in one place — a denser, single-page companion to the
+        curated <code>demo/</code> app's per-feature views.
+      </p>
+    </header>
+    <main class="sandbox-main">
+      <div class="demo-controls-groups">
+        <fieldset class="demo-controls">
+          <legend>Item actions & lookup</legend>
+          <button class="sandbox-hidden" type="button" @click.prevent="resetLayout">Reset Layout</button>
+          <label for="scrollFocusItemId">
+            scrollToItem/focusItem id:
+            <input id="scrollFocusItemId" v-model="scrollFocusItemId" type="text" style="width: 60px">
+          </label>
+          <button type="button" @click.prevent="refLayout.scrollToItem(scrollFocusItemId)">Scroll to item</button>
+          <button type="button" @click.prevent="refLayout.focusItem(scrollFocusItemId)">Focus item</button>
+          <button type="button" @click.prevent="refLayout.compactNow()">compactNow</button>
+          <button type="button" @click.prevent="refLayout.rearrange()">rearrange</button>
+          <button type="button" @click.prevent="refLayout.duplicateItem(scrollFocusItemId)">duplicateItem</button>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Grid geometry</legend>
+          <label for="rowHeight">Row Height (px)<input id="rowHeight" v-model="rowHeight" type="number" @change="onRowHeightChange"/></label>
+          <label for="colNum">Max Columns<input id="colNum" v-model="colNum" type="number" @change="onColNumChange"/></label>
+          <label for="maxRows">Max Rows<input id="maxRows" v-model="maxRows" type="number" @change="onMaxRowsChange"/></label>
+          <label for="mtb">Margin Top / Bottom<input id="mtb" v-model="marginTopBottom" type="number" @change="onMarginTopBottomChange"/></label>
+          <label for="mlr">Margin Left / Right<input id="mlr" v-model="marginLeftRight" type="number" @change="onMarginLeftRightChange"/></label>
+          <label for="borderRadius">Border Radius<input id="borderRadius" v-model="borderRadiusPx" type="number"/></label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Panel visibility</legend>
+          <label for="hideLayout"><input id="hideLayout" v-model="hideLayout" type="checkbox">Hide Layout</label>
+          <label for="hideEventLog"><input id="hideEventLog" v-model="hideEventLog" type="checkbox">Hide Event Log</label>
+          <label for="hideDroppable"><input id="hideDroppable" v-model="hideDroppable" type="checkbox">Hide Droppable</label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Compaction & collision</legend>
+          <label for="distributeEvenly"><input id="distributeEvenly" v-model="distributeEvenly" type="checkbox">distributeEvenly</label>
+          <label for="preventCollision"><input id="preventCollision" v-model="preventCollision" type="checkbox">preventCollision</label>
+          <label for="restoreOnDrag"><input id="restoreOnDrag" v-model="restoreOnDrag" type="checkbox">restoreOnDrag</label>
+          <label for="horizontalShift"><input id="horizontalShift" v-model="horizontalShift" type="checkbox">horizontalShift</label>
+          <label for="compactType">compactType
+            <select id="compactType" v-model="compactType">
+              <option :value="ECompactType.VERTICAL">Vertical</option>
+              <option :value="ECompactType.HORIZONTAL">Horizontal</option>
+              <option :value="ECompactType.NONE">None</option>
+              <option :value="ECompactType.VERTICAL_OVERLAP">Vertical (overlap)</option>
+              <option :value="ECompactType.HORIZONTAL_OVERLAP">Horizontal (overlap)</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Drag & resize behavior</legend>
+          <label for="autosize"><input id="autosize" v-model="autoResizeGridLayout" type="checkbox">autosize</label>
+          <label for="isBounded"><input id="isBounded" v-model="isBounded" type="checkbox">isBounded</label>
+          <label class="sandbox-hidden" for="isDraggable"><input id="isDraggable" v-model="isDraggable" type="checkbox">isDraggable</label>
+          <label class="sandbox-hidden" for="isResizable"><input id="isResizable" v-model="isResizable" type="checkbox">isResizable</label>
+          <label for="isMirrored"><input id="isMirrored" v-model="isMirrored" type="checkbox">isMirrored</label>
+          <label for="isResponsive"><input id="isResponsive" v-model="isResponsive" type="checkbox">isResponsive</label>
+          <label for="preserveAspectRatio"><input id="preserveAspectRatio" v-model="preserveAspectRatio" type="checkbox">preserveAspectRatio</label>
+          <label for="showResizeHandles"><input id="showResizeHandles" v-model="showResizeHandles" type="checkbox">showResizeHandles</label>
+          <label for="customResizeHandle"><input id="customResizeHandle" v-model="customResizeHandle" type="checkbox">custom #resize-handle</label>
+          <label for="autoScroll"><input id="autoScroll" v-model="autoScroll" type="checkbox">autoScroll</label>
+          <label for="useBorderRadius"><input id="useBorderRadius" v-model="useBorderRadius" type="checkbox">useBorderRadius</label>
+          <label for="resizeHandleColor">
+            resizeHandleColor:
+            <input id="resizeHandleColor" v-model="resizeHandleColor" type="text" style="width: 100px">
+          </label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Visual aids</legend>
+          <label for="showGridLines"><input id="showGridLines" v-model="showGridLines" type="checkbox">showGridLines</label>
+          <label for="snapToGrid"><input id="snapToGrid" v-model="snapToGrid" type="checkbox">snapToGrid</label>
+          <label for="snapThreshold">
+            snapThreshold:
+            <input id="snapThreshold" v-model.number="snapThreshold" min="0" type="number" style="width: 50px">
+          </label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Editing, accessibility & close button</legend>
+          <label for="editMode"><input id="editMode" v-model="enableEditMode" type="checkbox">editMode</label>
+          <label for="layoutEnableEditMode"><input id="layoutEnableEditMode" v-model="layoutEnableEditMode" type="checkbox">enableEditMode (grid-wide)</label>
+          <label for="showCloseButton"><input id="showCloseButton" v-model="showCloseButton" type="checkbox">showCloseButton</label>
+          <label for="spanishLabels"><input id="spanishLabels" v-model="spanishLabels" type="checkbox">ariaLabels (Spanish)</label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Multi-select & auto-height</legend>
+          <label for="multiSelect"><input id="multiSelect" v-model="multiSelect" type="checkbox">multiSelect</label>
+          <label for="autoHeight"><input id="autoHeight" v-model="autoHeight" type="checkbox">autoHeight</label>
+        </fieldset>
+
+        <fieldset class="demo-controls">
+          <legend>Outside drop</legend>
+          <label for="allowOutsideDrop"><input id="allowOutsideDrop" v-model="allowOutsideDrop" type="checkbox">allowOutsideDrop</label>
+        </fieldset>
+
+        <fieldset v-if="!hideEventLog" class="demo-controls">
+          <legend>Event log filter</legend>
+          <button type="button" @click.prevent="clearEventLog">Clear Event Log</button>
+          <VueMultiselect
+              v-model="selected"
+              :hide-selected="false"
+              :multiple="true"
+              :taggable="true"
+              :options="options"
+              class="sandbox-multiselect"
+              deselect-label="Remove me"
+              placeholder="Select events to log"
+              select-label="Select me"
+              @change="updateSelected">
+          </VueMultiselect>
+        </fieldset>
       </div>
-    </div>
-    <div class="row">
-      <div
-          v-if="!hideDroppable && enableEditMode"
-          class="col-sm-2">
-        <div
-            class="droppable-element"
-            draggable="true"
-            @drag="drag"
-            @dragend="dragend">
-          Droppable Element (Drag me!)
-        </div>
-        <!-- <DragItem
-          :testLayout="testLayout"
-          :colNum="colNum"
-          :refLayout="refLayout"
-          :map-cache="mapCache"
-          @updateTestLayout="updateTestLayout">
-        </DragItem> -->
-      </div>
-      <div
-          v-if="!hideLayout"
-          class="col-sm-6">
-        <div class="layoutJSON">
-          Displayed as <code>[x, y, w, h]</code>:
-          <div class="columns">
-            <div v-for="item in testLayout">
-              <b>{{ item.i }}</b>: [{{ item }}]
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-          v-if="!hideEventLog"
-          class="col-sm-4">
-        <div
-            ref="eventsDiv"
-            class="eventsJSON">
+      <div class="sandbox-panels">
+        <div v-if="!hideDroppable && enableEditMode" class="demo-grid-wrap">
           <div
-              v-for="event in eventsLog"
-              :key="event">
-            {{ event }}
+              class="droppable-element"
+              draggable="true"
+              @drag="drag"
+              @dragend="dragend">
+            Droppable Element (Drag me!)
+          </div>
+        </div>
+        <div v-if="!hideLayout" class="demo-grid-wrap">
+          <p class="demo-grid-label">Layout, as [x, y, w, h]</p>
+          <div class="layoutJSON">
+            <div class="columns">
+              <div v-for="item in testLayout">
+                <b>{{ item.i }}</b>: [{{ item }}]
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="!hideEventLog" class="demo-grid-wrap">
+          <p class="demo-grid-label">Event log</p>
+          <div ref="eventsDiv" class="demo-log">
+            <div
+                v-for="event in eventsLog"
+                :key="event">
+              {{ event }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div style="font-size: 0; height: 5px; margin:0; padding: 0;"></div>
-    <div class="row">
-      <div class="col-sm">
-        <div class="layout">
-          <div id="content">
-            <GridLayout
-                ref="refLayout"
-                v-model:layout="testLayout"
+      <div v-if="allowOutsideDrop" class="demo-controls">
+        <div draggable="true" class="demo-droppable" @dragstart="onOutsideDragStart">
+          ⠿ Drag me into the grid (allowOutsideDrop)
+        </div>
+      </div>
+      <div class="demo-grid-wrap">
+        <div id="content">
+          <GridLayout
+              ref="refLayout"
+              v-model:layout="testLayout"
                 :auto-size="autoResizeGridLayout"
                 :col-num="colNum"
                 :distribute-evenly="distributeEvenly"
@@ -158,11 +177,24 @@
                 :responsive="isResponsive"
                 :restore-on-drag="restoreOnDrag"
                 :row-height="rowHeight"
+                :border-radius-px="borderRadiusPx"
                 :show-close-button="showCloseButton"
                 :show-grid-lines="showGridLines"
                 :use-border-radius="useBorderRadius"
                 :use-css-transforms="true"
-                :vertical-compact="verticalCompact"
+                :compact-type="compactType"
+                :allow-outside-drop="allowOutsideDrop"
+                :outside-drop-width="2"
+                :outside-drop-height="2"
+                :show-resize-handles="showResizeHandles"
+                :multi-select="multiSelect"
+                :enable-edit-mode="layoutEnableEditMode"
+                :aria-labels="ariaLabels"
+                :resize-handle-color="resizeHandleColor"
+                :snap-to-grid="snapToGrid"
+                :snap-threshold="snapThreshold"
+                @item-dropped-from-outside="onItemDroppedFromOutside"
+                @move-blocked-by-collision="onMoveBlockedByCollision"
                 @breakpoint-changed="onBreakpointChanged"
                 @changed-direction="onChangedDirection"
                 @columns-changed="onColNumChanged"
@@ -186,9 +218,12 @@
                   :is-draggable="item.isDraggable"
                   :is-resizable="item.isResizable"
                   :isStatic="item.isStatic"
+                  :auto-scroll="autoScroll"
+                  :auto-height="autoHeight"
                   :min-h="item.minH"
                   :min-w="item.minW"
                   :preserve-aspect-ratio="preserveAspectRatio"
+                  :border-radius-px="borderRadiusPx"
                   :show-close-button="showCloseButton"
                   :use-border-radius="useBorderRadius"
                   :w="item.w"
@@ -207,21 +242,23 @@
                 <span class="text">
                   {{ itemTitle(item) }}
                 </span>
+                <template v-if="customResizeHandle" #resize-handle="{ edge }">
+                  <span class="sandbox-resize-icon" :title="edge">⤡</span>
+                </template>
               </GridItem>
             </GridLayout>
           </div>
         </div>
-      </div>
-    </div>
+      </main>
+      <footer class="sandbox-footer">
+        <p style="text-align: center">
+          Copyright © 2022-{{ getCurrentDate() }} Geirr Winnem
+        </p>
+        <p style="text-align: center">
+          <a href="https://winnem.tech" target="_blank">winnem.tech</a>
+        </p>
+      </footer>
   </div>
-  <footer>
-    <p style="text-align: center">
-      Copyright © 2022-{{ getCurrentDate() }} Geirr Winnem
-    </p>
-    <p style="text-align: center">
-      <a href="https://winnem.tech" target="_blank">winnem.tech</a>
-    </p>
-  </footer>
 </template>
 
 <script lang="ts" setup>
@@ -231,8 +268,9 @@ import GridLayout from '../src/components/Grid/GridLayout.vue';
 import GridItem from '../src/components/Grid/GridItem.vue';
 import {ILayoutItem, TLayout} from "../src/components/Grid/layout-definition";
 import VueMultiselect from 'vue-multiselect';
-import {getAllStaticGridItems} from "../src/core/common/helpers/gridIemTypeHelpers";
-import {getFirstCollision} from "../src/core/gridlayout/helpers/collissionHelper";
+import {getAllStaticGridItems} from "../src/core/common/helpers/grid-item-type-helpers";
+import {getFirstCollision} from "../src/core/gridlayout/helpers/collision-helper";
+import {ECompactType} from "../src/core/gridlayout/enums/ECompactType";
 
 /**
  * Removing all selected items in dropdown if All is selected
@@ -271,8 +309,39 @@ const rowHeight = ref(60);
 const restoreOnDrag = ref(false);
 const showCloseButton = ref(false);
 const showGridLines = ref(false);
+const autoScroll = ref(false);
+const scrollFocusItemId = ref(`0`);
+const showResizeHandles = ref(false);
+const customResizeHandle = ref(false);
+const multiSelect = ref(false);
+const layoutEnableEditMode = ref(true);
+const spanishLabels = ref(false);
+const ariaLabels = computed(() => (spanishLabels.value
+  ? {
+    closeButton: `Cerrar`,
+    itemRoleDescription: `Elemento arrastrable y redimensionable`,
+    moveInstruction: `Presiona las flechas para mover.`,
+    resizeInstruction: `Presiona shift más flechas para redimensionar.`,
+  }
+  : {}));
+const resizeHandleColor = ref(`rgb(94 94 94 / 45%)`);
+const snapToGrid = ref(false);
+const snapThreshold = ref(1);
+const autoHeight = ref(false);
 const useBorderRadius = ref(false);
-const verticalCompact = ref(true);
+const compactType = ref(ECompactType.VERTICAL);
+const allowOutsideDrop = ref(false);
+
+const onOutsideDragStart = (event: DragEvent): void => {
+  event.dataTransfer?.setData('text/plain', 'sandbox-widget');
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'copy';
+  }
+};
+
+const onItemDroppedFromOutside = (payload: { x: number; y: number; w: number; h: number }): void => {
+  testLayout.value.push({ h: payload.h, i: String(Date.now()), w: payload.w, x: payload.x, y: payload.y });
+};
 
 // Model for the layout definition
 const testLayout = ref([...testData]);
@@ -458,6 +527,10 @@ const onLayoutUpdated = (value: TLayout[]): void => {
   if (selected.value.includes('layoutUpdatedEvent') || selected.value.includes('All')) {
     publishToEventLogWithNewLine(`Layout updated:`, JSON.stringify(value));
   }
+};
+
+const onMoveBlockedByCollision = (id: string | number): void => {
+  publishToEventLogWithNewLine(`Move blocked by collision:`, String(id));
 };
 
 const onLayoutUpdate = (value: TLayout[]): void => {
@@ -717,46 +790,67 @@ onBeforeUnmount(() => {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
-<style lang="scss" scoped>
-@import '../src/styles/variables';
-@import '../node_modules/vue-multiselect/dist/vue-multiselect.css';
+<style scoped>
+@import '../demo/style.css';
 
-.hide {
-  display: none;
+.sandbox-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-form {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+.sandbox-header {
+  padding: 20px 32px 0;
 }
 
-#rowHeight {
-  max-width: 70px !important;
+.sandbox-header h1 {
+  font-size: 18px;
+  margin: 0 0 6px;
 }
 
-#colNum {
-  max-width: 70px !important;
+.sandbox-main {
+  flex: 1;
+  padding: 0 32px 24px;
+  overflow: auto;
 }
 
-#mlr {
-  max-width: 70px !important;
+.sandbox-footer {
+  padding: 16px 32px 24px;
+  color: var(--color-text-muted);
+  font-size: 13px;
 }
 
-#mtb {
-  max-width: 70px !important;
+.sandbox-footer a {
+  color: var(--color-primary);
 }
 
-#maxRows {
-  max-width: 70px !important;
+/* Reproduces mini.css's .hidden utility for the one control that relied
+   on it (see docs/REFACTORING.md #44) — kept hidden rather than shown,
+   since removing the CSS framework should change how things look, not
+   what's currently visible. `!important` is deliberate here, not lazy:
+   confirmed directly that without it, `.demo-controls label`'s own
+   `display: flex` (two classes, higher specificity) silently overrode
+   this rule's `display: none` (one class) once these controls moved
+   inside a `.demo-controls` group — the elements were still present in
+   the DOM and functional the whole time, just visibly showing instead
+   of staying hidden as intended. A utility class whose entire job is
+   "hide this regardless of what else applies" is the one legitimate
+   case for `!important` — the alternative (matching or exceeding every
+   context it might ever be nested inside) is far more fragile. */
+.sandbox-hidden {
+  display: none !important;
 }
 
-#borderRadius {
-  max-width: 70px !important;
+.sandbox-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
-.container {
-  background: #646cff;
-  min-width: 330px;
+.sandbox-multiselect {
+  flex: 1 1 320px;
+  min-width: 240px;
 }
 
 .vue-grid-item .text {
@@ -772,70 +866,36 @@ form {
   width: 100%;
 }
 
-.layout {
-  background-color: #58749f;
-  border-radius: 8px;
-  margin-bottom: 20px;
+.vue-grid-item.test {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #3730a3;
 }
 
-.test {
-  background-color: #a86666;
+.vue-grid-item.test.vue-static {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
 }
 
 .droppable-element {
-  background: #fdd;
-  border: 1px solid black;
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius);
   cursor: grab;
   height: 100px;
   margin: 0;
-  max-width: 250px;
   padding: 10px;
   text-align: center;
 }
 
 .layoutJSON {
-  background: #ddd;
-  border: 1px solid black;
-  border-radius: 8px;
-  height: 100px;
-  overflow-y: scroll;
-  padding: 10px;
-}
-
-.eventsJSON {
-  background: #ddd;
-  border: 1px solid black;
-  border-radius: 8px;
-  height: 100px;
-  margin-top: 0;
-  overflow-y: scroll;
-  padding: 10px;
+  height: 140px;
+  overflow-y: auto;
+  font-size: 12px;
 }
 
 .columns {
-  -moz-columns: 120px;
-  -webkit-columns: 120px;
   columns: 120px;
 }
-
-//colors
-$red: #E1332D;
-$white: #fff;
-$black: #000;
-
-.btn-hover {
-  background: $black;
-  border: 1px solid;
-  color: $white;
-  line-height: 1.4;
-  padding: .35em;
-  text-decoration: none;
-
-  &:hover {
-    background: rgba($white, 1);
-    color: $red;
-  }
-}
-
 </style>

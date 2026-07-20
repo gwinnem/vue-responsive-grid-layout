@@ -1,0 +1,105 @@
+/**
+ * Shared styling for the actual GridLayout/GridItem content rendered
+ * inside example demos. Not scoped to a single component because
+ * GridItem's content is unstyled by default (deliberately — it's meant to
+ * hold arbitrary consumer content), and every example wants the same
+ * "nice colored card with a number in the middle" look without repeating
+ * the CSS in every single example file.
+ */
+
+.vue-grid-layout {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--vp-c-bg-soft),
+    var(--vp-c-bg-soft) 10px,
+    var(--vp-c-bg) 10px,
+    var(--vp-c-bg) 20px
+  );
+  border-radius: 8px;
+}
+
+.example-item {
+  align-items: center;
+  background: linear-gradient(160deg, var(--vp-c-brand-2), var(--vp-c-brand-1));
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 15%);
+  color: #fff;
+  display: flex;
+  font-size: 15px;
+  font-weight: 600;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.example-item--static {
+  background: var(--vp-c-gray-2);
+  color: var(--vp-c-text-2);
+}
+
+.example-item--muted {
+  background: var(--vp-c-bg-alt);
+  border: 1px dashed var(--vp-c-divider);
+  box-shadow: none;
+  color: var(--vp-c-text-2);
+}
+
+.example-item small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+/* The built-in close button/drag-handle are unstyled DOM elements too —
+   give them enough visual presence to be usable inside the demo cards. */
+.vue-grid-item .btn-close {
+  z-index: 30;
+}
+
+/* A small palette so numbered items don't all look identical when an
+   example wants to show several distinct items at once. */
+.example-item--c1 { background: linear-gradient(160deg, #60a5fa, #2563eb); }
+.example-item--c2 { background: linear-gradient(160deg, #34d399, #059669); }
+.example-item--c3 { background: linear-gradient(160deg, #fbbf24, #d97706); }
+.example-item--c4 { background: linear-gradient(160deg, #f472b6, #db2777); }
+.example-item--c5 { background: linear-gradient(160deg, #a78bfa, #7c3aed); }
+.example-item--c6 { background: linear-gradient(160deg, #fb7185, #e11d48); }
+
+/* Buttons used in a few examples' control panels (Add item, Reset, etc.) */
+.example-button {
+  background: var(--vp-c-brand-1);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 12px;
+  transition: background-color 0.15s ease;
+}
+
+.example-button:hover {
+  background: var(--vp-c-brand-2);
+}
+
+.example-button--secondary {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-1);
+}
+
+.example-button--secondary:hover {
+  background: var(--vp-c-bg-alt);
+  border-color: var(--vp-c-brand-1);
+}
+
+.example-select {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  color: var(--vp-c-text-1);
+  font-size: 13px;
+  padding: 3px 8px;
+}

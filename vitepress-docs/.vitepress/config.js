@@ -1,6 +1,10 @@
 import { defineConfig } from 'vitepress';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import nav from './configs/nav';
 import sidebar from './configs/sidebar';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   lang: 'en-US',
@@ -111,10 +115,30 @@ export default defineConfig({
   vite: {
     server: {
       host: true,
+      // Only auto-open for a real interactive dev session — CI shouldn't
+      // try to launch a browser window.
+      open: !process.env.CI,
       port: 9091,
     },
     json: {
       stringify: true,
+    },
+    resolve: {
+      alias: [
+        // Examples import `vue-ts-responsive-grid-layout` exactly like a
+        // real consumer would (see docs/guide/installation) — aliased to
+        // the local source so the docs site never depends on a built
+        // `dist/` or a published npm version being present. This is what
+        // makes `npm run docs:dev`/`docs:build` work straight after
+        // cloning the repo, with zero separate build step.
+        { find: /^vue-ts-responsive-grid-layout$/, replacement: path.resolve(__dirname, '../../src/components/index.ts') },
+        // Same rationale as the main alias above — the new `/core` entry
+        // point (see docs/REFACTORING.md #78) needs its own alias too,
+        // or an example importing from it would resolve to nothing at
+        // all in the docs site specifically.
+        { find: /^vue-ts-responsive-grid-layout\/core$/, replacement: path.resolve(__dirname, '../../src/core/index.ts') },
+        { find: '@', replacement: path.resolve(__dirname, '../../src') },
+      ],
     },
   },
 });

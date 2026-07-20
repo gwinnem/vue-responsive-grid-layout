@@ -3,12 +3,23 @@ node_modules
 /dist
 /coverage
 /examples
+/dist-demo
+/dist-analyze
+/playwright-report
+/test-results
+/blob-report
+/playwright/.cache
 
 # vitepress
 /vitepress-docs/.vitepress/cache
 
 # coverage
 /tests/coverage
+
+# stryker (mutation testing)
+.stryker-tmp
+/reports/mutation
+StrykerTrapper.log
 
 # local env files
 .env.local

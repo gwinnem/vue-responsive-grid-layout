@@ -1,11 +1,18 @@
-# Horizontal shift of GridItem's when they are being dragged.
-<br/>
+# Show grid lines
 
-When ***horizontalShift*** is not set, the GridItem's will shift vertically.
-Set it to ```true``` and they will shift horizontally instead. This applies when you are dragging a GridItem over another horizontally.
- 
-<br/>
 <CustomComponent/>
+
+## Code
+
+```vue
+<GridLayout v-model:layout="layout" :show-grid-lines="true">
+  ...
+</GridLayout>
+```
+
+Handy while building a layout in the browser, or as a permanent visual
+aid for dashboard-style grids where users expect to see the underlying
+structure.
 
 <script setup>
 import CustomComponent from './components/16-example.vue';

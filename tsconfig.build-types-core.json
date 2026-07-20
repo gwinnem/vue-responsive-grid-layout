@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src/core/**/*", "src/components/Grid/layout-definition.ts", "src/components/Grid/grid-layout-props.interface.ts"],
+  "exclude": [
+    "src/**/__tests__/*",
+    "src/**/*.cy.ts",
+    "**/*.spec.ts",
+    "vitepress-docs/*",
+    "tests/*",
+    "sandbox/",
+    "demo/",
+    "/dist",
+    "node_modules/*",
+    "*.tgz"
+  ]
+}

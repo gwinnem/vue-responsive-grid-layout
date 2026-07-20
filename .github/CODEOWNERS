@@ -1,0 +1,11 @@
+# CODEOWNERS — enables automatic review requests once branch protection
+# requires review from a code owner (see docs/REFACTOR_STRATEGY.md's CI/CD
+# section for the other manual repo-settings steps, like branch protection
+# itself, that pair with this file). Meaningful even for a single-maintainer
+# project: it's what makes "request review" happen automatically instead of
+# depending on someone remembering to add a reviewer by hand.
+#
+# Order matters — later patterns override earlier ones for files they both
+# match, same as .gitignore.
+
+* @gwinnem

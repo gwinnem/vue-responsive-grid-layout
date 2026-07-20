@@ -1,11 +1,19 @@
-# Horizontal shift of GridItem's when they are being dragged.
-<br/>
+# Horizontal shift
 
-When ***horizontalShift*** is not set, the GridItem's will shift vertically.
-Set it to ```true``` and they will shift horizontally instead. This applies when you are dragging a GridItem over another horizontally.
-
-<br/>
 <CustomComponent/>
+
+## Code
+
+```vue
+<GridLayout v-model:layout="layout" :horizontal-shift="true">
+  ...
+</GridLayout>
+```
+
+The default collision behavior compacts vertically (colliding items get
+pushed down). `horizontalShift` changes that to push left/right instead —
+useful for layouts that read more naturally as a single row or a small
+number of rows.
 
 <script setup>
 import CustomComponent from './components/15-example.vue';

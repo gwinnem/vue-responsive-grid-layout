@@ -36,6 +36,28 @@ describe('validateLayoutItemRequiredKeys', () => {
     expect(validateLayoutItemRequiredKeys(keys)).toBe(false);
   });
 
+  it('Should return true when i is a non-empty string', () => {
+    const keys = {
+      i: `widget-1`,
+      x: 1,
+      y: 1,
+      h: 1,
+      w: 1,
+    };
+    expect(validateLayoutItemRequiredKeys(keys)).toBe(true);
+  });
+
+  it('Should return false when i is an empty string', () => {
+    const keys = {
+      i: ``,
+      x: 1,
+      y: 1,
+      h: 1,
+      w: 1,
+    };
+    expect(validateLayoutItemRequiredKeys(keys)).toBe(false);
+  });
+
   it('Should return false if x is less then min value', () => {
     const keys = {
       i: 1,

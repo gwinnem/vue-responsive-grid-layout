@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-js/master/packages/api/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "vitest",
+  "reporters": ["clear-text", "progress", "html"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/index.html"
+  },
+  "coverageAnalysis": "perTest",
+  "timeoutMS": 15000,
+  "mutate": [
+    "src/core/**/*.ts",
+    "src/components/Grid/composables/*.ts",
+    "src/composables/*.ts",
+    "src/hooks/*.ts",
+    "!src/**/*.d.ts"
+  ],
+  "ignorePatterns": [
+    "demo",
+    "sandbox",
+    "vitepress-docs",
+    "docs",
+    "dist",
+    "dist-demo"
+  ]
+}

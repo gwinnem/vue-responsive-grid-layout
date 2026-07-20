@@ -1,0 +1,34 @@
+/**
+ * Shared design tokens for `demo/` and `sandbox/` — a single source both
+ * import, rather than two independently-maintained copies of the same
+ * CSS custom properties (see `docs/REFACTORING.md`'s design-tokens
+ * entry, and `ROADMAP.md`'s "Shared design tokens" item this closes).
+ *
+ * Kept deliberately small: only the actual design tokens (color,
+ * spacing, typography), not per-app layout styles (nav, panels, demo
+ * item styling) — those stay in each app's own stylesheet, since they
+ * differ meaningfully between the two (a curated per-feature showcase
+ * vs. a dense, all-props-in-one test bench).
+ */
+:root {
+  --color-bg: #f6f7f9;
+  --color-surface: #fff;
+  --color-border: #e2e5ea;
+  --color-text: #1f2430;
+  --color-text-muted: #667085;
+  --color-primary: #3b6df0;
+  --color-primary-hover: #2f57c4;
+  --radius: 10px;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+}

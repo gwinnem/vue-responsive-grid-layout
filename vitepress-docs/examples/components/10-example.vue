@@ -1,668 +1,97 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <form>
-          <fieldset>
-            <legend>Test bench</legend>
-            <label
-              class="hide"
-              for="rowHeight">
-              Row Height(px)
-            </label>
-            <input
-              id="rowHeight"
-              v-model="rowHeight"
-              class="hide"
-              type="number" />
-            <label
-              class="hide"
-              for="colNum">
-              Max Columns
-            </label>
-            <input
-              id="colNum"
-              v-model="colNum"
-              class="hide"
-              type="number" />
-            <label
-              class="hide"
-              for="maxRows">
-              Max Rows
-            </label>
-            <input
-              id="maxRows"
-              v-model="maxRows"
-              class="hide"
-              type="number" />
-            <br class="hide" />
-            <label
-              class="hide"
-              for="autosize">
-              autosize
-            </label>
-            <input
-              id="autosize"
-              v-model="autoResizeGridLayout"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="editMode">
-              editMode
-            </label>
-            <input
-              id="editMode"
-              v-model="enableEditMode"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="horizontalShift">
-              horizontalShift
-            </label>
-            <input
-              id="horizontalShift"
-              v-model="horizontalShift"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isBounded">
-              isBounded
-            </label>
-            <input
-              id="isBounded"
-              v-model="isBounded"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isDraggable">
-              isDraggable
-            </label>
-            <input
-              id="isDraggable"
-              v-model="isDraggable"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isMirrored">
-              isMirrored
-            </label>
-            <input
-              id="isMirrored"
-              v-model="isMirrored"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isResizable">
-              isResizable
-            </label>
-            <input
-              id="isResizable"
-              v-model="isResizable"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="isResponsive">
-              isResponsive
-            </label>
-            <input
-              id="isResponsive"
-              v-model="isResponsive"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="preserveAspectRatio">
-              preserveAspectRatio
-            </label>
-            <input
-              id="preserveAspectRatio"
-              v-model="preserveAspectRatio"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="preventCollision">
-              preventCollision
-            </label>
-            <input
-              id="preventCollision"
-              v-model="preventCollision"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="restoreOnDrag">
-              restoreOnDrag
-            </label>
-            <input
-              id="restoreOnDrag"
-              v-model="restoreOnDrag"
-              class="hide"
-              type="checkbox" />
-            <label
-              class=""
-              for="showCloseButton">
-              showCloseButton
-            </label>
-            <input
-              id="showCloseButton"
-              v-model="showCloseButton"
-              class=""
-              type="checkbox" />
-            <button
-              id="addItem"
-              class="button"
-              type="button"
-              @click="addGridItem">
-              Add
-            </button>
-            <label
-              class="hide"
-              for="showGridLines">
-              showGridLines
-            </label>
-            <input
-              id="showGridLines"
-              v-model="showGridLines"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="useBorderRadius">
-              useBorderRadius
-            </label>
-            <input
-              id="useBorderRadius"
-              v-model="useBorderRadius"
-              class="hide"
-              type="checkbox" />
-            <label
-              class="hide"
-              for="verticalCompact">
-              verticalCompact
-            </label>
-            <input
-              id="verticalCompact"
-              v-model="verticalCompact"
-              class="hide"
-              type="checkbox" />
-          </fieldset>
-        </form>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-2 hide">
-        <div
-          class="droppable-element"
-          draggable="true"
-          @drag="drag"
-          @dragend="dragend">
-          Droppable Element (Drag me!)
-        </div>
-      </div>
-      <div class="col-sm-7">
-        <div class="layoutJSON">
-          Displayed as <code>[x, y, w, h]</code>:
-          <div class="columns">
-            <div
-              v-for="item in testLayout"
-              :key="item.i">
-              <b>{{ item.i }}</b>: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-3 hide">
-        <textarea style="width: 100%; margin-top: 15px; height: 150px; border-radius: 12px;"></textarea>
-      </div>
-    </div>
-    <div style="font-size: 0; height: 5px; margin:0; padding: 0;"></div>
-    <div class="row">
-      <div class="col-sm">
-        <div class="layout">
-          <div
-            id="content"
-            class="content">
-            <GridLayout
-              ref="refLayout"
-              v-model:layout="testLayout"
-              :auto-size="autoResizeGridLayout"
-              :class="{grid: showGridLines}"
-              :col-num="colNum"
-              drag-allow-from=".vue-draggable-handle"
-              drag-ignore-from=".no-drag"
-              :horizontal-shift="horizontalShift"
-              :is-bounded="isBounded"
-              :is-draggable="isDraggable"
-              :is-mirrored="isMirrored"
-              :is-resizable="isResizable"
-              :margin="[10, 10]"
-              :max-rows="maxRows"
-              :prevent-collision="preventCollision"
-              :responsive="isResponsive"
-              :restore-on-drag="restoreOnDrag"
-              :row-height="rowHeight"
-              :use-border-radius="useBorderRadius"
-              :use-css-transforms="true"
-              :vertical-compact="verticalCompact"
-              @columns-changed="colNumChanged">
-              <GridItem
-                v-for="item in testLayout"
-                :key="item.i"
-                :ref="el => setChildRef(el)"
-                class="test"
-                :enable-edit-mode="enableEditMode"
-                :h="item.h"
-                :i="item.i"
-                :is-draggable="item.isDraggable"
-                :is-resizable="item.isResizable"
-                :is-static="item.isStatic"
-                :min-h="item.minH"
-                :min-w="item.minW"
-                :preserve-aspect-ratio="preserveAspectRatio"
-                :show-close-button="showCloseButton"
-                :use-border-radius="useBorderRadius"
-                :w="item.w"
-                :x="item.x"
-                :y="item.y"
-                @container-resized="containerResizedEvent"
-                @drag="dragEvent"
-                @dragged="draggedEvent"
-                @move="moveEvent"
-                @moved="movedEvent"
-                @remove-grid-item="removeGridItem"
-                @resize="resizeEvent"
-                @resized="resizedEvent">
-                <span class="text">
-                  {{ itemTitle(item) }}
-                </span>
-              </GridItem>
-            </GridLayout>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <ExampleDemo title="Add or remove items">
+    <template #description>
+      Widgets can be added or removed at runtime without rebuilding the
+      grid — <code>GridLayout</code> just reacts to the bound
+      <code>layout</code> array changing, the same way any other
+      <code>v-model</code> would. Where a newly-added item actually lands
+      is entirely up to the consumer, though — the library only places
+      the item wherever <code>x</code>/<code>y</code> say to, then
+      compacts around it. This demo's own <code>addItem</code> does a
+      real first-fit bin-pack — remove an item from the middle of the
+      grid, then add a new one, and it lands in the gap left behind
+      rather than always at the very bottom.
+    </template>
+    <template #controls>
+      <ExampleToggle v-model="appendToFirstRow" label="Add to end of first row (instead of a new row)" />
+      <button class="example-button" type="button" @click="addItem">+ Add item</button>
+      <button class="example-button example-button--secondary" type="button" @click="layout = []">Clear all</button>
+    </template>
+
+    <GridLayout v-model:layout="layout" :col-num="colNum" :row-height="60">
+      <GridItem v-for="item in layout" :key="item.i" :h="item.h" :i="item.i" :w="item.w" :x="item.x" :y="item.y"
+        show-close-button @remove-grid-item="removeItem">
+        <div class="example-item">{{ item.i }}</div>
+      </GridItem>
+    </GridLayout>
+    <template #footer>
+      <LayoutJsonViewer :layout="layout" />
+    </template>
+  </ExampleDemo>
 </template>
 
 <script lang="ts" setup>
-  import {
-    ref, onMounted, nextTick, onBeforeUnmount,
-  } from 'vue';
-  import '../../../node_modules/vue-ts-responsive-grid-layout/dist/vue-ts-responsive-grid-layout.css';
-  import { GridLayout, GridItem, TLayoutItem } from 'vue-ts-responsive-grid-layout';
-  import { testData } from './test';
+import { ref } from 'vue';
+import { GridLayout, GridItem, type TLayout } from 'vue-ts-responsive-grid-layout';
+import { findFirstFitSlot } from 'vue-ts-responsive-grid-layout/core';
 
-  const autoResizeGridLayout = ref(true);
-  const colNum = ref(4);
-  const enableEditMode = ref(true);
-  const horizontalShift = ref(false);
-  const isBounded = ref(false);
-  const isDraggable = ref(false);
-  const isMirrored = ref(false); // TODO Not auto updating
-  const isResizable = ref(false);
-  const isResponsive = ref(true);
-  const maxRows = ref(40);
-  const preserveAspectRatio = ref(false);
-  const preventCollision = ref(false);
-  const rowHeight = ref(50);
-  const restoreOnDrag = ref(false);
-  const showCloseButton = ref(true);
-  const showGridLines = ref(false);
-  const useBorderRadius = ref(true);
-  const verticalCompact = ref(true);
+const colNum = 12;
 
-  const testLayout = ref(testData);
-  const refLayout = ref();
-  const mapCache: Map<string, any> = new Map();
+const layout = ref<TLayout>([
+  { h: 2, i: '0', w: 2, x: 0, y: 0 },
+  { h: 2, i: '1', w: 2, x: 2, y: 0 },
+]);
 
-  let orgColNum = colNum.value;
-  const colNumChanged = (value: number): void => {
-    if(orgColNum !== value) {
-      orgColNum = value;
-      colNum.value = value;
-    }
-  };
+const appendToFirstRow = ref(false);
+let nextId = 2;
 
-  const newIndex = ref(testLayout.value.length + 1);
-  const addGridItem = (): void => {
-    testLayout.value.push({
-      h: 2,
-      i: newIndex.value,
-      w: 1,
-      x: (testLayout.value.length) % (colNum.value || 4),
-      y: testLayout.value.length + (colNum.value || 4),
-    });
-    newIndex.value++;
-  };
+/**
+ * Bug fix: this used to only ever place a new item past the bottom-most
+ * occupied row across the *entire* layout — so removing an item from
+ * the middle of the grid (opening up a gap) and then adding a new one
+ * never reused that gap; the new item always landed in a fresh row at
+ * the very bottom, even when there was clearly room for it much
+ * higher up. Reported as "bin-packing placement algorithm" (missing
+ * one). Now uses the library's own exported `findFirstFitSlot` — a
+ * real first-fit bin-pack, scanning row by row from the top and
+ * column by column from the left for the first open gap.
+ */
+const addItem = (): void => {
+  const newItem = { h: 2, i: String(nextId), w: 2, x: 0, y: 0 };
+  nextId += 1;
 
-  const containerResizedEvent = (): void => {
-    // TBD
-  };
-
-  const dragEvent = (): void => {
-    // TBD
-  };
-
-  const draggedEvent = (): void => {
-    // TBD
-  };
-
-  const moveEvent = (): void => {
-    // TBD
-  };
-
-  const movedEvent = (): void => {
-    // TBD
-  };
-
-  const resizeEvent = (): void => {
-    // TBD
-  };
-
-  const resizedEvent = (): void => {
-    // TBD
-  };
-
-  const removeGridItem = (id: string | number): void => {
-    testLayout.value = testLayout.value.filter(item => {
-      return item.i !== id;
-    });
-    // emits(EGridItemEvent.REMOVE_ITEM);
-  };
-
-  const itemTitle = (item: TLayoutItem): string => {
-    let result = item.i;
-    if(item.isStatic) {
-      result += ` - Static`;
-    }
-    return <string>result;
-  };
-
-  const setChildRef = (vm: TLayoutItem): void => {
-    if(vm && vm.i) {
-      mapCache.set(vm.i, vm);
-    }
-  };
-
-  const mouseXY = {
-    x: 0,
-    y: 0,
-  };
-
-  const DragPos = {
-    h: 1,
-    i: ``,
-    w: 1,
-    x: 0,
-    y: 0,
-  };
-
-  const drag = (e: DragEvent): void => {
-    e.stopPropagation();
-    e.preventDefault();
-    if(!enableEditMode.value && !isDraggable.value) {
+  if (appendToFirstRow.value) {
+    const firstRowItems = layout.value.filter(item => item.y === 0);
+    // Bug fix: this used to sum every first-row item's own width and
+    // use that total as the new item's x — which only happens to
+    // equal "the first free column" when the row is packed with no
+    // gaps. Remove an item from the middle of a full first row (not
+    // the end), and the sum stays the same as before the removal
+    // (widths don't change), so the new item lands at the OLD
+    // rightmost edge, colliding with whatever item is already sitting
+    // there — collision-avoidance then pushes it down into the next
+    // row instead of into the gap this toggle is meant to fill.
+    // Reported directly: clear all, add 6 items filling a 12-column
+    // row exactly, remove the 3rd from the left, add one more —
+    // landed at the last column of the *next* row instead of the gap.
+    // Fixed to the actual rightmost occupied edge (max of x+w across
+    // first-row items), which is correct with or without gaps.
+    const rightmostEdge = firstRowItems.reduce((max, item) => Math.max(max, item.x + item.w), 0);
+    if (rightmostEdge + newItem.w <= colNum) {
+      newItem.x = rightmostEdge;
+      layout.value.push(newItem);
       return;
     }
-    const t = document.getElementById(`content`) as HTMLElement;
-    const parentRect = t.getBoundingClientRect();
-    let mouseInGrid = false;
-    if(
-      mouseXY.x > parentRect.left
-      && mouseXY.x < parentRect.right
-      && mouseXY.y > parentRect.top
-      && mouseXY.y < parentRect.bottom
-    ) {
-      mouseInGrid = true;
-    }
-    if(mouseInGrid === true && testLayout.value.findIndex(item => item.i === `drop`) === -1) {
-      testLayout.value.push({
-        h: 2,
-        i: `drop`,
-        w: 2,
-        x: (testLayout.value.length * 2) % colNum.value,
-        y: testLayout.value.length + colNum.value, // puts it at the bottom
-      });
-    }
+    // First row is full — fall through to the bin-pack placement below.
+  }
 
-    const index = testLayout.value.findIndex(item => item.i === `drop`);
+  const slot = findFirstFitSlot(layout.value, colNum, newItem.w, newItem.h);
+  newItem.x = slot.x;
+  newItem.y = slot.y;
+  layout.value.push(newItem);
+};
 
-    if(index !== -1) {
-      try {
-        refLayout.value.defaultGridItem.$el.style.display = `none`;
-      } catch{
-        // Do nothing
-      }
-      const el = mapCache.get(`drop`);
-      if(!el) {
-        return;
-      }
-
-      el.dragging = {
-        left: mouseXY.x - parentRect.left,
-        top: mouseXY.y - parentRect.top,
-      };
-      const newPos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left);
-      if(mouseInGrid === true) {
-        refLayout.value.dragEvent(`dragstart`, `drop`, newPos.x, newPos.y, 2, 2);
-        DragPos.i = String(index);
-        DragPos.x = testLayout.value[index].x;
-        DragPos.y = testLayout.value[index].y;
-      }
-      if(mouseInGrid === false) {
-        refLayout.value.dragEvent(`dragend`, `drop`, newPos.x, newPos.y, 2, 2);
-        testLayout.value = testLayout.value.filter(obj => obj.i !== `drop`);
-      }
-    }
-  };
-
-  const dragend = (): void => {
-    const t = document.getElementById(`content`) as HTMLElement;
-    const parentRect = t.getBoundingClientRect();
-    let mouseInGrid = false;
-    if(
-      mouseXY.x > parentRect.left
-      && mouseXY.x < parentRect.right
-      && mouseXY.y > parentRect.top
-      && mouseXY.y < parentRect.bottom
-    ) {
-      mouseInGrid = true;
-    }
-
-    if(mouseInGrid === true) {
-      refLayout.value.dragEvent(`dragend`, `drop`, DragPos.x, DragPos.y, 2, 2);
-      testLayout.value = testLayout.value.filter(obj => obj.i !== `drop`);
-      nextTick(() => {
-        testLayout.value.push({
-          h: 1,
-          i: DragPos.i,
-          minH: 1,
-          minW: 1,
-          w: 1,
-          x: DragPos.x,
-          y: DragPos.y,
-        });
-        refLayout.value.dragEvent(`dragend`, DragPos.i, DragPos.x, DragPos.y, 2, 2);
-        mapCache.delete(`drop`);
-      });
-    }
-  };
-
-  const addDragOverEvent = (e: DragEvent): void => {
-    mouseXY.x = e.clientX;
-    mouseXY.y = e.clientY;
-  };
-
-  onMounted(() => {
-    document.addEventListener(`dragover`, addDragOverEvent);
-  });
-  onBeforeUnmount(() => {
-    document.removeEventListener(`dragover`, addDragOverEvent);
-  });
+const removeItem = (id: string | number): void => {
+  layout.value = layout.value.filter(item => item.i !== id);
+};
 </script>
-
-<style lang="scss" scoped>
-.button {
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 15px;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 16px;
-  margin-left: 20px;
-  outline: none;
-  padding: 5px 15px;
-  text-align: center;
-  text-decoration: none;
-}
-
-.button:hover {
-  background-color: #3e8e41
-}
-
-.button:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
-
-button:hover {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.hide {
-  display: none;
-}
-
-form {
-  background-color: #7f8497;
-  border-radius: 12px;
-}
-
-fieldset {
-  color: #000;
-  padding: 15px;
-}
-
-legend {
-  font-weight: bold;
-}
-
-#rowHeight {
-  max-width: 70px !important;
-}
-
-#colNum {
-  max-width: 70px !important;
-}
-
-#mlr {
-  max-width: 70px !important;
-}
-
-#mtb {
-  max-width: 70px !important;
-}
-
-#maxRows {
-  max-width: 70px !important;
-}
-
-#borderRadius {
-  max-width: 70px !important;
-}
-
-.container {
-  background: #646cff;
-  min-width: 330px;
-  padding: 10px;
-}
-
-.grid::before {
-  content: '';
-  background-size: calc(calc(100% - 5px) / v-bind(colNum)) v-bind(rowHeightPx);
-  background-image: linear-gradient(
-      to right,
-      black 1px,
-      transparent 1px
-  ),
-  linear-gradient(
-      to bottom,
-      black 1px,
-      transparent 1px);
-  height: calc(100% - 5px);
-  width: calc(100% - 5px);
-  position: absolute;
-  background-repeat: repeat;
-  margin: 5px;
-}
-
-.vue-grid-item .text {
-  bottom: 0;
-  font-size: 20px;
-  height: 100%;
-  left: 0;
-  margin: auto;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 20px;
-  width: 100%;
-}
-
-.layout {
-  background-color: #58749f;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.test {
-  background-color: #a86666;
-}
-
-.droppable-element {
-  background: #fdd;
-  border: 1px solid black;
-  border-radius: 8px;
-  cursor: grab;
-  margin: 0;
-  height: 100px;
-  padding: 10px;
-  text-align: center;
-  max-width: 250px;
-}
-
-.layoutJSON {
-  background: #ddd;
-  border: 1px solid black;
-  border-radius: 8px;
-  color: #000;
-  margin-top: 10px;
-  padding: 10px;
-}
-
-.eventsJSON {
-  background: #726e6e;
-  border: 1px solid black;
-  border-radius: 12px;
-  color: #000;
-  height: 200px;
-  padding: 10px;
-  overflow-y: scroll;
-}
-
-.columns {
-  -moz-columns: 120px;
-  -webkit-columns: 120px;
-  columns: 120px;
-}
-</style>
