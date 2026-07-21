@@ -86,16 +86,6 @@ only to keep this page a single stop for "what's suggested":
 11. ~~Configurable transition duration/easing~~ — **done**, see "Recently completed" above.
 12. ~~`GridLayout.scrollToItem(id)`/`focusItem(id)`~~ — **done**, see "Recently completed" above.
 
-### The one "free" item — done
-
-`@interactjs/auto-scroll` was imported (contributing to bundle size)
-but never actually configured. Finished it: an `autoScroll` prop on
-`GridItem` (default `false`) sets a convenience `{ enabled: true }`
-default on both `dragOption`/`resizeOption`'s `autoScroll` key — which
-was already reachable directly for finer control, since both props are
-typed against and merged into interact.js's own option types, but
-wasn't documented as such anywhere. See "Recently completed" above.
-
 **Update**: `interact.js` (and `dragOption`/`resizeOption` along with
 it) was later removed entirely — `autoScroll` is now backed by a native
 `requestAnimationFrame`-driven implementation instead (see

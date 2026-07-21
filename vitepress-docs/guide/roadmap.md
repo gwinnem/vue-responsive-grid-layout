@@ -182,9 +182,6 @@ one lives — is in the source repository's
 A separate list of forward-looking feature ideas — things worth
 considering, not things anyone's promised to build — lives in
 [`docs/FEATURE_RECOMMENDATIONS.md`](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/docs/FEATURE_RECOMMENDATIONS.md)
-in the source repo. Includes a genuinely "free" one found while
-researching it: `@interactjs/auto-scroll` is already imported and paid
-for in bundle size, just never actually configured.
 
 ## Have a request?
 
