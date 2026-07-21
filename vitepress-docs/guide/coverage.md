@@ -23,8 +23,8 @@ npm run test:coverage
 | Functions | **99.5%** |
 | Lines | **99.52%** |
 
-620 tests across 34 files (Vitest — unit + component), plus 59 end-to-end
-scenarios (Playwright, run against Chromium/Firefox/WebKit — 177 runs total).
+620 tests across 34 files (Vitest — unit + component), plus 61 end-to-end
+scenarios (Playwright, run against Chromium/Firefox/WebKit — 183 runs total).
 
 ::: tip Enforced, not aspirational
 `vitest.config.js` sets a **90% minimum** on all four metrics above and
@@ -128,11 +128,20 @@ described in the abstract:
   prop — previously an entire untested clamp path — is covered.
 - **RTL + an in-progress resize.** `GridItem.vue`'s own live-resize
   positioning (`createStyle()`'s `renderRtl.value` branch while
-  `isResizing.value` is true) needs a real pointer-driven resize
-  gesture while mirrored — there's no end-to-end RTL coverage at all
-  currently, and this specific combination isn't reachable via a
-  simple prop change the way most other RTL behavior is tested. The
-  most significant single remaining gap, flagged rather than forced.
+  `isResizing.value` is true) now has a real, verified e2e test — see
+  `e2e/drag-and-resize.spec.ts`'s "RTL: the live visual during an
+  in-progress resize..." test, confirmed to genuinely fail without the
+  fix (not just pass coincidentally) before being added. That closes
+  the actual behavioral gap this bullet used to describe — there's no
+  longer zero end-to-end RTL coverage. What may still remain, distinct
+  from e2e coverage: Vitest's own statement/branch coverage percentage
+  above is collected purely from the unit/component suite (jsdom), not
+  from Playwright — no dedicated component-level test was added
+  alongside the e2e one, so this exact branch may still show as
+  uncovered in the Vitest report specifically, even though the
+  behavior itself is now verified by a real browser test. Left
+  unclaimed rather than assumed, since regenerating the coverage report
+  to check directly wasn't possible this pass.
 
 Several real gaps were closed during the most recent pass, previously
 listed here as open — three GridLayout-level cascade handlers

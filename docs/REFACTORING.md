@@ -5417,6 +5417,51 @@ it passes again.
 Verified throughout: typecheck, full unit suite (620/620), and the
 complete e2e suite (61/61, run against the real dev server).
 
+### 115. Homepage (`vitepress-docs/index.md`) refactored to reflect the solution better
+
+Cross-checked the existing 12-feature homepage grid against
+`FEATURES.md` and `PRODUCTION_READINESS.md` to find genuine gaps rather
+than guessing. Confirmed the "45 Examples" link and "21.84 KB gzip"
+bundle-size claim were both still accurate (not stale), so left those
+untouched. Found three shipped, differentiating capabilities missing
+from the homepage entirely: RTL layout mirroring (`isMirrored`), the
+framework-agnostic `/core` entry point (previously only a sub-clause
+inside the TypeScript-first card, not its own card), and the project's
+own testing rigor (98%+ coverage, cross-browser Playwright e2e,
+mutation testing) — a genuine trust signal for a new visitor evaluating
+adoption, not surfaced anywhere on the page before. Added all three as
+their own feature cards (15 total, a clean 5-row grid), and trimmed the
+TypeScript-first card's own text since the core entry point now has
+its own dedicated card rather than being mentioned twice. Verified the
+YAML frontmatter still parses correctly after the edit.
+
+### 116. `vitepress-docs/guide/coverage.md` updated to reflect this session's actual changes, not left stale
+
+Two confirmed staleness issues, found by cross-checking rather than
+assumed: the e2e test count still said 59/177 runs, but this session's
+own work (the RTL live-resize test, the cross-grid z-index regression
+test) brought it to 61/183 — updated to match. More substantively, the
+"RTL + an in-progress resize" bullet under "why these files aren't at
+100%" still described this as the single most significant remaining
+gap with zero e2e coverage — but this session added exactly that test
+(`e2e/drag-and-resize.spec.ts`'s "RTL: the live visual..." test,
+confirmed to genuinely fail without the fix before being added).
+Rewrote the bullet to reflect that the actual behavioral gap is
+closed, while being precise about a real, distinct nuance rather than
+overclaiming: Vitest's own statement/branch percentages above are
+collected purely from the jsdom unit/component suite, not from
+Playwright, so this exact branch may still show as uncovered in the
+Vitest report specifically even though the behavior itself is now
+verified by a real browser test — no dedicated component-level test
+was added alongside the e2e one. Left unclaimed rather than guessed,
+since regenerating the actual coverage report to check directly wasn't
+possible this pass (see the standing network-restriction note
+elsewhere in this file). Checked other docs (`PRODUCTION_READINESS.md`,
+`FEATURES.md`, `README.md`) for the same stale count and found none;
+the one other "59 e2e" mention, in this file's own finding #105, is a
+correctly-preserved historical record of a past state, not a current
+claim, and was left untouched.
+
 ## Structural: both `GridItem.vue` and `GridLayout.vue` were doing too much — done
 
 **`GridItem.vue`** — checked directly rather than assumed. This section

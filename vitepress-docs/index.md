@@ -49,7 +49,7 @@ features:
     details: Move and resize items with arrow keys and shift+arrow, no mouse required — with localizable ARIA strings for every screen-reader-facing string.
   - icon: 🔤
     title: TypeScript-first
-    details: Every prop, event, and enum is fully typed and exported from the package's main entry point, plus a zero-dependency /core entry point for framework-agnostic use.
+    details: Every prop, event, and enum is fully typed and exported from the package's main entry point — no reaching into an internal path required.
   - icon: ↩️
     title: Undo/redo
     details: Opt-in enableUndoRedo history — snapshots taken at each committed change (drag/resize end, add/remove), not per intermediate frame, with a configurable history limit.
@@ -59,4 +59,13 @@ features:
   - icon: 🖼️
     title: SVG export
     details: Export the current layout to a standalone SVG — a static snapshot for docs, thumbnails, or sharing, no screenshot tooling required.
+  - icon: 🌐
+    title: RTL layout mirroring
+    details: isMirrored flips the entire grid for right-to-left locales — anchor edges, resize direction, and drag math all correctly reverse, with a per-item opt-out.
+  - icon: 🧩
+    title: Framework-agnostic core
+    details: A separate /core entry point exposes the positioning, collision, and compaction engine with zero Vue dependency — usable standalone outside Vue entirely.
+  - icon: ✅
+    title: Battle-tested
+    details: 98%+ statement/branch coverage, a Playwright e2e suite across Chromium/Firefox/WebKit, mutation testing, and CI gates on every PR — not just unit tests against the happy path.
 ---
