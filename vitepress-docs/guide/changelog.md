@@ -11,7 +11,9 @@ This mirrors the repository's
 [`CHANGELOG.md`](https://github.com/gwinnem/vue-responsive-grid-layout/blob/main/CHANGELOG.md) —
 check there for the single source of truth if this page looks out of date.
 
-## v2.0.0 — 2026-07-20
+## Unreleased
+
+## v2.0.0 — 2026-07-14
 
 The first major release. Two large passes: the first brought cross-grid
 and outside-the-grid drag-and-drop, a full test/CI/docs foundation, and

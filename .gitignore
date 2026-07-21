@@ -12,6 +12,7 @@ node_modules
 
 # vitepress
 /vitepress-docs/.vitepress/cache
+/vitepress-docs/.vitepress/dist
 
 # coverage
 /tests/coverage

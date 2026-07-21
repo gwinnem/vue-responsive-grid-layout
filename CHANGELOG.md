@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file. Format is
 loosely based on [Keep a Changelog](https://keepachangelog.com/); dates are
 `YYYY-MM-DD`.
 
-## v2.0.0 — 2026-07-20
+## [Unreleased]
 
 ### Added
 

@@ -113,6 +113,19 @@ export default defineConfig({
   },
 
   vite: {
+    // VitePress 1.6.x's own bundled Vite still calls into Dart Sass's
+    // legacy JS API internally for .scss compilation — this project's
+    // own styles don't use that API at all, there's nothing here to
+    // migrate; this just silences the resulting noise until VitePress's
+    // own dependency catches up, rather than living with it forever or
+    // downgrading `sass` to mask it.
+    css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
+    },
     server: {
       host: true,
       // Only auto-open for a real interactive dev session — CI shouldn't
