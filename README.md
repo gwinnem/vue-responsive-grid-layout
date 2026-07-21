@@ -260,8 +260,6 @@ to this repository itself instead? See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ### References
 
-* [Mini.css used in the sandbox](https://minicss.us/docs.htm#)
-* [Vue-Multiselect used in the sandbox](https://vue-multiselect.js.org/#sub-getting-started)
 * [Vitest](https://vitest.dev/)
 * [Vitest UI](https://vitest.dev/guide/ui.html#vitest-ui)
 * [Playwright](https://playwright.dev/)
